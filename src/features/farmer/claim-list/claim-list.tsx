@@ -57,13 +57,13 @@ const ClaimList = () => {
         </Typography>
         <Grid container>
           <Grid item xs={10} sm={4} md={3} lg={2}>
-            {/* <SimpleDropDown
+            <SimpleDropDown
               id="status"
               label="Claim Status"
               fullWidth
               bind={bindStatus}
               options={StatusClaimList}
-            /> */}
+            />
           </Grid>
         </Grid>
       </form>

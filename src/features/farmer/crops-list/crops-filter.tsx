@@ -78,9 +78,7 @@ const CropsFilter = () => {
             label="Crop Status"
             fullWidth
             bind={bindStatus}
-            options={StatusCropList.map((x) => {
-              return { id: x, value: x };
-            })}
+            options={StatusCropList}
           />
         </Grid>
 

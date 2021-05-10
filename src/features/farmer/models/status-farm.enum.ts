@@ -3,5 +3,3 @@ export enum StatusFarm {
   Rejected = "Rejected",
   Approved = "Approved",
 }
-
-export const StatusFarmList: string[] = Object.values(StatusFarm);
