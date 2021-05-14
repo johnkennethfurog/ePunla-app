@@ -11,7 +11,9 @@ import CropsFilter from "./crops-filter";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {},
+    container: {
+      padding: 10,
+    },
     table: {},
   })
 );
@@ -21,12 +23,10 @@ const CropList = () => {
   const crops = useSelector(selectCrops);
 
   return (
-    <Paper>
+    <Paper className={style.container}>
       <CropsFilter />
       <Table className={style.table} aria-label="farm table">
-        <TableHead>
-          <CropRowHeader />
-        </TableHead>
+        <CropRowHeader />
         <TableBody>
           {crops.map((crop) => (
             <CropRow crop={crop} key={crop.farmCropId.toString()} />

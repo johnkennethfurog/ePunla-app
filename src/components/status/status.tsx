@@ -1,4 +1,4 @@
-import { makeStyles, Theme, createStyles, Chip } from "@material-ui/core";
+import { makeStyles, Theme, createStyles } from "@material-ui/core";
 import React from "react";
 
 type StatusProps = {
@@ -10,17 +10,23 @@ type StatusProps = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    status: {
+      padding: 5,
+      borderRadius: 5,
+      fontSize: 13,
+      fontWeight: "bold",
+    },
     pending: {
-      backgroundColor: theme.palette.warning.dark,
-      color: "white",
+      backgroundColor: "#ffb74d61",
+      color: theme.palette.warning.dark,
     },
     cancelled: {
-      backgroundColor: theme.palette.error.dark,
-      color: "white",
+      backgroundColor: "rgba(255, 72, 66, 0.16)",
+      color: theme.palette.error.dark,
     },
     approved: {
-      backgroundColor: theme.palette.success.dark,
-      color: "white",
+      backgroundColor: "rgba(84, 214, 44, 0.16)",
+      color: theme.palette.success.dark,
     },
   })
 );
@@ -31,16 +37,18 @@ const Status = (props: StatusProps) => {
   const isCancelled = props.status === props.cancelledStatus;
   const isApproved = props.status === props.approvedStatus;
   return (
-    <Chip
-      className={
+    <span
+      className={[
+        style.status,
         isCancelled
           ? style.cancelled
           : isApproved
           ? style.approved
-          : style.pending
-      }
-      label={props.status}
-    />
+          : style.pending,
+      ].join(" ")}
+    >
+      {props.status}
+    </span>
   );
 };
 

@@ -11,19 +11,19 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  MenuItem,
-  TextField,
   Grid,
   Typography,
 } from "@material-ui/core";
-import ClaimRow from "./claim-row";
+import ClaimRow, { ClaimRowHeader } from "./claim-row";
 import useInput from "../../../hooks/useInput";
 import { StatusClaimList } from "../models/status-claim.enum";
 import { SimpleDropDown } from "../../../components/select/selects";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {},
+    container: {
+      padding: 10,
+    },
     table: {},
     searchForm: {
       padding: 15,
@@ -50,13 +50,13 @@ const ClaimList = () => {
   }, [status]);
 
   return (
-    <Paper style={{ marginBottom: 20 }}>
+    <Paper className={style.container}>
       <form className={style.searchForm}>
         <Typography variant="subtitle1" gutterBottom>
           Search Claims
         </Typography>
         <Grid container>
-          <Grid item xs={10} sm={4} md={3} lg={2}>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
             <SimpleDropDown
               id="status"
               label="Claim Status"
@@ -69,17 +69,7 @@ const ClaimList = () => {
       </form>
 
       <Table className={style.table} aria-label="farm table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Date Filed</TableCell>
-            <TableCell>Farm</TableCell>
-            <TableCell>Crop</TableCell>
-            <TableCell>Damaged Area</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Claim Status</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
+        <ClaimRowHeader />
         <TableBody>
           {claims.map((claim) => (
             <ClaimRow claim={claim} key={claim.claimId.toString()} />

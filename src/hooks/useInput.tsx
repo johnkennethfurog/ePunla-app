@@ -15,7 +15,7 @@ const useInput = <T,>(initialValue: T) => {
 
   const bind = {
     value,
-    onChange: (e: any) => {
+    onChange: (e: React.ChangeEvent<{ name?: string; value: T }>) => {
       setValue(e.target.value);
     },
   };

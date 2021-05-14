@@ -14,7 +14,9 @@ import { LookupItem } from "../../models/lookup-item";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    formControl: {},
+    formControl: {
+      backgroundColor: "rgb(244, 246, 248)",
+    },
   })
 );
 
@@ -33,12 +35,17 @@ export const SimpleDropDown = (props: DropDownProps) => {
   return (
     <FormControl
       className={style.formControl}
-      variant="filled"
+      variant="outlined"
       id={props.id}
       fullWidth={props.fullWidth}
     >
       <InputLabel id={props.id}>{props.label}</InputLabel>
-      <Select {...props.bind} labelId={props.id} id={props.id + "_"}>
+      <Select
+        label={props.label}
+        {...props.bind}
+        labelId={props.id}
+        id={props.id + "_"}
+      >
         <MenuItem value={props.emptyValue ? props.emptyValue : ""}>
           <em>None</em>
         </MenuItem>
