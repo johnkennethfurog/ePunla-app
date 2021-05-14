@@ -1,12 +1,8 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { fetchClaims, selectClaims } from "../farmerSlice";
 import {
   makeStyles,
   Theme,
@@ -14,10 +10,15 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
-import ClaimRow, { ClaimRowHeader } from "./claim-row";
+import ClaimRow from "./claim-row";
 import useInput from "../../../hooks/useInput";
 import { StatusClaimList } from "../models/status-claim.enum";
 import { SimpleDropDown } from "../../../components/select/selects";
+import { deleteClaim, fetchClaims } from "../farmerActions";
+import { selectClaims } from "../farmerSelectors";
+import ClaimRowHeader from "./claim-row-header";
+import ClaimRowDetail from "./claim-row-detail";
+import ConfirmationModal from "../../../components/modals/confirmation-modal";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const ClaimList = () => {
   const [status, bindStatus] = useInput("");
+  const [expandedClaimId, setExpandedClaimId] = useState<number>(null);
+  const [claimIdToDelete, setClaimIdToDelete] = useState<number>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(() => false);
 
   const claims = useSelector(selectClaims);
   const dispatch = useDispatch();
@@ -48,6 +52,20 @@ const ClaimList = () => {
   useEffect(() => {
     dispatch(fetchClaims(!!status ? status : null));
   }, [status]);
+
+  const onDelete = (claimId: number) => {
+    setClaimIdToDelete(claimId);
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const onConfirmDelete = () => {
+    setShowDeleteModal(false);
+    dispatch(deleteClaim(claimIdToDelete));
+  };
 
   return (
     <Paper className={style.container}>
@@ -68,14 +86,47 @@ const ClaimList = () => {
         </Grid>
       </form>
 
-      <Table className={style.table} aria-label="farm table">
+      <Table className={style.table} size="small" aria-label="farm table">
         <ClaimRowHeader />
         <TableBody>
-          {claims.map((claim) => (
-            <ClaimRow claim={claim} key={claim.claimId.toString()} />
-          ))}
+          {claims.map((claim) => {
+            const isOpen = expandedClaimId === claim.claimId;
+
+            return (
+              <Fragment key={claim.claimId.toString()}>
+                <ClaimRow
+                  isOpen={isOpen}
+                  onDelete={onDelete}
+                  onExpand={() => {
+                    if (!isOpen) {
+                      setExpandedClaimId(claim.claimId);
+                    } else {
+                      setExpandedClaimId(null);
+                    }
+                  }}
+                  claim={claim}
+                  key={claim.claimId.toString()}
+                />
+                <ClaimRowDetail
+                  claim={claim}
+                  isOpen={isOpen}
+                  key={claim.claimId.toString() + "_detail"}
+                />
+              </Fragment>
+            );
+          })}
         </TableBody>
       </Table>
+
+      <ConfirmationModal
+        open={showDeleteModal}
+        title="Delete Claim"
+        content="Are you sure you want to delete this claim?"
+        btnNoTitle="No"
+        btnYesTitle="Yes"
+        onClickBtnNo={closeDeleteModal}
+        onClickBtnYes={onConfirmDelete}
+      />
     </Paper>
   );
 };

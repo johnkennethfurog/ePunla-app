@@ -2,12 +2,11 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
-import TableHead from "@material-ui/core/TableHead";
 import Paper from "@material-ui/core/Paper";
-import { selectCrops } from "../farmerSlice";
 import { makeStyles, Theme, createStyles } from "@material-ui/core";
 import CropRow, { CropRowHeader } from "./crops-row";
 import CropsFilter from "./crops-filter";
+import { selectCrops } from "../farmerSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

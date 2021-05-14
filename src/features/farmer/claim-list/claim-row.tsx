@@ -5,10 +5,11 @@ import {
   createStyles,
   makeStyles,
   Theme,
-  TableHead,
 } from "@material-ui/core";
 import React from "react";
 import Status from "../../../components/status/status";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -19,9 +20,6 @@ import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    rowHeader: {
-      backgroundColor: "rgb(244, 246, 248)",
-    },
     cell: {
       borderBottom: 0,
     },
@@ -30,23 +28,31 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type ClaimRowProps = {
   claim: Claim;
+  onExpand: () => void;
+  onDelete: (claimId: number) => void;
+  isOpen: boolean;
 };
 
 const ClaimRow = (props: ClaimRowProps) => {
   const style = useStyles();
-  const { claim } = props;
+  const { claim, onExpand, isOpen, onDelete } = props;
 
   const onClickView = () => {};
 
   return (
     <TableRow key={claim.claimId}>
       <TableCell className={style.cell}>
+        <IconButton aria-label="expand row" size="small" onClick={onExpand}>
+          {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </IconButton>
+      </TableCell>
+
+      <TableCell className={style.cell}>
         {moment(claim.filingDate).format("MM-DD-YYYY")}
       </TableCell>
       <TableCell className={style.cell}>{claim.farm}</TableCell>
       <TableCell className={style.cell}>{claim.crop}</TableCell>
       <TableCell className={style.cell}>{claim.damagedArea}</TableCell>
-      <TableCell className={style.cell}>{claim.description}</TableCell>
       <TableCell className={style.cell}>
         {
           <Status
@@ -61,29 +67,11 @@ const ClaimRow = (props: ClaimRowProps) => {
         <IconButton onClick={onClickView} aria-label="edit">
           <EditIcon />
         </IconButton>
-        <IconButton onClick={onClickView} aria-label="delete">
+        <IconButton onClick={() => onDelete(claim.claimId)} aria-label="delete">
           <DeleteIcon />
         </IconButton>
       </TableCell>
     </TableRow>
-  );
-};
-
-export const ClaimRowHeader = () => {
-  const style = useStyles();
-
-  return (
-    <TableHead className={style.rowHeader}>
-      <TableRow>
-        <TableCell>Date Filed</TableCell>
-        <TableCell>Farm</TableCell>
-        <TableCell>Crop</TableCell>
-        <TableCell>Damaged Area</TableCell>
-        <TableCell>Description</TableCell>
-        <TableCell>Claim Status</TableCell>
-        <TableCell></TableCell>
-      </TableRow>
-    </TableHead>
   );
 };
 

@@ -15,14 +15,13 @@ import {
   selectCropsLookup,
 } from "../../../app/commonSlice";
 import AppAsyncAutoComplete from "../../../components/autocomplete/app-async-autocomplete";
-import AppAutoComplete from "../../../components/autocomplete/app-autocomplete";
 import AppDatePicker from "../../../components/date-picker/date-picker";
 import { SimpleDropDown } from "../../../components/select/selects";
 import useDateInput from "../../../hooks/useDateInput";
 import useInput from "../../../hooks/useInput";
 import useLookup from "../../../hooks/useLookup";
 import { LookupItem } from "../../../models/lookup-item";
-import { fetchCrops } from "../farmerSlice";
+import { fetchCrops } from "../farmerActions";
 import { StatusCropList } from "../models/status-crop.enum";
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -3,9 +3,6 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DescriptionIcon from "@material-ui/icons/Description";
 import VideocamIcon from "@material-ui/icons/Videocam";
-import PeopleIcon from "@material-ui/icons/People";
-import ErrorIcon from "@material-ui/icons/Error";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import React from "react";
 
 const drawerItems: DrawerItem[] = [

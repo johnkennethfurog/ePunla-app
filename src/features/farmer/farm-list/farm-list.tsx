@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
-import TableContainer from "@material-ui/core/TableContainer";
 import Paper from "@material-ui/core/Paper";
-import { fetchFarms, selectFarms } from "../farmerSlice";
 import { useHistory } from "react-router-dom";
 import { makeStyles, Theme, createStyles } from "@material-ui/core";
 import FarmRow, { FarmRowHeader } from "./farm-rows";
+import { fetchFarms } from "../farmerActions";
+import { selectFarms } from "../farmerSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
