@@ -13,8 +13,8 @@ import Status from "../../../components/status/status";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import { Crop } from "../models/crop";
-import { StatusCrop } from "../models/status-crop.enum";
+import { Crop } from "../farmer-models/crop";
+import { StatusCrop } from "../farmer-models/status-crop.enum";
 
 import moment from "moment";
 

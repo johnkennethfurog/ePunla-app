@@ -9,7 +9,7 @@ import {
   Theme,
 } from "@material-ui/core";
 import React from "react";
-import { Claim } from "../models/claim";
+import { Claim } from "../farmer-models/claim";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

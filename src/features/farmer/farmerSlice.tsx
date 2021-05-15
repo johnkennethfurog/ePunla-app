@@ -1,8 +1,8 @@
 import { createSlice, Dictionary, PayloadAction } from "@reduxjs/toolkit";
 import { LookupItem } from "../../models/lookup-item";
-import { Farm } from "./models/farm";
-import { Claim } from "./models/claim";
-import { Crop } from "./models/crop";
+import { Farm } from "./farmer-models/farm";
+import { Claim } from "./farmer-models/claim";
+import { Crop } from "./farmer-models/crop";
 
 interface FarmerState {
   farms: Farm[];

@@ -5,7 +5,7 @@ const BASE_URL_QUERY = "https://e-punla-query.azurewebsites.net";
 const BASE_URL_COMMAND = "https://e-punla-command.azurewebsites.net";
 
 const test_token =
-  "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwibmJmIjoxNjIwNDU3MzMzLCJleHAiOjE2MjEwNjIxMzMsImlhdCI6MTYyMDQ1NzMzM30.J22dsRPFGitaUxuUF_A7Gpvk6-E9WGvc5yWKU2lWLdr6tOoiSfq4JNEkFm1vVYvDMF9rIsg3GsSEkNpxCA7ECw";
+  "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwibmJmIjoxNjIxMDg3MTQ0LCJleHAiOjE2MjE2OTE5NDQsImlhdCI6MTYyMTA4NzE0NH0.-Ng50wAdpQhqQyK0hMgBzEQRkfpSSeQckJuHW3hOeQc_7A2MHg-6PZzwbenFWyR810AoVmObmqt_r7hH24EDVw";
 
 const getQueryUrl = (url) => {
   return `${BASE_URL_QUERY}${API_VERSION}${url}`;

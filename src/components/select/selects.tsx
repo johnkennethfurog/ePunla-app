@@ -27,29 +27,30 @@ type DropDownProps = {
   options: LookupItem[];
   fullWidth?: boolean;
   emptyValue?: string | number;
+  hideEmptyOption?: boolean;
 };
 
 export const SimpleDropDown = (props: DropDownProps) => {
   const style = useStyles();
+  const { hideEmptyOption, label, fullWidth, id, bind, options, emptyValue } =
+    props;
 
   return (
     <FormControl
       className={style.formControl}
       variant="outlined"
-      id={props.id}
-      fullWidth={props.fullWidth}
+      id={id}
+      fullWidth={fullWidth}
     >
-      <InputLabel id={props.id}>{props.label}</InputLabel>
-      <Select
-        label={props.label}
-        {...props.bind}
-        labelId={props.id}
-        id={props.id + "_"}
-      >
-        <MenuItem value={props.emptyValue ? props.emptyValue : ""}>
-          <em>None</em>
-        </MenuItem>
-        {props.options.map((opt) => {
+      <InputLabel id={id}>{label}</InputLabel>
+      <Select label={label} {...bind} labelId={id} id={id + "_"}>
+        {!hideEmptyOption && (
+          <MenuItem value={emptyValue ? emptyValue : ""}>
+            <em>None</em>
+          </MenuItem>
+        )}
+
+        {options.map((opt) => {
           return (
             <MenuItem key={opt.id} value={opt.id}>
               {opt.value}

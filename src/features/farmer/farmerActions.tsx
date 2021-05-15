@@ -5,10 +5,10 @@ import {
   clientQueryApiRequest,
 } from "../../utils/client";
 import { farmerSlice } from "./farmerSlice";
-import { Claim } from "./models/claim";
-import { Crop } from "./models/crop";
-import { Farm } from "./models/farm";
-import { SearchCrop } from "./models/search-crop";
+import { Claim } from "./farmer-models/claim";
+import { Crop } from "./farmer-models/crop";
+import { Farm } from "./farmer-models/farm";
+import { SearchCrop } from "./farmer-models/search-crop";
 
 const FARMER_MODULE = "/farmer";
 

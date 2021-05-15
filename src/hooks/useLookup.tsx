@@ -18,6 +18,8 @@ const useLookup = (initialValue: number | string) => {
   const bind = {
     value,
     onChange: (lookupItem: LookupItem) => {
+      console.log("lookupItem", lookupItem);
+
       setValue(lookupItem?.id);
     },
   };

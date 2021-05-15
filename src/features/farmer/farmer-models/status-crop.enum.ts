@@ -1,4 +1,5 @@
 import { LookupItem } from "../../../models/lookup-item";
+import enumToLookup from "../../../utils/enum-to-lookup";
 
 export enum StatusCrop {
   Planted = "Planted",
@@ -6,8 +7,4 @@ export enum StatusCrop {
   Damaged = "Damaged",
 }
 
-export const StatusCropList: LookupItem[] = Object.values(StatusCrop).map(
-  (stat) => {
-    return { id: stat, value: stat };
-  }
-);
+export const StatusCropList: LookupItem[] = enumToLookup(StatusCrop);

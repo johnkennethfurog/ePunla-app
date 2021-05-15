@@ -14,8 +14,8 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import { Claim } from "../models/claim";
-import { StatusClaim } from "../models/status-claim.enum";
+import { Claim } from "../farmer-models/claim";
+import { StatusClaim } from "../farmer-models/status-claim.enum";
 import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>

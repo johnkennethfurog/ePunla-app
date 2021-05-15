@@ -9,8 +9,8 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import Status from "../../../components/status/status";
-import { Farm } from "../models/farm";
-import { StatusFarm } from "../models/status-farm.enum";
+import { Farm } from "../farmer-models/farm";
+import { StatusFarm } from "../farmer-models/status-farm.enum";
 import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme: Theme) =>
