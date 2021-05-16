@@ -8,16 +8,9 @@ import {
   createStyles,
   makeStyles,
   Theme,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
   TextField,
-  InputAdornment,
 } from "@material-ui/core";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsLoading } from "../../../app/commonSlice";
 import { SimpleDropDown } from "../../../components/select/selects";
@@ -25,10 +18,10 @@ import useInput from "../../../hooks/useInput";
 import { LookupItem } from "../../../models/lookup-item";
 import { fetchCrops } from "../farmerActions";
 import { selectCrops } from "../farmerSelectors";
-import { Claim, DamageCause } from "../farmer-models/claim";
-import { DamageCauseList } from "../farmer-models/damage-cause.enum";
-import { DamageCauseOption } from "../farmer-models/damage-cause-option";
-import classes from "*.module.css";
+import { Claim } from "../farmer-models/claim";
+import ClaimDamageCause from "./claim-damage-cause";
+import { ClaimCausePayload } from "../farmer-models/claim-save-payload";
+import { MapToDamageCausePayload } from "../farmer-utils/damabe-cause-mapper";
 
 type ConfirmationModalProps = {
   createNew: boolean;
@@ -60,30 +53,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const mapDamageCauses = (damageCauses: DamageCause[]): DamageCauseOption[] => {
-  return DamageCauseList.map((dmg) => {
-    const dc = damageCauses.find((x) => x.damageTypeId === dmg.id);
-    const damageCauseOption: DamageCauseOption = {
-      damageType: dmg.value,
-      damageTypeId: dmg.id as number,
-      isSelected: !!dc,
-      damagedAreaSize: dc?.damagedAreaSize || 0,
-    };
-
-    console.log("damageCauseOption", damageCauseOption);
-
-    return damageCauseOption;
-  });
-};
-
 const ClaimFormModal = (props: ConfirmationModalProps) => {
   const { createNew, isOpen, onClose, claim } = props;
   const style = useStyles();
   const dispatch = useDispatch();
   const [farmCropId, bindFarmCropId] = useInput(claim?.farmCropId || "");
   const [damagedArea, bindDamagedArea] = useInput(claim?.damagedArea || "Full");
-
-  const [damageCause, setDamageCause] = useState<DamageCauseOption[]>(() => []);
+  const [damageCauses, setDamageCauses] = useState<ClaimCausePayload[]>(
+    () => []
+  );
 
   const isLoading = useSelector(selectIsLoading);
 
@@ -94,9 +72,13 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
     onClose();
   };
 
+  const onChangeDamageCauses = (causes: ClaimCausePayload[]) => {
+    setDamageCauses(causes);
+  };
+
   useEffect(() => {
     if (!!isOpen) {
-      setDamageCause(mapDamageCauses(claim?.damageCause || []));
+      setDamageCauses(MapToDamageCausePayload(claim?.damageCause || []));
       dispatch(
         fetchCrops({
           status: "planted",
@@ -155,38 +137,11 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
               {/* DAMAGE CAUSE */}
 
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                <FormLabel component="legend">Cause of Damage</FormLabel>
-                <FormGroup>
-                  {damageCause.map((cause) => {
-                    return (
-                      <Fragment key={cause.damageTypeId.toString()}>
-                        <FormControlLabel
-                          key={cause.damageTypeId.toString()}
-                          control={
-                            <Checkbox
-                              checked={cause.isSelected}
-                              name="antoine"
-                            />
-                          }
-                          label={cause.damageType}
-                        />
-                        <TextField
-                          type="number"
-                          value={cause.damagedAreaSize}
-                          variant="outlined"
-                          InputProps={{
-                            disabled: !cause.isSelected,
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                sqm.
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      </Fragment>
-                    );
-                  })}
-                </FormGroup>
+                <ClaimDamageCause
+                  isOpen={isOpen}
+                  causes={damageCauses}
+                  onChange={onChangeDamageCauses}
+                />
               </Grid>
             </Grid>
 
