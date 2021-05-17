@@ -9,6 +9,7 @@ interface FarmerState {
   claims: Claim[];
   crops: Crop[];
   isLoading: boolean;
+  isSaving: boolean;
   error: any;
   lookups: Dictionary<LookupItem>;
 }
@@ -19,6 +20,7 @@ const initialState: FarmerState = {
   crops: [],
   error: null,
   isLoading: false,
+  isSaving: false,
   lookups: {},
 };
 
@@ -27,14 +29,25 @@ export const farmerSlice = createSlice({
   name: "farms",
   initialState,
   reducers: {
-    error: (state, action: PayloadAction<any>) => {
+    error: (state: FarmerState, action: PayloadAction<any>) => {
       state.isLoading = false;
+      state.isSaving = false;
       state.error = action.payload;
     },
 
-    load: (state) => {
+    load: (state: FarmerState) => {
       state.isLoading = true;
       state.error = null;
+    },
+    save: (state: FarmerState) => {
+      state.isSaving = true;
+      state.error = null;
+    },
+    uploadPhotoSuccess: (state: FarmerState) => {
+      state.isLoading = false;
+    },
+    saveClaimSuccess: (state: FarmerState) => {
+      state.isSaving = false;
     },
     loadFarmsSuccess: (state: FarmerState, action: PayloadAction<Farm[]>) => {
       state.isLoading = false;

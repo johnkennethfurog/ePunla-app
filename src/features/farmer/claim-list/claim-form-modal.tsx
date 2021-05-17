@@ -16,12 +16,17 @@ import { selectIsLoading } from "../../../app/commonSlice";
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
 import { LookupItem } from "../../../models/lookup-item";
-import { fetchCrops } from "../farmerActions";
-import { selectCrops } from "../farmerSelectors";
+import { fetchCrops, saveClaim, uploadPhoto } from "../farmerActions";
+import { selectCrops, selectIsSaving } from "../farmerSelectors";
 import { Claim } from "../farmer-models/claim";
 import ClaimDamageCause from "./claim-damage-cause";
-import { ClaimCausePayload } from "../farmer-models/claim-save-payload";
+import {
+  ClaimCausePayload,
+  ClaimSavePayload,
+} from "../farmer-models/claim-save-payload";
 import { MapToDamageCausePayload } from "../farmer-utils/damabe-cause-mapper";
+import ImageUploader from "../../../components/image-uploader/image-uploader";
+import { ImageUploadResponse } from "../../../models/image-upload-response";
 
 type ConfirmationModalProps = {
   createNew: boolean;
@@ -57,28 +62,21 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
   const { createNew, isOpen, onClose, claim } = props;
   const style = useStyles();
   const dispatch = useDispatch();
+  const [image] = useState<string>(claim?.photoUrl);
+  const [imageToUpload, setImageToUpload] = useState<File>();
   const [farmCropId, bindFarmCropId] = useInput(claim?.farmCropId || "");
+  const [description, bindDescription] = useInput(claim?.description || "");
   const [damagedArea, bindDamagedArea] = useInput(claim?.damagedArea || "Full");
-  const [damageCauses, setDamageCauses] = useState<ClaimCausePayload[]>(
-    () => []
-  );
+  const [claimCauses, setClaimCauses] = useState<ClaimCausePayload[]>(() => []);
 
-  const isLoading = useSelector(selectIsLoading);
+  const isSaving = useSelector(selectIsSaving);
 
   const crops = useSelector(selectCrops);
   const [cropsLookup, setCropsLookup] = useState<LookupItem[]>(() => []);
 
-  const onSave = () => {
-    onClose();
-  };
-
-  const onChangeDamageCauses = (causes: ClaimCausePayload[]) => {
-    setDamageCauses(causes);
-  };
-
   useEffect(() => {
     if (!!isOpen) {
-      setDamageCauses(MapToDamageCausePayload(claim?.damageCause || []));
+      setClaimCauses(MapToDamageCausePayload(claim?.damageCause || []));
       dispatch(
         fetchCrops({
           status: "planted",
@@ -100,6 +98,41 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
     }
   }, [crops, isOpen]);
 
+  useEffect(() => {
+    if (!isSaving) {
+    }
+  }, [isSaving]);
+
+  const onSave = () => {
+    if (!imageToUpload) {
+      save();
+      return;
+    }
+
+    dispatch(
+      uploadPhoto(imageToUpload, (img) => {
+        save(img);
+      })
+    );
+  };
+
+  const save = (image?: ImageUploadResponse) => {
+    const payload: ClaimSavePayload = {
+      claimId: claim?.claimId,
+      farmCropId: farmCropId as number,
+      damagedArea,
+      description,
+      photoUrl: image?.url,
+      photoId: image?.publicId,
+      claimCauses,
+    };
+    dispatch(saveClaim(payload, onClose));
+  };
+
+  const onChangeDamageCauses = (causes: ClaimCausePayload[]) => {
+    setClaimCauses(causes);
+  };
+
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
@@ -107,7 +140,7 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
       </DialogTitle>
       <DialogContent>
         <form className={style.form}>
-          <Grid container spacing={2}>
+          <Grid alignItems="flex-start" container spacing={2}>
             {/* LEFT AREA */}
             <Grid container spacing={2} item sm={12} md={6} lg={6} xl={6}>
               {/* DAMAGED AREA */}
@@ -139,14 +172,23 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <ClaimDamageCause
                   isOpen={isOpen}
-                  causes={damageCauses}
+                  causes={claimCauses}
                   onChange={onChangeDamageCauses}
                 />
               </Grid>
             </Grid>
 
             {/* RIGHT AREA */}
-            <Grid container spacing={2} item sm={12} md={6} lg={6} xl={6}>
+            <Grid
+              alignItems="flex-start"
+              container
+              spacing={2}
+              item
+              sm={12}
+              md={6}
+              lg={6}
+              xl={6}
+            >
               {/* DESCRIPTION */}
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <TextField
@@ -157,15 +199,15 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
                   rows={8}
                   style={{ flexGrow: 1 }}
                   variant="outlined"
-                  defaultValue="Default Value"
+                  {...bindDescription}
                 />
               </Grid>
 
               {/* IMAGE */}
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                <img
-                  className={style.image}
-                  src={"https://i.stack.imgur.com/y9DpT.jpg"}
+                <ImageUploader
+                  image={image}
+                  onSelectImage={(img) => setImageToUpload(img)}
                 />
               </Grid>
             </Grid>

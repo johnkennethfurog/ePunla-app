@@ -9,3 +9,4 @@ export const selectCrops = (state: RootState) => state.farmer.crops;
 
 export const selectError = (state: RootState) => state.farmer.error;
 export const selectIsLoading = (state: RootState) => state.farmer.isLoading;
+export const selectIsSaving = (state: RootState) => state.farmer.isSaving;
