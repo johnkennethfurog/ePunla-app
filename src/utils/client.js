@@ -1,11 +1,14 @@
 import axios from "axios";
 
 const API_VERSION = "/api";
-const BASE_URL_QUERY = "https://e-punla-query.azurewebsites.net";
-const BASE_URL_COMMAND = "https://e-punla-command.azurewebsites.net";
+// const BASE_URL_QUERY = "https://e-punla-query.azurewebsites.net";
+// const BASE_URL_COMMAND = "https://e-punla-command.azurewebsites.net";
+
+const BASE_URL_QUERY = "http://localhost:5001";
+const BASE_URL_COMMAND = "http://localhost:5002";
 
 const test_token =
-  "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwibmJmIjoxNjIxMDg3MTQ0LCJleHAiOjE2MjE2OTE5NDQsImlhdCI6MTYyMTA4NzE0NH0.-Ng50wAdpQhqQyK0hMgBzEQRkfpSSeQckJuHW3hOeQc_7A2MHg-6PZzwbenFWyR810AoVmObmqt_r7hH24EDVw";
+  "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwibmJmIjoxNjIxNjg1MzIwLCJleHAiOjE2MjIyOTAxMjAsImlhdCI6MTYyMTY4NTMyMH0.n8sAkVE_cYEgepNH-7klfUb4oZ2JHfQ_XGikr-l28DOFw0Q7BDXBXZy_eDJ2rxwa-qcZZO871LPU9W_EPZeRYQ";
 
 const getQueryUrl = (url) => {
   return `${BASE_URL_QUERY}${API_VERSION}${url}`;
@@ -46,7 +49,7 @@ const getAxiosClient = async (
     (error) => {
       // Do centralize error handling here
       //store.dispatch(showErrorDialog(error));
-      throw error;
+      throw error.response.data;
     }
   );
 

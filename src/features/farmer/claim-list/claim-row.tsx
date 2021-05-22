@@ -17,6 +17,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { Claim } from "../farmer-models/claim";
 import { StatusClaim } from "../farmer-models/status-claim.enum";
 import moment from "moment";
+import { selectClaim } from "../farmerSlice";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,10 +36,14 @@ type ClaimRowProps = {
 };
 
 const ClaimRow = (props: ClaimRowProps) => {
-  const style = useStyles();
   const { claim, onExpand, isOpen, onDelete } = props;
 
-  const onClickView = () => {};
+  const style = useStyles();
+  const dispatch = useDispatch();
+
+  const onClickView = () => {
+    dispatch(selectClaim(claim));
+  };
 
   return (
     <TableRow key={claim.claimId}>
@@ -64,12 +70,20 @@ const ClaimRow = (props: ClaimRowProps) => {
         }
       </TableCell>
       <TableCell className={style.cell}>
-        <IconButton onClick={onClickView} aria-label="edit">
-          <EditIcon />
-        </IconButton>
-        <IconButton onClick={() => onDelete(claim.claimId)} aria-label="delete">
-          <DeleteIcon />
-        </IconButton>
+        {claim.status === "Pending" && (
+          <>
+            <IconButton onClick={onClickView} aria-label="edit">
+              <EditIcon />
+            </IconButton>
+
+            <IconButton
+              onClick={() => onDelete(claim.claimId)}
+              aria-label="delete"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </>
+        )}
       </TableCell>
     </TableRow>
   );

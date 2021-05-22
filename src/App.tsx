@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import clsx from "clsx";
 import Drawer from "@material-ui/core/Drawer";
@@ -22,10 +22,12 @@ import drawerItems from "./utils/drawer-items";
 import FarmList from "./features/farmer/farm-list/farm-list";
 import ClaimList from "./features/farmer/claim-list/claim-list";
 import CropList from "./features/farmer/crops-list/crops-list";
+import MessagePrompt from "./components/message-prompt/message-prompt";
 
 function App() {
   const classes = DrawerStyle();
-  const [open, setOpen] = React.useState(false);
+
+  const [open, setOpen] = React.useState(true);
   const history = useHistory();
 
   const handleDrawerOpen = () => {
@@ -111,6 +113,7 @@ function App() {
             <CropList />
           </Route>
         </Switch>
+        <MessagePrompt />
       </main>
     </div>
   );

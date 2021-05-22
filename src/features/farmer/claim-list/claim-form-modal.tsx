@@ -12,11 +12,17 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectIsLoading } from "../../../app/commonSlice";
+import { selectClaim } from "../farmerSlice";
+
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
 import { LookupItem } from "../../../models/lookup-item";
-import { fetchCrops, saveClaim, uploadPhoto } from "../farmerActions";
+import {
+  addValidationError,
+  fetchCrops,
+  saveClaim,
+  uploadPhoto,
+} from "../farmerActions";
 import { selectCrops, selectIsSaving } from "../farmerSelectors";
 import { Claim } from "../farmer-models/claim";
 import ClaimDamageCause from "./claim-damage-cause";
@@ -27,9 +33,10 @@ import {
 import { MapToDamageCausePayload } from "../farmer-utils/damabe-cause-mapper";
 import ImageUploader from "../../../components/image-uploader/image-uploader";
 import { ImageUploadResponse } from "../../../models/image-upload-response";
+import ErrorAlert from "../../../components/error-alert/error-alert";
+import ButtonLoading from "../../../components/button-loading/button-loading";
 
 type ConfirmationModalProps = {
-  createNew: boolean;
   claim?: Claim;
   isOpen: boolean;
   onClose: () => void;
@@ -59,29 +66,42 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const ClaimFormModal = (props: ConfirmationModalProps) => {
-  const { createNew, isOpen, onClose, claim } = props;
+  const { isOpen, onClose, claim } = props;
+
+  const [isNew, setIsNew] = useState(true);
+
   const style = useStyles();
   const dispatch = useDispatch();
-  const [image] = useState<string>(claim?.photoUrl);
+
+  const [farmCropId, bindFarmCropId, setFarmCropId] = useInput("");
+  const [description, bindDescription, setDescription] = useInput("");
+  const [damagedArea, bindDamagedArea, setDamagedArea] = useInput("");
+
+  const [image, setImage] = useState<string>(claim?.photoUrl);
   const [imageToUpload, setImageToUpload] = useState<File>();
-  const [farmCropId, bindFarmCropId] = useInput(claim?.farmCropId || "");
-  const [description, bindDescription] = useInput(claim?.description || "");
-  const [damagedArea, bindDamagedArea] = useInput(claim?.damagedArea || "Full");
   const [claimCauses, setClaimCauses] = useState<ClaimCausePayload[]>(() => []);
+  const [cropsLookup, setCropsLookup] = useState<LookupItem[]>(() => []);
 
   const isSaving = useSelector(selectIsSaving);
-
   const crops = useSelector(selectCrops);
-  const [cropsLookup, setCropsLookup] = useState<LookupItem[]>(() => []);
 
   useEffect(() => {
     if (!!isOpen) {
       setClaimCauses(MapToDamageCausePayload(claim?.damageCause || []));
+      setFarmCropId(claim?.farmCropId.toString() || "");
+      setDescription(claim?.description || "");
+      setDamagedArea(claim?.damagedArea || "Full");
+      setImage(claim?.photoUrl);
+
       dispatch(
         fetchCrops({
           status: "planted",
         })
       );
+
+      setIsNew(!claim);
+    } else {
+      dispatch(selectClaim(null));
     }
   }, [isOpen]);
 
@@ -94,6 +114,13 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
         } as LookupItem;
       });
 
+      if (!!claim) {
+        lookup.push({
+          value: claim.crop,
+          id: claim.farmCropId,
+        });
+      }
+
       setCropsLookup(lookup);
     }
   }, [crops, isOpen]);
@@ -104,6 +131,16 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
   }, [isSaving]);
 
   const onSave = () => {
+    if (claimCauses.length === 0) {
+      dispatch(addValidationError("Kindly select atleast 1 Cause of Damage."));
+      return;
+    }
+
+    if (!farmCropId) {
+      dispatch(addValidationError("Kindly select a crop."));
+      return;
+    }
+
     if (!imageToUpload) {
       save();
       return;
@@ -119,13 +156,14 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
   const save = (image?: ImageUploadResponse) => {
     const payload: ClaimSavePayload = {
       claimId: claim?.claimId,
-      farmCropId: farmCropId as number,
+      farmCropId: +farmCropId,
       damagedArea,
       description,
-      photoUrl: image?.url,
-      photoId: image?.publicId,
+      photoUrl: image?.url || claim?.photoUrl,
+      photoId: image?.publicId || claim?.photoId,
       claimCauses,
     };
+
     dispatch(saveClaim(payload, onClose));
   };
 
@@ -133,11 +171,15 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
     setClaimCauses(causes);
   };
 
+  const closeClaimModal = () => {
+    if (!isSaving) {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>
-        {!!createNew ? "Create New Claim" : "UpdateClaim"}
-      </DialogTitle>
+    <Dialog open={isOpen} onClose={closeClaimModal} fullWidth maxWidth="md">
+      <DialogTitle>{!!isNew ? "Create New Claim" : "Update Claim"}</DialogTitle>
       <DialogContent>
         <form className={style.form}>
           <Grid alignItems="flex-start" container spacing={2}>
@@ -215,13 +257,13 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
         </form>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button disabled={isSaving} onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={onSave} color="primary" autoFocus>
-          Save
-        </Button>
+        <ButtonLoading onClick={onSave} autoFocus text="Save" />
       </DialogActions>
+
+      <ErrorAlert />
     </Dialog>
   );
 };

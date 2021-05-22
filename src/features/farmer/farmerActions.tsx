@@ -11,6 +11,8 @@ import { Farm } from "./farmer-models/farm";
 import { SearchCrop } from "./farmer-models/search-crop";
 import { ImageUploadResponse } from "../../models/image-upload-response";
 import { ClaimSavePayload } from "./farmer-models/claim-save-payload";
+import { showError, showSuccess } from "../../app/messagePromptSlice";
+import { ErrorMessage } from "../../models/error-message";
 
 const FARMER_MODULE = "/farmer";
 const PHOTO_MODULE = "/photo";
@@ -38,6 +40,7 @@ export const fetchFarms = (): AppThunk => (dispatch) => {
     })
     .catch((err: any) => {
       dispatch(error(err));
+      dispatch(showError("Unable to get Farms"));
     });
 };
 
@@ -53,6 +56,7 @@ export const fetchClaims =
       })
       .catch((err: any) => {
         dispatch(error(err));
+        dispatch(showError("Unable to get Claims"));
       });
   };
 
@@ -65,9 +69,11 @@ export const deleteClaim =
       .delete(FARMER_MODULE + "/claims/" + claimId)
       .then(() => {
         dispatch(deleteClaimSuccess(claimId));
+        dispatch(showSuccess("Claims Deleted!"));
       })
       .catch((err: any) => {
         dispatch(error(err));
+        dispatch(showError("Unable to upload delete Claim"));
       });
   };
 
@@ -83,13 +89,14 @@ export const fetchCrops =
       })
       .catch((err: any) => {
         dispatch(error(err));
+        dispatch(showError("Unable to get Crops"));
       });
   };
 
 export const uploadPhoto =
   (file: File, callBack: (img: ImageUploadResponse) => void): AppThunk =>
   (dispatch) => {
-    dispatch(load());
+    dispatch(save());
 
     const data = new FormData();
     data.append("file", file);
@@ -102,6 +109,7 @@ export const uploadPhoto =
       })
       .catch((err: any) => {
         dispatch(error(err));
+        dispatch(showError("Unable to upload Photo"));
       });
   };
 
@@ -114,8 +122,19 @@ export const saveClaim =
       .post(FARMER_MODULE + "/claims/save", claim, {})
       .then((response: AxiosResponse<ImageUploadResponse>) => {
         dispatch(saveClaimSuccess());
+        dispatch(showSuccess("Claims saved successfully!"));
+        onSaveSuccess();
       })
       .catch((err: any) => {
         dispatch(error(err));
+        dispatch(showError("Unable to save claim"));
       });
+  };
+
+export const addValidationError =
+  (errorMessage: string): AppThunk =>
+  (dispatch) => {
+    const err: ErrorMessage = { message: errorMessage };
+
+    dispatch(error([err]));
   };

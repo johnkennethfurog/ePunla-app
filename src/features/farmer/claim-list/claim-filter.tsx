@@ -6,11 +6,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
 import { fetchClaims } from "../farmerActions";
 import { StatusClaimList } from "../farmer-models/status-claim.enum";
+import { selectReloadTable } from "../farmerSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,14 +23,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const ClaimFilter = () => {
+  const dispatch = useDispatch();
+  const style = useStyles();
+
+  const reloadTable = useSelector(selectReloadTable);
+
   const [status, bindStatus] = useInput("");
 
   useEffect(() => {
     dispatch(fetchClaims(!!status ? status : null));
   }, [status]);
 
-  const dispatch = useDispatch();
-  const style = useStyles();
+  useEffect(() => {
+    if (!!reloadTable) {
+      dispatch(fetchClaims(!!status ? status : null));
+    }
+  }, [reloadTable]);
 
   return (
     <form className={style.searchForm}>

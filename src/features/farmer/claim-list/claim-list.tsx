@@ -6,12 +6,13 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles, Theme, createStyles, Button } from "@material-ui/core";
 import ClaimRow from "./claim-row";
 import { deleteClaim } from "../farmerActions";
-import { selectClaims } from "../farmerSelectors";
+import { selectClaims, selectSelectedClaim } from "../farmerSelectors";
 import ClaimRowHeader from "./claim-row-header";
 import ClaimRowDetail from "./claim-row-detail";
 import ConfirmationModal from "../../../components/modals/confirmation-modal";
 import ClaimFilter from "./claim-filter";
 import ClaimFormModal from "./claim-form-modal";
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,10 +20,21 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: 10,
     },
     table: {},
+    newButtonDiv: {
+      display: "flex",
+      justifyContent: "flex-end",
+      marginBottom: 10,
+    },
   })
 );
 
 const ClaimList = () => {
+  const dispatch = useDispatch();
+  const style = useStyles();
+
+  const selectedClaim = useSelector(selectSelectedClaim);
+  const claims = useSelector(selectClaims);
+
   const [expandedClaimId, setExpandedClaimId] = useState<number>(null);
   const [claimIdToDelete, setClaimIdToDelete] = useState<number>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(() => false);
@@ -30,15 +42,15 @@ const ClaimList = () => {
     () => false
   );
 
-  const claims = useSelector(selectClaims);
-  const dispatch = useDispatch();
-  const style = useStyles();
+  useEffect(() => {
+    return () => {};
+  }, []);
 
   useEffect(() => {
-    return () => {
-      console.log("unmounting");
-    };
-  }, []);
+    if (!!selectedClaim) {
+      setShowClaimFormModal(true);
+    }
+  }, [selectedClaim]);
 
   const onDelete = (claimId: number) => {
     setClaimIdToDelete(claimId);
@@ -64,7 +76,15 @@ const ClaimList = () => {
 
   return (
     <>
-      <Button onClick={openClaimFormModal}>Create New</Button>
+      <div className={style.newButtonDiv}>
+        <Button
+          color="primary"
+          onClick={openClaimFormModal}
+          startIcon={<AddIcon />}
+        >
+          Create New
+        </Button>
+      </div>
       <Paper className={style.container}>
         <ClaimFilter />
         <Table className={style.table} size="small" aria-label="farm table">
@@ -111,7 +131,7 @@ const ClaimList = () => {
         <ClaimFormModal
           onClose={closeFormModal}
           isOpen={showClaimFormModal}
-          createNew={true}
+          claim={selectedClaim}
         />
       </Paper>
     </>
