@@ -1,4 +1,4 @@
-export interface Crop {
+export interface FarmCrop {
   farmCropId: number;
   crop: string;
   cropId: number;

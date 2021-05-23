@@ -1,5 +1,6 @@
 import { createSlice, Dictionary, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
+import { ActionTodo } from "../models/action-to-do";
 import { LookupItem } from "../models/lookup-item";
 import { LookupItemResponse } from "../models/lookup-item-response";
 import { LookupType } from "../models/lookup-type.enum";
@@ -12,6 +13,7 @@ interface CommonState {
   error: any;
   isLoading: boolean;
   cropsLookup: LookupItem[];
+  actionPerform: ActionTodo;
 }
 
 const initialState: CommonState = {
@@ -19,6 +21,7 @@ const initialState: CommonState = {
   error: null,
   isLoading: false,
   cropsLookup: [],
+  actionPerform: null,
 };
 
 // REDUCERS
@@ -53,6 +56,12 @@ const commonSlice = createSlice({
       state.isLoading = false;
     },
     noAction: () => {},
+    onDoAction: (state: CommonState, action: PayloadAction<ActionTodo>) => {
+      state.actionPerform = action.payload;
+    },
+    onDoneAction: (state: CommonState) => {
+      state.actionPerform = null;
+    },
   },
 });
 
@@ -60,11 +69,15 @@ const {
   loadCropLookupSuccess,
   loadLookupSuccess,
   onError,
-  onLoadLookup,
+  onDoAction,
+  onDoneAction,
   onClearCropLookup,
 } = commonSlice.actions;
 
 export const clearCropLookup = onClearCropLookup;
+
+export const doAction = onDoAction;
+export const doneAction = onDoneAction;
 
 //ASYNC ACTIONS
 export const fetchCropsLookups =
@@ -122,5 +135,8 @@ export const selectLookup = (lookupType: LookupType) => (state: RootState) =>
   state.common.lookups[lookupType];
 
 export const selectCropsLookup = (state: RootState) => state.common.cropsLookup;
+
+export const selectActionToPerform = (state: RootState) =>
+  state.common.actionPerform;
 
 export default commonSlice.reducer;

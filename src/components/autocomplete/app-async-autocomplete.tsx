@@ -16,11 +16,15 @@ type AsyncAutoCompleteProps = {
   loadLookups: (keyword: string) => void;
   clearLookups: () => void;
   lookupSelector: (state: RootState) => LookupItem[];
+  initialValue?: LookupItem;
+  required?: boolean;
 };
 
 const AppAsyncAutoComplete = (props: AsyncAutoCompleteProps) => {
   const styles = useStyles();
-  const [inputValue, setInputValue] = useState(() => "");
+  const [inputValue, setInputValue] = useState(
+    () => props.initialValue?.value || ""
+  );
   const [itemSelected, setItemSelected] = useState(() => false);
 
   const isLoading = useSelector(selectIsLoading);
@@ -66,14 +70,20 @@ const AppAsyncAutoComplete = (props: AsyncAutoCompleteProps) => {
         setInputValue(newInputValue);
       }}
       fullWidth
+      defaultValue={props.initialValue}
       className={styles.formControl}
       loading={isLoading}
       loadingText="Loading ..."
       options={lookups}
-      getOptionLabel={(option) => option.value}
+      getOptionLabel={(option) => option?.value || ""}
       onChange={onChangeLookup}
       renderInput={(params) => (
-        <TextField {...params} label={props.label} variant="outlined" />
+        <TextField
+          required={props.required}
+          {...params}
+          label={props.label}
+          variant="outlined"
+        />
       )}
     />
   );

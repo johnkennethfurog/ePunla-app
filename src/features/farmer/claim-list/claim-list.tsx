@@ -87,7 +87,7 @@ const ClaimList = () => {
       </div>
       <Paper className={style.container}>
         <ClaimFilter />
-        <Table className={style.table} size="small" aria-label="farm table">
+        <Table className={style.table} aria-label="farm table">
           <ClaimRowHeader />
           <TableBody>
             {claims.map((claim) => {

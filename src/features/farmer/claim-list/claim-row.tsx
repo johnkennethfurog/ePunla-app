@@ -70,7 +70,7 @@ const ClaimRow = (props: ClaimRowProps) => {
         }
       </TableCell>
       <TableCell className={style.cell}>
-        {claim.status === "Pending" && (
+        {claim.status === StatusClaim.Pending && (
           <>
             <IconButton onClick={onClickView} aria-label="edit">
               <EditIcon />

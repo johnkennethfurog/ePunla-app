@@ -22,6 +22,7 @@ interface DatePickerProps {
   label: string;
   minDate?: moment.Moment;
   maxDate?: moment.Moment;
+  required?: boolean;
 }
 
 const AppDatePicker = (props: DatePickerProps) => {
@@ -31,6 +32,7 @@ const AppDatePicker = (props: DatePickerProps) => {
       disableToolbar
       inputVariant={props.inputVariant}
       variant="inline"
+      required={props.required}
       minDate={props.minDate?.toDate()}
       maxDate={props.maxDate?.toDate()}
       format="MM-DD-YYYY"

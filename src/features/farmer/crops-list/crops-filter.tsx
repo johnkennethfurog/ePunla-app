@@ -8,7 +8,7 @@ import {
 
 import moment from "moment";
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   clearCropLookup,
   fetchCropsLookups,
@@ -23,6 +23,7 @@ import useLookup from "../../../hooks/useLookup";
 import { LookupItem } from "../../../models/lookup-item";
 import { fetchCrops } from "../farmerActions";
 import { StatusCropList } from "../farmer-models/status-crop.enum";
+import { selectReloadTable } from "../farmerSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,12 +50,17 @@ const crops: LookupItem[] = [
 ];
 
 const CropsFilter = () => {
-  const [status, bindStatus] = useInput("");
-  const [crop, bindCrop] = useLookup(null);
-  const [plantedFrom, bindPlantedFrom] = useDateInput(moment().startOf("year"));
-  const [plantedTo, bindPlantedTo] = useDateInput(moment());
   const dispatch = useDispatch();
   const style = useStyles();
+
+  const [status, bindStatus] = useInput("");
+
+  const [crop, bindCrop] = useLookup(null);
+
+  const reloadTable = useSelector(selectReloadTable);
+
+  const [plantedFrom, bindPlantedFrom] = useDateInput(moment().startOf("year"));
+  const [plantedTo, bindPlantedTo] = useDateInput(moment());
 
   useEffect(() => {
     return () => {
@@ -63,6 +69,16 @@ const CropsFilter = () => {
   }, []);
 
   useEffect(() => {
+    if (!!reloadTable) {
+      loadCrops();
+    }
+  }, [reloadTable]);
+
+  useEffect(() => {
+    loadCrops();
+  }, [status, crop, plantedFrom, plantedTo]);
+
+  const loadCrops = () => {
     dispatch(
       fetchCrops({
         status: !!status ? status : null,
@@ -71,7 +87,7 @@ const CropsFilter = () => {
         cropId: crop as number,
       })
     );
-  }, [status, crop, plantedFrom, plantedTo]);
+  };
 
   return (
     <form className={style.searchForm}>

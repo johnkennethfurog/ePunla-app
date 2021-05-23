@@ -36,7 +36,7 @@ import { ImageUploadResponse } from "../../../models/image-upload-response";
 import ErrorAlert from "../../../components/error-alert/error-alert";
 import ButtonLoading from "../../../components/button-loading/button-loading";
 
-type ConfirmationModalProps = {
+type ClaimFormModalProps = {
   claim?: Claim;
   isOpen: boolean;
   onClose: () => void;
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ClaimFormModal = (props: ConfirmationModalProps) => {
+const ClaimFormModal = (props: ClaimFormModalProps) => {
   const { isOpen, onClose, claim } = props;
 
   const [isNew, setIsNew] = useState(true);
@@ -124,11 +124,6 @@ const ClaimFormModal = (props: ConfirmationModalProps) => {
       setCropsLookup(lookup);
     }
   }, [crops, isOpen]);
-
-  useEffect(() => {
-    if (!isSaving) {
-    }
-  }, [isSaving]);
 
   const onSave = () => {
     if (claimCauses.length === 0) {

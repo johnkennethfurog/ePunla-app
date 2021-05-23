@@ -2,11 +2,9 @@ import {
   createStyles,
   FormControl,
   InputLabel,
-  InputLabelProps,
   makeStyles,
   MenuItem,
   Select,
-  TextField,
   Theme,
 } from "@material-ui/core";
 import React from "react";
@@ -28,6 +26,7 @@ type DropDownProps = {
   fullWidth?: boolean;
   emptyValue?: string | number;
   hideEmptyOption?: boolean;
+  required?: boolean;
 };
 
 export const SimpleDropDown = (props: DropDownProps) => {
@@ -37,6 +36,7 @@ export const SimpleDropDown = (props: DropDownProps) => {
 
   return (
     <FormControl
+      required={props.required}
       className={style.formControl}
       variant="outlined"
       id={id}

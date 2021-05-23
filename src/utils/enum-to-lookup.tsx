@@ -3,11 +3,11 @@ import { LookupItem } from "../models/lookup-item";
 
 const enumToLookup = (Enum: any): LookupItem[] => {
   const lookups: LookupItem[] = [];
-  for (const [propertyKey, propertyValue] of Object.entries(DamageCause)) {
+  for (const [propertyKey, propertyValue] of Object.entries(Enum)) {
     if (!Number.isNaN(Number(propertyKey))) {
       continue;
     }
-    lookups.push({ id: propertyValue, value: propertyKey });
+    lookups.push({ id: propertyValue as string, value: propertyKey });
   }
 
   return lookups;

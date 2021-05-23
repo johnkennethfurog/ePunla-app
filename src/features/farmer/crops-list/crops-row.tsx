@@ -5,28 +5,29 @@ import {
   createStyles,
   makeStyles,
   Theme,
-  TableHead,
 } from "@material-ui/core";
 import React from "react";
 import Status from "../../../components/status/status";
 
+import PanToolIcon from "@material-ui/icons/PanTool";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import { Crop } from "../farmer-models/crop";
+import { FarmCrop } from "../farmer-models/farm-crop";
 import { StatusCrop } from "../farmer-models/status-crop.enum";
 
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { ActionType } from "../../../models/action-type.enum";
+import { doAction } from "../../../app/commonSlice";
+import { ActionModule } from "../../../models/action-module.enum";
 
 type CropRowProps = {
-  crop: Crop;
+  crop: FarmCrop;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    rowHeader: {
-      backgroundColor: "rgb(244, 246, 248)",
-    },
     cell: {
       borderBottom: 0,
     },
@@ -34,10 +35,32 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const CropRow = (props: CropRowProps) => {
-  const style = useStyles();
   const { crop } = props;
 
-  const onClickView = () => {};
+  const style = useStyles();
+  const dispatch = useDispatch();
+
+  const onHarvest = () => {
+    dispatchAction(ActionType.HarvestCrops);
+  };
+
+  const onEdit = () => {
+    dispatchAction(ActionType.UpdateCrops);
+  };
+
+  const onDelete = () => {
+    dispatchAction(ActionType.DeleteCrops);
+  };
+
+  const dispatchAction = (action: ActionType) => {
+    dispatch(
+      doAction({
+        data: crop,
+        actionType: action,
+        actionModule: ActionModule.FarmerCropsModule,
+      })
+    );
+  };
 
   return (
     <TableRow key={crop.farmCropId}>
@@ -59,32 +82,21 @@ const CropRow = (props: CropRowProps) => {
         }
       </TableCell>
       <TableCell className={style.cell}>
-        <IconButton onClick={onClickView} aria-label="edit">
-          <EditIcon />
-        </IconButton>
-        <IconButton onClick={onClickView} aria-label="delete">
-          <DeleteIcon />
-        </IconButton>
+        {crop.status === StatusCrop.Planted && (
+          <>
+            <IconButton onClick={onEdit} aria-label="edit">
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={onDelete} aria-label="delete">
+              <DeleteIcon />
+            </IconButton>
+            <IconButton onClick={onHarvest} aria-label="harvest">
+              <PanToolIcon />
+            </IconButton>
+          </>
+        )}
       </TableCell>
     </TableRow>
-  );
-};
-
-export const CropRowHeader = () => {
-  const style = useStyles();
-
-  return (
-    <TableHead>
-      <TableRow className={style.rowHeader}>
-        <TableCell>Date Planted</TableCell>
-        <TableCell>Crop</TableCell>
-        <TableCell>Category</TableCell>
-        <TableCell>Farm</TableCell>
-        <TableCell>Area Size</TableCell>
-        <TableCell>Crop Status</TableCell>
-        <TableCell></TableCell>
-      </TableRow>
-    </TableHead>
   );
 };
 
