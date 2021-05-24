@@ -1,10 +1,9 @@
+import React from "react";
 import { DrawerItem } from "../models/drawer-item";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import DescriptionIcon from "@material-ui/icons/Description";
-import VideocamIcon from "@material-ui/icons/Videocam";
-import React from "react";
-
+import LandscapeIcon from "@material-ui/icons/Landscape";
+import EcoIcon from "@material-ui/icons/Eco";
 const drawerItems: DrawerItem[] = [
   {
     iconComponent: <DashboardIcon />,
@@ -12,17 +11,17 @@ const drawerItems: DrawerItem[] = [
     route: "/dashboard",
   },
   {
-    iconComponent: <AssignmentIcon />,
+    iconComponent: <LandscapeIcon />,
     title: "Farms",
     route: "/farms",
   },
   {
-    iconComponent: <DescriptionIcon />,
+    iconComponent: <EcoIcon />,
     title: "Crops",
     route: "/crops",
   },
   {
-    iconComponent: <VideocamIcon />,
+    iconComponent: <AssignmentIcon />,
     title: "Claims",
     route: "/claims",
   },
