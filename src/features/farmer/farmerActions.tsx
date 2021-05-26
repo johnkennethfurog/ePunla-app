@@ -15,6 +15,7 @@ import { showError, showSuccess } from "../../app/messagePromptSlice";
 import { ErrorMessage } from "../../models/error-message";
 import moment from "moment";
 import { FarmCropSavePayload } from "./farmer-models/farm-crop-save-payload";
+import { FarmSavePayload } from "./farmer-models/farm-save-payload";
 
 const FARMER_MODULE = "/farmer";
 const PHOTO_MODULE = "/photo";
@@ -32,6 +33,7 @@ const {
   saveClaimSuccess,
   harvestCropSuccess,
   saveFarmCropSuccess,
+  saveFarmSuccess,
 
   deleteClaimSuccess,
   deleteCropSuccess,
@@ -157,6 +159,23 @@ export const saveFarmCrop =
       .then((response: AxiosResponse) => {
         dispatch(saveFarmCropSuccess());
         dispatch(showSuccess("Farm crop saved successfully!"));
+        onSaveSuccess();
+      })
+      .catch((err: any) => {
+        dispatch(error(err));
+      });
+  };
+
+export const saveFarm =
+  (farm: FarmSavePayload, onSaveSuccess: () => void): AppThunk =>
+  (dispatch) => {
+    dispatch(save());
+
+    clientCommandApiRequest()
+      .post(FARMER_MODULE + "/farms/save", farm)
+      .then((response: AxiosResponse) => {
+        dispatch(saveFarmSuccess());
+        dispatch(showSuccess("Farm saved successfully!"));
         onSaveSuccess();
       })
       .catch((err: any) => {

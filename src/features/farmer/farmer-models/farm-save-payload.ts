@@ -1,0 +1,11 @@
+import { Coordinates } from "../../../models/coordinates";
+
+export interface FarmSavePayload {
+  farmId?: number;
+  name: string;
+  size: number;
+  streetAddress: string;
+  barangayId: number;
+  barangayAreaId: number;
+  coordinates: Coordinates;
+}

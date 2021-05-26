@@ -1,6 +1,7 @@
 import { createSlice, Dictionary, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { ActionTodo } from "../models/action-to-do";
+import { Barangay } from "../models/barangay";
 import { LookupItem } from "../models/lookup-item";
 import { LookupItemResponse } from "../models/lookup-item-response";
 import { LookupType } from "../models/lookup-type.enum";
@@ -14,6 +15,7 @@ interface CommonState {
   isLoading: boolean;
   cropsLookup: LookupItem[];
   actionPerform: ActionTodo;
+  barangays: Barangay[];
 }
 
 const initialState: CommonState = {
@@ -22,6 +24,7 @@ const initialState: CommonState = {
   isLoading: false,
   cropsLookup: [],
   actionPerform: null,
+  barangays: [],
 };
 
 // REDUCERS
@@ -55,6 +58,13 @@ const commonSlice = createSlice({
       state.cropsLookup = action.payload;
       state.isLoading = false;
     },
+    loadBarangaySuccess: (
+      state: CommonState,
+      action: PayloadAction<Barangay[]>
+    ) => {
+      state.barangays = action.payload;
+      state.isLoading = false;
+    },
     noAction: () => {},
     onDoAction: (state: CommonState, action: PayloadAction<ActionTodo>) => {
       state.actionPerform = action.payload;
@@ -72,6 +82,7 @@ const {
   onDoAction,
   onDoneAction,
   onClearCropLookup,
+  loadBarangaySuccess,
 } = commonSlice.actions;
 
 export const clearCropLookup = onClearCropLookup;
@@ -128,6 +139,17 @@ export const fetchLookups =
       });
   };
 
+export const fetchBarangays = (): AppThunk => (dispatch, getState) => {
+  clientQueryApiRequest()
+    .get("/masterlist/barangays")
+    .then((response: AxiosResponse<Barangay[]>) => {
+      dispatch(loadBarangaySuccess(response.data));
+    })
+    .catch((err: any) => {
+      dispatch(onError(err));
+    });
+};
+
 // SELECTOR
 export const selectIsLoading = (state: RootState) => state.common.isLoading;
 
@@ -135,6 +157,8 @@ export const selectLookup = (lookupType: LookupType) => (state: RootState) =>
   state.common.lookups[lookupType];
 
 export const selectCropsLookup = (state: RootState) => state.common.cropsLookup;
+
+export const selectBarangay = (state: RootState) => state.common.barangays;
 
 export const selectActionToPerform = (state: RootState) =>
   state.common.actionPerform;

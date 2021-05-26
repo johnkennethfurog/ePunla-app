@@ -79,6 +79,10 @@ export const farmerSlice = createSlice({
       state.isSaving = false;
       state.reloadTable = true;
     },
+    saveFarmSuccess: (state: FarmerState) => {
+      state.isSaving = false;
+      state.reloadTable = true;
+    },
 
     // FETCHING
     loadFarmsSuccess: (state: FarmerState, action: PayloadAction<Farm[]>) => {
