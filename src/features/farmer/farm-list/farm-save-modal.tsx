@@ -31,6 +31,11 @@ type FarmSaveModalProps = {
   onClose: () => void;
 };
 
+const tanauan_coords: Coordinates = {
+  lng: 121.09959078753087,
+  lat: 14.098898609585907,
+};
+
 const FarmSaveModal = (props: FarmSaveModalProps) => {
   const { isOpen, onClose, farm } = props;
 
@@ -41,10 +46,11 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
   const [isNew, setIsNew] = useState(true);
 
   const [farmName, bindFarmName, setFarmName] = useInput("");
-  const [barangayId, bindBarangayId, setBarangayId] = useInput("");
-  const [areaId, bindAreaId, setAreaId] = useInput("");
   const [address, bindAddress, setAddress] = useInput("");
-  const [areaSize, bindAreaSize, seAreaSize] = useInput("");
+  const [areaSize, bindAreaSize, setAreaSize] = useInput("");
+  const [areaId, bindAreaId, setAreaId] = useInput<string | number>("");
+  const [barangayId, bindBarangayId, setBarangayId] =
+    useInput<string | number>("");
 
   const [coordinates, setCoordinates] = useState<Coordinates>(null);
   const [barangayLookup, setBarangayLookup] = useState<LookupItem[]>(() => []);
@@ -53,42 +59,63 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
   useEffect(() => {
     if (!isOpen) {
       setAreaLookup([]);
+      setBarangayLookup([]);
+
       return;
     }
+
+    setIsNew(!!farm);
+
+    setFarmName(farm?.name || "");
+    setAddress(farm?.streetAddress || "");
+    setAreaSize(farm?.areaSize.toString() || "");
+    setBarangayId(farm?.barangayId || "");
+    setAreaId(farm?.barangayAreaId || "");
+    setCoordinates(
+      !!farm?.lng && !!farm.lat ? { lng: farm.lng, lat: farm.lat } : null
+    );
 
     dispatch(fetchBarangays());
   }, [isOpen]);
 
   useEffect(() => {
-    if (!!isOpen) {
-      const lookup = barangays.map((x) => {
-        return {
-          value: x.barangay,
-          id: x.barangayId,
-        } as LookupItem;
-      });
-      setBarangayLookup(lookup);
+    if (!isOpen) {
+      return;
     }
+
+    const lookup = barangays.map((x) => {
+      return {
+        value: x.barangay,
+        id: x.barangayId,
+      } as LookupItem;
+    });
+    setBarangayLookup(lookup);
   }, [barangays, isOpen]);
 
   useEffect(() => {
-    if (!!barangayId) {
-      const brgy = barangays.find((x) => x.barangayId === +barangayId);
-      const lookup = brgy.areas.map((x) => {
-        return {
-          value: x.area,
-          id: x.barangayAreaId,
-        } as LookupItem;
-      });
-
-      setAreaLookup(lookup);
-      setAreaId("");
+    if (!isOpen || !barangayId || barangays.length < 1) {
+      return;
     }
-  }, [barangayId, isOpen]);
+
+    const brgy = barangays.find((x) => x.barangayId === barangayId);
+    const lookup = brgy.areas.map((x) => {
+      return {
+        value: x.area,
+        id: x.barangayAreaId,
+      } as LookupItem;
+    });
+    console.log("y");
+    setAreaLookup(lookup);
+  }, [barangayId, isOpen, barangays]);
 
   const closeFarmSaveModal = () => {};
 
   const onSave = () => {
+    if (!farmName) {
+      dispatch(addValidationError("Farm Name is required"));
+      return;
+    }
+
     if (!barangayId) {
       dispatch(addValidationError("Barangay is required"));
       return;
@@ -99,13 +126,13 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
       return;
     }
 
-    if (!farmName) {
-      dispatch(addValidationError("Farm Name is required"));
+    if (!address) {
+      dispatch(addValidationError("Address is required"));
       return;
     }
 
-    if (!address) {
-      dispatch(addValidationError("Address is required"));
+    if (!areaSize) {
+      dispatch(addValidationError("Farm size is required"));
       return;
     }
 
@@ -123,7 +150,8 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
           size: +areaSize,
           farmId: farm?.farmId,
           streetAddress: address,
-          coordinates,
+          lng: coordinates.lng,
+          lat: coordinates.lat,
         },
         onClose
       )
@@ -207,17 +235,15 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
               bootstrapURLKeys={{
                 key: "AIzaSyAxZUt26k60tbv0UIiDIyEsQOfEUmFGhCc",
               }}
-              defaultCenter={{
-                lng: 121.09959078753087,
-                lat: 14.098898609585907,
-              }}
-              defaultZoom={12.5}
+              defaultCenter={coordinates || tanauan_coords}
+              defaultZoom={!!coordinates ? 15 : 12.5}
             >
               {!!coordinates && <LocationMarker {...coordinates} />}
             </GoogleMapReact>
           </Grid>
         </Grid>
       </DialogContent>
+
       <DialogActions>
         <Button disabled={isSaving} onClick={onClose} color="primary">
           Cancel

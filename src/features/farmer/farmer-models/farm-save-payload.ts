@@ -7,5 +7,6 @@ export interface FarmSavePayload {
   streetAddress: string;
   barangayId: number;
   barangayAreaId: number;
-  coordinates: Coordinates;
+  lng: number;
+  lat: number;
 }

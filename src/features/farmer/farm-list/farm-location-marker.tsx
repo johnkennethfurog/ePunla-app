@@ -1,14 +1,29 @@
 import React from "react";
+import Lottie from "lottie-react";
+import animationData from "../../../lottie/farm_location.json";
 
 type LocationMarkerProps = {
   lng: number;
   lat: number;
 };
-const LocationMarker = (props: LocationMarkerProps) => {
-  console.log("props", props);
 
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+};
+
+const LocationMarker = (props: LocationMarkerProps) => {
   return (
-    <div style={{ height: 25, width: 25, backgroundColor: "blue" }}>a</div>
+    <Lottie
+      style={{
+        height: 100,
+        width: 100,
+        marginLeft: -50,
+        marginTop: -50,
+      }}
+      {...defaultOptions}
+    />
   );
 };
 

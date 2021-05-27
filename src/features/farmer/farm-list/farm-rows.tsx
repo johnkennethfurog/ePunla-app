@@ -11,7 +11,14 @@ import React from "react";
 import Status from "../../../components/status/status";
 import { Farm } from "../farmer-models/farm";
 import { StatusFarm } from "../farmer-models/status-farm.enum";
+
 import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+
+import { ActionType } from "../../../models/action-type.enum";
+import { useDispatch } from "react-redux";
+import { doAction } from "../../../app/commonSlice";
+import { ActionModule } from "../../../models/action-module.enum";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,10 +36,28 @@ type FarmRowProps = {
 };
 
 const FarmRow = (props: FarmRowProps) => {
-  const style = useStyles();
   const { farm } = props;
 
-  const onClickView = () => {};
+  const style = useStyles();
+  const dispatch = useDispatch();
+
+  const onEdit = () => {
+    dispatchAction(ActionType.UpdateFarm);
+  };
+
+  const onDelete = () => {
+    dispatchAction(ActionType.DeleteFarm);
+  };
+
+  const dispatchAction = (action: ActionType) => {
+    dispatch(
+      doAction({
+        data: farm,
+        actionType: action,
+        actionModule: ActionModule.FarmerFarmsModule,
+      })
+    );
+  };
 
   return (
     <TableRow key={farm.farmId}>
@@ -52,9 +77,11 @@ const FarmRow = (props: FarmRowProps) => {
         }
       </TableCell>
       <TableCell className={style.cell}>
-        <IconButton onClick={onClickView} aria-label="edit">
-          <EditIcon />
-        </IconButton>
+        {farm.status === StatusFarm.Pending && (
+          <IconButton onClick={onEdit} aria-label="edit">
+            <EditIcon />
+          </IconButton>
+        )}
       </TableCell>
     </TableRow>
   );

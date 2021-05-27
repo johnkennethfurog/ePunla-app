@@ -51,6 +51,11 @@ export const farmerSlice = createSlice({
       state.reloadTable = false;
       state.error = null;
     },
+    reset: (state: FarmerState) => {
+      state.error = null;
+      state.isLoading = false;
+      state.isSaving = false;
+    },
 
     // SAVING
     uploadPhotoSuccess: (state: FarmerState) => {

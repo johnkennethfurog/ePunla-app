@@ -24,6 +24,7 @@ const {
   error,
   load,
   save,
+  reset,
 
   loadFarmsSuccess,
   loadClaimsSuccess,
@@ -227,3 +228,5 @@ export const deleteCrop =
         dispatch(showError(errorMessage));
       });
   };
+
+export const resetFarmerAction = reset;
