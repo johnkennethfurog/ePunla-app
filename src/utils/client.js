@@ -7,9 +7,6 @@ const API_VERSION = "/api";
 const BASE_URL_QUERY = "http://localhost:5001";
 const BASE_URL_COMMAND = "http://localhost:5002";
 
-const test_token =
-  "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwibmJmIjoxNjIyNjA5MzcyLCJleHAiOjE2MjMyMTQxNzIsImlhdCI6MTYyMjYwOTM3Mn0.t_gpkpkxfRTsnIb6L0L8DkcgZknnnrNaBKq-CATF9OwUtL-GKR6P9zFz3DlrDyA107Gmdd3YNJs4fqCoGlqOPQ";
-
 const getQueryUrl = (url) => {
   return `${BASE_URL_QUERY}${API_VERSION}${url}`;
 };
@@ -18,18 +15,8 @@ const getCommandUrl = (url) => {
   return `${BASE_URL_COMMAND}${API_VERSION}${url}`;
 };
 
-const getAxiosClient = async (
-  token,
-  forQuery,
-  method,
-  url,
-  options,
-  data,
-  params
-) => {
-  if (!token) {
-    token = test_token;
-  }
+const getAxiosClient = async (forQuery, method, url, options, data, params) => {
+  let token = localStorage.getItem("token");
 
   const axiosSetup = {
     headers: {
@@ -61,23 +48,23 @@ const getAxiosClient = async (
   return axiosInstance[method](requestUrl, options);
 };
 
-const clientApiRequest = (token, forQuery) => {
+const clientApiRequest = (forQuery) => {
   return {
     get: (url, options = {}, params = {}) =>
-      getAxiosClient(token, forQuery, "get", url, options, null, params),
+      getAxiosClient(forQuery, "get", url, options, null, params),
     post: (url, data, options = {}) =>
-      getAxiosClient(token, forQuery, "post", url, options, data),
+      getAxiosClient(forQuery, "post", url, options, data),
     put: (url, data, options = {}) =>
-      getAxiosClient(token, forQuery, "put", url, options, data),
+      getAxiosClient(forQuery, "put", url, options, data),
     delete: (url, data, options = {}) =>
-      getAxiosClient(token, forQuery, "delete", url, options, data),
+      getAxiosClient(forQuery, "delete", url, options, data),
   };
 };
 
-export const clientCommandApiRequest = (token = null) => {
-  return clientApiRequest(token, false);
+export const clientCommandApiRequest = () => {
+  return clientApiRequest(false);
 };
 
-export const clientQueryApiRequest = (token = null) => {
-  return clientApiRequest(token, true);
+export const clientQueryApiRequest = () => {
+  return clientApiRequest(true);
 };

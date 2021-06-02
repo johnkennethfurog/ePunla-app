@@ -2,12 +2,13 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import farmerReducer from "../features/farmer/farmerSlice";
 import commonReducer from "./+states/commonSlice";
 import messagePromptSliceReducer from "./+states/messagePromptSlice";
-
+import userReducer from "./+states/userSlice";
 export const store = configureStore({
   reducer: {
     farmer: farmerReducer,
     common: commonReducer,
     messageprompt: messagePromptSliceReducer,
+    user: userReducer,
   },
 });
 

@@ -13,10 +13,12 @@ import {
   selectIsSaving,
 } from "../../features/farmer/farmerSelectors";
 
+import { selectUserLoading } from "../../app/+states/userSlice";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     wrapper: {
-      margin: theme.spacing(1),
+      // margin: theme.spacing(1),
       position: "relative",
     },
     buttonProgress: {
@@ -39,6 +41,7 @@ type ButtonLoadingProps = {
 const ButtonLoading = (props: ButtonLoadingProps) => {
   const { onClick, text, autoFocus } = props;
   const loading = useSelector(selectIsLoading);
+  const isUserLoading = useSelector(selectUserLoading);
   const isSaving = useSelector(selectIsSaving);
   const style = useStyles();
 
@@ -53,7 +56,7 @@ const ButtonLoading = (props: ButtonLoadingProps) => {
       >
         {text}
       </Button>
-      {(loading || isSaving) && (
+      {(loading || isSaving || isUserLoading) && (
         <CircularProgress size={24} className={style.buttonProgress} />
       )}
     </div>
