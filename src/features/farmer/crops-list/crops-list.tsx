@@ -11,7 +11,10 @@ import CropRowHeader from "./crops-row-header";
 import { FarmCrop } from "../farmer-models/farm-crop";
 import ConfirmationModal from "../../../components/modals/confirmation-modal";
 import { deleteCrop } from "../farmerActions";
-import { doneAction, selectActionToPerform } from "../../../app/commonSlice";
+import {
+  doneAction,
+  selectActionToPerform,
+} from "../../../app/+states/commonSlice";
 import { ActionType } from "../../../models/action-type.enum";
 import CropHarvestModal from "./crops-harvest-modal";
 import { ActionModule } from "../../../models/action-module.enum";

@@ -1,13 +1,13 @@
 import { createSlice, Dictionary, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
-import { ActionTodo } from "../models/action-to-do";
-import { Barangay } from "../models/barangay";
-import { LookupItem } from "../models/lookup-item";
-import { LookupItemResponse } from "../models/lookup-item-response";
-import { LookupType } from "../models/lookup-type.enum";
-import { PagedRequest } from "../models/paged-request";
-import { clientQueryApiRequest } from "../utils/client";
-import { AppThunk, RootState } from "./store";
+import { ActionTodo } from "../../models/action-to-do";
+import { Barangay } from "../../models/barangay";
+import { LookupItem } from "../../models/lookup-item";
+import { LookupItemResponse } from "../../models/lookup-item-response";
+import { LookupType } from "../../models/lookup-type.enum";
+import { PagedRequest } from "../../models/paged-request";
+import { clientQueryApiRequest } from "../../utils/client";
+import { AppThunk, RootState } from "../store";
 
 interface CommonState {
   lookups: Dictionary<LookupItem[]>;

@@ -60,6 +60,7 @@ const style = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  avatar: {},
 }));
 
 export default style;

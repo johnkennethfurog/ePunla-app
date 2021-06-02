@@ -8,7 +8,7 @@ import {
   selectShowError,
   selectShowModal,
   selectShowSuccess,
-} from "../../app/messagePromptSlice";
+} from "../../app/+states/messagePromptSlice";
 
 type MessagePromptProps = {};
 

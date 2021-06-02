@@ -8,7 +8,7 @@ const BASE_URL_QUERY = "http://localhost:5001";
 const BASE_URL_COMMAND = "http://localhost:5002";
 
 const test_token =
-  "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwibmJmIjoxNjIxNjg1MzIwLCJleHAiOjE2MjIyOTAxMjAsImlhdCI6MTYyMTY4NTMyMH0.n8sAkVE_cYEgepNH-7klfUb4oZ2JHfQ_XGikr-l28DOFw0Q7BDXBXZy_eDJ2rxwa-qcZZO871LPU9W_EPZeRYQ";
+  "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwibmJmIjoxNjIyNjA5MzcyLCJleHAiOjE2MjMyMTQxNzIsImlhdCI6MTYyMjYwOTM3Mn0.t_gpkpkxfRTsnIb6L0L8DkcgZknnnrNaBKq-CATF9OwUtL-GKR6P9zFz3DlrDyA107Gmdd3YNJs4fqCoGlqOPQ";
 
 const getQueryUrl = (url) => {
   return `${BASE_URL_QUERY}${API_VERSION}${url}`;

@@ -19,7 +19,7 @@ import { StatusCrop } from "../farmer-models/status-crop.enum";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { ActionType } from "../../../models/action-type.enum";
-import { doAction } from "../../../app/commonSlice";
+import { doAction } from "../../../app/+states/commonSlice";
 import { ActionModule } from "../../../models/action-module.enum";
 
 type CropRowProps = {

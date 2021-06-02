@@ -8,7 +8,10 @@ import FarmRow, { FarmRowHeader } from "./farm-rows";
 import { fetchFarms, resetFarmerAction } from "../farmerActions";
 import { selectFarms, selectReloadTable } from "../farmerSelectors";
 import FarmSaveModal from "./farm-save-modal";
-import { doneAction, selectActionToPerform } from "../../../app/commonSlice";
+import {
+  doneAction,
+  selectActionToPerform,
+} from "../../../app/+states/commonSlice";
 import { ActionModule } from "../../../models/action-module.enum";
 import { ActionType } from "../../../models/action-type.enum";
 import { Farm } from "../farmer-models/farm";

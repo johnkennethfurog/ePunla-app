@@ -17,7 +17,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 
 import { ActionType } from "../../../models/action-type.enum";
 import { useDispatch } from "react-redux";
-import { doAction } from "../../../app/commonSlice";
+import { doAction } from "../../../app/+states/commonSlice";
 import { ActionModule } from "../../../models/action-module.enum";
 
 const useStyles = makeStyles((theme: Theme) =>

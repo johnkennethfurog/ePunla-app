@@ -19,7 +19,10 @@ import useInput from "../../../hooks/useInput";
 import { LookupItem } from "../../../models/lookup-item";
 import { Farm } from "../farmer-models/farm";
 import { selectIsSaving } from "../farmerSelectors";
-import { fetchBarangays, selectBarangay } from "../../../app/commonSlice";
+import {
+  fetchBarangays,
+  selectBarangay,
+} from "../../../app/+states/commonSlice";
 import { Coordinates } from "../../../models/coordinates";
 import LocationMarker from "./farm-location-marker";
 import { addValidationError, saveFarm } from "../farmerActions";

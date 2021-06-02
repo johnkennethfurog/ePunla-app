@@ -2,7 +2,7 @@ import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { selectIsLoading } from "../../app/commonSlice";
+import { selectIsLoading } from "../../app/+states/commonSlice";
 import { RootState } from "../../app/store";
 import { LookupItem } from "../../models/lookup-item";
 import useStyles from "./autocomplete.style";
