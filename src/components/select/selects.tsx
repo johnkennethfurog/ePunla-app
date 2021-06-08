@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { LookupItem } from "../../models/lookup-item";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,23 +28,40 @@ type DropDownProps = {
   emptyValue?: string | number;
   hideEmptyOption?: boolean;
   required?: boolean;
+  className?: string;
+  readOnly?: boolean;
 };
 
 export const SimpleDropDown = (props: DropDownProps) => {
   const style = useStyles();
-  const { hideEmptyOption, label, fullWidth, id, bind, options, emptyValue } =
-    props;
+  const {
+    hideEmptyOption,
+    label,
+    fullWidth,
+    id,
+    bind,
+    options,
+    emptyValue,
+    className,
+    readOnly,
+  } = props;
 
   return (
     <FormControl
       required={props.required}
-      className={style.formControl}
+      className={clsx(style.formControl, className)}
       variant="outlined"
       id={id}
       fullWidth={fullWidth}
     >
       <InputLabel id={id}>{label}</InputLabel>
-      <Select label={label} {...bind} labelId={id} id={id + "_"}>
+      <Select
+        readOnly={readOnly}
+        label={label}
+        {...bind}
+        labelId={id}
+        id={id + "_"}
+      >
         {!hideEmptyOption && (
           <MenuItem value={emptyValue ? emptyValue : ""}>
             <em>None</em>

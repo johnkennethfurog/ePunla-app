@@ -24,12 +24,16 @@ import TanauanLogo from "../assets/tanauan_logo.png";
 import ButtonLoading from "../components/button-loading/button-loading";
 import useInput from "../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
-import { signIn, validateMobileNumber } from "./+states/userSlice";
+import { signIn, signUp, validateMobileNumber } from "./+states/userSlice";
 import { useHistory } from "react-router";
 import { showError } from "./+states/messagePromptSlice";
 import { SimpleDropDown } from "../components/select/selects";
 import { LookupItem } from "../models/lookup-item";
 import ErrorAlert from "../components/error-alert/error-alert";
+import { fetchBarangays, selectBarangay } from "./+states/commonSlice";
+import ImageUploader from "../components/image-uploader/image-uploader";
+import { uploadPhoto } from "../features/farmer/farmerActions";
+import { ImageUploadResponse } from "../models/image-upload-response";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -43,7 +47,10 @@ const useStyle = makeStyles((theme) => ({
     padding: theme.spacing(2),
     maxWidth: 500,
   },
-  textField: {},
+  textField: {
+    marginTop: theme.spacing(0.5),
+    backgroundColor: "white",
+  },
   actionDiv: {
     display: "flex",
     justifyContent: "space-between",
@@ -68,6 +75,14 @@ const useStyle = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+
+  profile: {
+    borderRadius: 20,
+    backgroundColor: "red",
+    height: 100,
+    padding: 20,
+    color: "red",
+  },
 }));
 
 const getSteps = () => {
@@ -81,14 +96,24 @@ const SignupPage = () => {
   const history = useHistory();
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
   const steps = getSteps();
+  const barangays = useSelector(selectBarangay);
 
   const [activeStep, setActiveStep] = useState(0);
   const [showPass, setShowPass] = useState<boolean>(false);
+  const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
   const [barangayLookup, setBarangayLookup] = useState<LookupItem[]>(() => []);
   const [areaLookup, setAreaLookup] = useState<LookupItem[]>(() => []);
+  const [imageToUpload, setImageToUpload] = useState<File>();
 
   const [mobileNumber, bindMobileNumber] = useInput("");
   const [password, bindPassword] = useInput("");
+  const [confirmPassword, bindConfirmPassword] = useInput("");
+
+  const [firstName, bindFirstName] = useInput("");
+  const [lastName, bindLastName] = useInput("");
+  const [middleName, bindMiddleName] = useInput("");
+
+  const [streetAddress, bindAddress] = useInput("");
   const [areaId, bindAreaId, setAreaId] = useInput<string | number>("");
   const [barangayId, bindBarangayId, setBarangayId] =
     useInput<string | number>("");
@@ -97,7 +122,37 @@ const SignupPage = () => {
     // use full screen to adjust screen design
   }, [fullScreen]);
 
-  const LoginCredential = () => {
+  useEffect(() => {
+    dispatch(fetchBarangays());
+  }, []);
+
+  useEffect(() => {
+    const lookup = barangays.map((x) => {
+      return {
+        value: x.barangay,
+        id: x.barangayId,
+      } as LookupItem;
+    });
+    setBarangayLookup(lookup);
+  }, [barangays]);
+
+  useEffect(() => {
+    if (!barangayId || barangays.length < 1) {
+      return;
+    }
+
+    const brgy = barangays.find((x) => x.barangayId === barangayId);
+    const lookup = brgy.areas.map((x) => {
+      return {
+        value: x.area,
+        id: x.barangayAreaId,
+      } as LookupItem;
+    });
+
+    setAreaLookup(lookup);
+  }, [barangayId, barangays]);
+
+  const LoginCredential = (readOnly?: boolean) => {
     return (
       <>
         {/* MOBILE NUMBER */}
@@ -111,6 +166,7 @@ const SignupPage = () => {
             <InputLabel htmlFor="mobile-number">Mobile Number</InputLabel>
             <OutlinedInput
               inputProps={{ maxLength: 10 }}
+              readOnly={readOnly}
               label="Mobile Number"
               id="mobile-number"
               {...bindMobileNumber}
@@ -120,69 +176,85 @@ const SignupPage = () => {
             />
           </FormControl>
         </Grid>
-        {/* PASSWORD */}
-        <Grid item xs={12}>
-          <FormControl
-            className={clsx(style.textField)}
-            fullWidth
-            required
-            variant="outlined"
-          >
-            <InputLabel htmlFor="password">Password</InputLabel>
-            <OutlinedInput
-              id="password"
-              label="Password"
-              {...bindPassword}
-              type={showPass ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    edge="end"
-                  >
-                    {showPass ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-        </Grid>
-        {/* CONFIRM PASSWORD */}
-        <Grid item xs={12}>
-          <FormControl
-            className={clsx(style.textField)}
-            fullWidth
-            required
-            variant="outlined"
-          >
-            <InputLabel htmlFor="password">Confirm Password</InputLabel>
-            <OutlinedInput
-              id="confirm-password"
-              label="Confirm Password"
-              {...bindPassword}
-              type={showPass ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    edge="end"
-                  >
-                    {showPass ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-        </Grid>
+        {!readOnly && (
+          <>
+            {/* PASSWORD */}
+            <Grid item xs={12}>
+              <FormControl
+                className={clsx(style.textField)}
+                fullWidth
+                required
+                variant="outlined"
+              >
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <OutlinedInput
+                  id="password"
+                  label="Password"
+                  {...bindPassword}
+                  readOnly={readOnly}
+                  type={showPass ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPass ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Grid>
+            {/* CONFIRM PASSWORD */}
+            <Grid item xs={12}>
+              <FormControl
+                className={clsx(style.textField)}
+                fullWidth
+                required
+                variant="outlined"
+              >
+                <InputLabel htmlFor="password">Confirm Password</InputLabel>
+                <OutlinedInput
+                  id="confirm-password"
+                  label="Confirm Password"
+                  {...bindConfirmPassword}
+                  readOnly={readOnly}
+                  type={showConfirmPass ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowConfirmPass(!showConfirmPass)}
+                        edge="end"
+                      >
+                        {showPass ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Grid>
+          </>
+        )}
       </>
     );
   };
 
-  const PersonalInformation = () => {
+  const PersonalInformation = (readOnly?: boolean) => {
     return (
       <>
+        {/* PROFILE PICTURE */}
+        <div
+          style={{
+            marginLeft: "auto",
+            marginRight: "auto",
+            marginBottom: 10,
+          }}
+        >
+          <ImageUploader onSelectImage={(x) => setImageToUpload(x)} />
+        </div>
         {/* FIRST NAME */}
         <Grid item xs={12}>
           <FormControl
@@ -195,7 +267,8 @@ const SignupPage = () => {
             <OutlinedInput
               label="First Name"
               id="first-name"
-              {...bindMobileNumber}
+              readOnly={readOnly}
+              {...bindFirstName}
             />
           </FormControl>
         </Grid>
@@ -212,7 +285,8 @@ const SignupPage = () => {
             <OutlinedInput
               label="First Name"
               id="last-name"
-              {...bindMobileNumber}
+              readOnly={readOnly}
+              {...bindLastName}
             />
           </FormControl>
         </Grid>
@@ -228,7 +302,8 @@ const SignupPage = () => {
             <OutlinedInput
               label="Middle Name"
               id="middle-name"
-              {...bindMobileNumber}
+              readOnly={readOnly}
+              {...bindMiddleName}
             />
           </FormControl>
         </Grid>
@@ -236,9 +311,37 @@ const SignupPage = () => {
     );
   };
 
-  const Address = () => {
+  const Address = (readOnly?: boolean) => {
     return (
       <>
+        {/* BARANGAY */}
+        <Grid item xs={12}>
+          <SimpleDropDown
+            label="Barangay"
+            required
+            fullWidth
+            readOnly={readOnly}
+            className={style.textField}
+            bind={bindBarangayId}
+            options={barangayLookup}
+            hideEmptyOption={true}
+          />
+        </Grid>
+
+        {/* BARANGAY AREA */}
+        <Grid item xs={12}>
+          <SimpleDropDown
+            className={style.textField}
+            label="Area"
+            required
+            readOnly={readOnly}
+            fullWidth
+            bind={bindAreaId}
+            options={areaLookup}
+            hideEmptyOption={true}
+          />
+        </Grid>
+
         {/* ADDRESS */}
         <Grid item xs={12}>
           <FormControl
@@ -249,54 +352,50 @@ const SignupPage = () => {
           >
             <InputLabel htmlFor="street-address">Street Address</InputLabel>
             <OutlinedInput
+              rows={2}
+              readOnly={readOnly}
+              multiline
               label="Street Address"
               id="street-address"
-              {...bindMobileNumber}
+              {...bindAddress}
             />
           </FormControl>
-        </Grid>
-
-        {/* BARANGAY */}
-        <Grid item xs={12}>
-          <SimpleDropDown
-            label="Barangay"
-            required
-            fullWidth
-            bind={bindBarangayId}
-            options={barangayLookup}
-            hideEmptyOption={true}
-          />
-        </Grid>
-
-        {/* BARANGAY AREA */}
-        <Grid item xs={12}>
-          <SimpleDropDown
-            label="Area"
-            required
-            fullWidth
-            bind={bindAreaId}
-            options={areaLookup}
-            hideEmptyOption={true}
-          />
         </Grid>
       </>
     );
   };
 
   const ReviewInformation = () => {
-    return <div>Last PArt</div>;
+    return (
+      <>
+        <Typography
+          style={{
+            textAlign: "center",
+            marginBottom: 20,
+            flex: 1,
+          }}
+          variant="h6"
+          color="primary"
+        >
+          Review your information
+        </Typography>
+        {PersonalInformation(true)}
+        {LoginCredential(true)}
+        {Address(true)}
+      </>
+    );
   };
 
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
-        return <LoginCredential />;
+        return LoginCredential();
       case 1:
-        return <PersonalInformation />;
+        return PersonalInformation();
       case 2:
-        return <Address />;
+        return Address();
       default:
-        return <ReviewInformation />;
+        return ReviewInformation();
     }
   };
 
@@ -305,12 +404,36 @@ const SignupPage = () => {
   };
 
   const onSignup = () => {
-    if (!mobileNumber || !password) {
-      dispatch(showError("Username and password is required"));
+    if (!imageToUpload) {
+      signup();
       return;
     }
 
-    dispatch(signIn(false, { mobileNumber, password }, onSigninSuccess));
+    dispatch(
+      uploadPhoto(imageToUpload, (img) => {
+        signup(img);
+      })
+    );
+  };
+
+  const signup = (img?: ImageUploadResponse) => {
+    dispatch(
+      signUp(
+        {
+          mobileNumber,
+          password,
+          firstName,
+          lastName,
+          middleName,
+          barangayId: +barangayId,
+          barangayAreaId: +areaId,
+          avatar: img?.url,
+          avatarId: img?.publicId,
+          streetAddress,
+        },
+        onSigninSuccess
+      )
+    );
   };
 
   const onSigninSuccess = () => {
@@ -323,15 +446,46 @@ const SignupPage = () => {
         handleNextForCredential();
         break;
       case 1:
+        handleNextForPersonalInfo();
         break;
-
+        break;
+      case 2:
+        handleNextForAddress();
+        break;
       default:
         break;
     }
   };
 
   const handleNextForCredential = () => {
+    if (!password || !confirmPassword || !mobileNumber) {
+      dispatch(showError("All fields are required."));
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      dispatch(showError("Password and Confirm Password don't match"));
+      return;
+    }
     dispatch(validateMobileNumber(mobileNumber, gotoNext));
+  };
+
+  const handleNextForPersonalInfo = () => {
+    if (!firstName || !lastName) {
+      dispatch(showError("Firstname and Lastname are required."));
+      return;
+    }
+
+    gotoNext();
+  };
+
+  const handleNextForAddress = () => {
+    if (!barangayId || !areaId || !streetAddress) {
+      dispatch(showError("All fields are required."));
+      return;
+    }
+
+    gotoNext();
   };
 
   const gotoNext = () => {

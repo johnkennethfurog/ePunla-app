@@ -2,11 +2,13 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core";
 import { CSSProperties } from "@material-ui/styles";
 import React, { useCallback, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import clsx from "clsx";
 
 type ImageUploaderProps = {
   image?: string;
   style?: CSSProperties;
   onSelectImage: (file: File) => void;
+  className?: string;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -75,6 +77,7 @@ const ImageUploader = (props: ImageUploaderProps) => {
       ...(isDragActive ? activeStyle : {}),
       ...(isDragAccept ? acceptStyle : {}),
       ...(isDragReject ? rejectStyle : {}),
+      ...props.style,
     }),
     [isDragActive, isDragReject, isDragAccept]
   );
@@ -82,7 +85,7 @@ const ImageUploader = (props: ImageUploaderProps) => {
   return (
     <div {...getRootProps({ style: divStyle })}>
       {!!preview && <img className={style.image} src={preview} />}
-      {!preview && <p>Drag 'n' drop your image, or click to select files</p>}
+      {!preview && <p>Drag 'n' drop your image, or click to select file</p>}
       <input {...getInputProps()}></input>
     </div>
   );
