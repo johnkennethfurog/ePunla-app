@@ -1,12 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 
 import SignupPage from "./app/signup-page";
 import SigninPage from "./app/signin-page";
-import HomePage from "./app/home-page";
+// import HomePage from "./app/home-page";
 import { makeStyles } from "@material-ui/core";
 import MessagePrompt from "./components/message-prompt/message-prompt";
 import ProtectedRoute from "./utils/guarded-route";
+const HomePage = React.lazy(() => import("./app/home-page"));
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -27,7 +28,9 @@ function App() {
         </Route>
 
         <ProtectedRoute path="/" authenticationPath="signin">
-          <HomePage />
+          <Suspense fallback={<div>Loading...</div>}>
+            <HomePage />
+          </Suspense>
         </ProtectedRoute>
       </Switch>
       <MessagePrompt />

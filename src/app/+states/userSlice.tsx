@@ -106,7 +106,7 @@ export const signIn =
         successCallback();
       })
       .catch((err: ErrorMessage[]) => {
-        const errorMessage = err[0].message || "Sign in failed";
+        const errorMessage = err[0]?.message || "Sign in failed";
         console.log("errorMessage", errorMessage);
 
         dispatch(showError(errorMessage));
@@ -130,7 +130,7 @@ export const signUp =
         successCallback();
       })
       .catch((err: ErrorMessage[]) => {
-        const errorMessage = err[0].message || "Sign up failed";
+        const errorMessage = err[0]?.message || "Sign up failed";
         console.log("errorMessage", errorMessage);
 
         dispatch(showError(errorMessage));
