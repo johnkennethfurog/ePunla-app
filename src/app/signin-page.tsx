@@ -90,6 +90,10 @@ const SigninPage = () => {
     history.replace("/farms");
   };
 
+  const onSignup = () => {
+    history.replace("signup");
+  };
+
   return (
     <div className={style.root}>
       <Paper>
@@ -158,7 +162,9 @@ const SigninPage = () => {
           </FormControl>
 
           <div className={style.actionDiv}>
-            <Button color="primary">Create Account</Button>
+            <Button onClick={onSignup} color="primary">
+              Create Account
+            </Button>
             <ButtonLoading text="Sign In" onClick={onSignin} />
           </div>
         </form>

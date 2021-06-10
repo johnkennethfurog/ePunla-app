@@ -31,7 +31,9 @@ import { SimpleDropDown } from "../components/select/selects";
 import { LookupItem } from "../models/lookup-item";
 import ErrorAlert from "../components/error-alert/error-alert";
 import { fetchBarangays, selectBarangay } from "./+states/commonSlice";
-import ImageUploader from "../components/image-uploader/image-uploader";
+import ImageUploader, {
+  ProfileUploader,
+} from "../components/image-uploader/image-uploader";
 import { uploadPhoto } from "../features/farmer/farmerActions";
 import { ImageUploadResponse } from "../models/image-upload-response";
 
@@ -75,14 +77,6 @@ const useStyle = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-
-  profile: {
-    borderRadius: 20,
-    backgroundColor: "red",
-    height: 100,
-    padding: 20,
-    color: "red",
-  },
 }));
 
 const getSteps = () => {
@@ -104,6 +98,7 @@ const SignupPage = () => {
   const [barangayLookup, setBarangayLookup] = useState<LookupItem[]>(() => []);
   const [areaLookup, setAreaLookup] = useState<LookupItem[]>(() => []);
   const [imageToUpload, setImageToUpload] = useState<File>();
+  const [imageToUploadPreview, setImageToUploadPreview] = useState<string>("");
 
   const [mobileNumber, bindMobileNumber] = useInput("");
   const [password, bindPassword] = useInput("");
@@ -114,9 +109,8 @@ const SignupPage = () => {
   const [middleName, bindMiddleName] = useInput("");
 
   const [streetAddress, bindAddress] = useInput("");
-  const [areaId, bindAreaId, setAreaId] = useInput<string | number>("");
-  const [barangayId, bindBarangayId, setBarangayId] =
-    useInput<string | number>("");
+  const [areaId, bindAreaId] = useInput<string | number>("");
+  const [barangayId, bindBarangayId] = useInput<string | number>("");
 
   useEffect(() => {
     // use full screen to adjust screen design
@@ -245,16 +239,22 @@ const SignupPage = () => {
   const PersonalInformation = (readOnly?: boolean) => {
     return (
       <>
-        {/* PROFILE PICTURE */}
-        <div
-          style={{
-            marginLeft: "auto",
-            marginRight: "auto",
-            marginBottom: 10,
-          }}
+        <Grid
+          style={{ display: "flex", flexDirection: "column" }}
+          alignItems="center"
+          justify="center"
+          item
+          xs={12}
         >
-          <ImageUploader onSelectImage={(x) => setImageToUpload(x)} />
-        </div>
+          {/* PROFILE PICTURE */}
+          <ProfileUploader
+            image={imageToUploadPreview}
+            onSelectImage={(x) => {
+              setImageToUpload(x);
+              setImageToUploadPreview(URL.createObjectURL(x));
+            }}
+          />
+        </Grid>
         {/* FIRST NAME */}
         <Grid item xs={12}>
           <FormControl
@@ -440,6 +440,10 @@ const SignupPage = () => {
     history.replace("/farms");
   };
 
+  const onSignin = () => {
+    history.replace("/signin");
+  };
+
   const handleNext = () => {
     switch (activeStep) {
       case 0:
@@ -569,7 +573,9 @@ const SignupPage = () => {
             }}
           >
             Already have an account?
-            <Button color="primary">Sign-In</Button>
+            <Button onClick={onSignin} color="primary">
+              Sign-In
+            </Button>
           </span>
         </form>
       </Paper>

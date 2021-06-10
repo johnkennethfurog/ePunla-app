@@ -20,18 +20,41 @@ import FarmList from "../features/farmer/farm-list/farm-list";
 import ClaimList from "../features/farmer/claim-list/claim-list";
 import CropList from "../features/farmer/crops-list/crops-list";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  logout,
+  selectIsPending,
+  selectUserAvatar,
+  selectUserFullname,
+} from "./+states/userSlice";
+import { Alert } from "@material-ui/lab";
 
 const HomePage = () => {
   const classes = DrawerStyle();
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const [open, setOpen] = React.useState(true);
-  const history = useHistory();
+
+  const avatar = useSelector(selectUserAvatar);
+  const fullName = useSelector(selectUserFullname);
+  const isPending = useSelector(selectIsPending);
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement>();
   const openMenu = Boolean(anchorEl);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleLogout = () => {
+    history.push("signin");
+    dispatch(logout());
+    setAnchorEl(null);
+  };
+
+  const handleProfile = () => {
+    setAnchorEl(null);
   };
 
   const handleMenuClose = () => {
@@ -82,11 +105,9 @@ const HomePage = () => {
           >
             <Avatar
               className={classes.avatar}
-              alt="Remy Sharp"
-              src="/broken-image.jpg"
-            >
-              JF
-            </Avatar>
+              alt={fullName}
+              src={avatar}
+            ></Avatar>
           </IconButton>
           <Menu
             id="menu-appbar"
@@ -103,8 +124,8 @@ const HomePage = () => {
             open={openMenu}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+            <MenuItem onClick={handleProfile}>Profile</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
@@ -153,6 +174,13 @@ const HomePage = () => {
       {/* ROUTER */}
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        {!!isPending && (
+          <Alert style={{ marginBottom: 10 }} severity="warning">
+            Your registration status is still <b>Pending</b> and still waiting
+            for our <b>administrator's Approval</b>
+          </Alert>
+        )}
+
         <Switch>
           <Route exact path="/farms">
             <FarmList />

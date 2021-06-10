@@ -107,7 +107,7 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
         id: x.barangayAreaId,
       } as LookupItem;
     });
-    console.log("y");
+
     setAreaLookup(lookup);
   }, [barangayId, isOpen, barangays]);
 

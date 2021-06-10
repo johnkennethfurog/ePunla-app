@@ -14,40 +14,54 @@ import { AxiosResponse } from "axios";
 import { showError } from "./messagePromptSlice";
 import { FarmerSignupPayload } from "../../features/farmer/farmer-models/farmer-signup-payload";
 
+const TOKEN = "token";
+
 interface UserState {
   loading: boolean;
   error: ErrorMessage[];
   user: Farmer;
+  isLoggedin: boolean;
+  isPending: false;
 }
 
 const initialState: UserState = {
   loading: false,
   error: [],
   user: null,
+  isPending: false,
+  isLoggedin: !!localStorage.getItem(TOKEN),
 };
 
 const AUTHENTICATION_MODULE = "/Authentication";
 const FARMER_MODULE = "/Farmer";
+
+const onUserAuthenticated = (
+  state: UserState,
+  action: PayloadAction<Farmer>
+) => {
+  state.loading = false;
+  state.user = action.payload;
+  state.isLoggedin = true;
+};
 
 // REDUCERS
 const UserSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    onSignInSuccess: (state: UserState, action: PayloadAction<Farmer>) => {
-      state.loading = false;
-      state.user = action.payload;
-    },
-    onSignUpSuccess: (state: UserState, action: PayloadAction<Farmer>) => {
-      state.loading = false;
-      state.user = action.payload;
-    },
+    onSignInSuccess: onUserAuthenticated,
+    onSignUpSuccess: onUserAuthenticated,
     onValidateMobileNumberSuccess: (state: UserState) => {
       state.loading = false;
     },
     onLoad: (state: UserState) => {
       state.error = [];
       state.loading = true;
+    },
+    onLogout: (state: UserState) => {
+      state.user = null;
+      state.loading = false;
+      state.isLoggedin = false;
     },
     onError: (state: UserState, action: PayloadAction<ErrorMessage[]>) => {
       state.error = action.payload;
@@ -57,8 +71,18 @@ const UserSlice = createSlice({
 });
 
 // ASYNC ACTIONS
-const { onSignInSuccess, onLoad, onError, onValidateMobileNumberSuccess } =
-  UserSlice.actions;
+const {
+  onSignInSuccess,
+  onLoad,
+  onError,
+  onValidateMobileNumberSuccess,
+  onLogout,
+} = UserSlice.actions;
+
+export const logout = (): AppThunk => (dispatch) => {
+  localStorage.removeItem(TOKEN);
+  dispatch(onLogout());
+};
 
 export const signIn =
   (
@@ -77,7 +101,7 @@ export const signIn =
       .post(url, payload)
       .then((response: AxiosResponse<{ token: string; user: Farmer }>) => {
         const { data } = response;
-        localStorage.setItem("token", data.token);
+        localStorage.setItem(TOKEN, data.token);
         dispatch(onSignInSuccess(data.user));
         successCallback();
       })
@@ -101,7 +125,7 @@ export const signUp =
       .post(url, payload)
       .then((response: AxiosResponse<{ token: string; user: Farmer }>) => {
         const { data } = response;
-        localStorage.setItem("token", data.token);
+        localStorage.setItem(TOKEN, data.token);
         dispatch(onSignInSuccess(data.user));
         successCallback();
       })
@@ -138,5 +162,13 @@ export const validateMobileNumber =
 // SELECTOR
 export const selectUserLoading = (state: RootState) => state.user.loading;
 export const selectUserError = (state: RootState) => state.user.error;
+export const selectIsAuthenticated = (state: RootState) =>
+  state.user.isLoggedin;
+
+export const selectUserAvatar = (state: RootState) => state.user.user?.avatar;
+export const selectUserFullname = (state: RootState) =>
+  `${state.user.user?.firstName} ${state.user.user?.lastName}`;
+export const selectIsPending = (state: RootState) =>
+  state.user?.user?.status === "Pending";
 
 export default UserSlice.reducer;

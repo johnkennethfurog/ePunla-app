@@ -13,6 +13,7 @@ import ConfirmationModal from "../../../components/modals/confirmation-modal";
 import ClaimFilter from "./claim-filter";
 import ClaimFormModal from "./claim-form-modal";
 import AddIcon from "@material-ui/icons/Add";
+import { selectIsPending } from "../../../app/+states/userSlice";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,6 +35,7 @@ const ClaimList = () => {
 
   const selectedClaim = useSelector(selectSelectedClaim);
   const claims = useSelector(selectClaims);
+  const isPending = useSelector(selectIsPending);
 
   const [expandedClaimId, setExpandedClaimId] = useState<number>(null);
   const [claimIdToDelete, setClaimIdToDelete] = useState<number>(null);
@@ -76,15 +78,18 @@ const ClaimList = () => {
 
   return (
     <>
-      <div className={style.newButtonDiv}>
-        <Button
-          color="primary"
-          onClick={openClaimFormModal}
-          startIcon={<AddIcon />}
-        >
-          Create New
-        </Button>
-      </div>
+      {!isPending && (
+        <div className={style.newButtonDiv}>
+          <Button
+            color="primary"
+            onClick={openClaimFormModal}
+            startIcon={<AddIcon />}
+          >
+            Create New
+          </Button>
+        </div>
+      )}
+
       <Paper className={style.container}>
         <ClaimFilter />
         <Table className={style.table} aria-label="farm table">

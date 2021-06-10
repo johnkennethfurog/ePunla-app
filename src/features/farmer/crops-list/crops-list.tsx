@@ -20,6 +20,7 @@ import CropHarvestModal from "./crops-harvest-modal";
 import { ActionModule } from "../../../models/action-module.enum";
 import AddIcon from "@material-ui/icons/Add";
 import CropsSaveModal from "./crops-save-modal";
+import { selectIsPending } from "../../../app/+states/userSlice";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,6 +47,7 @@ const CropList = () => {
 
   const crops = useSelector(selectCrops);
   const actionToPerform = useSelector(selectActionToPerform);
+  const isPending = useSelector(selectIsPending);
 
   useEffect(() => {
     if (!actionToPerform) return;
@@ -102,11 +104,14 @@ const CropList = () => {
 
   return (
     <>
-      <div className={style.newButtonDiv}>
-        <Button color="primary" onClick={enrollCrop} startIcon={<AddIcon />}>
-          Create New
-        </Button>
-      </div>
+      {!isPending && (
+        <div className={style.newButtonDiv}>
+          <Button color="primary" onClick={enrollCrop} startIcon={<AddIcon />}>
+            Create New
+          </Button>
+        </div>
+      )}
+
       <Paper className={style.container}>
         <CropsFilter />
         <Table className={style.table} aria-label="farm table">

@@ -6,6 +6,7 @@ import SigninPage from "./app/signin-page";
 import HomePage from "./app/home-page";
 import { makeStyles } from "@material-ui/core";
 import MessagePrompt from "./components/message-prompt/message-prompt";
+import ProtectedRoute from "./utils/guarded-route";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -24,9 +25,10 @@ function App() {
         <Route exact path="/signup">
           <SignupPage />
         </Route>
-        <Route path="/">
+
+        <ProtectedRoute path="/" authenticationPath="signin">
           <HomePage />
-        </Route>
+        </ProtectedRoute>
       </Switch>
       <MessagePrompt />
     </div>

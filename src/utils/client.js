@@ -4,8 +4,11 @@ const API_VERSION = "/api";
 // const BASE_URL_QUERY = "https://e-punla-query.azurewebsites.net";
 // const BASE_URL_COMMAND = "https://e-punla-command.azurewebsites.net";
 
-const BASE_URL_QUERY = "http://localhost:5001";
-const BASE_URL_COMMAND = "http://localhost:5002";
+const BASE_URL_QUERY = "https://epunla-query-api.herokuapp.com";
+const BASE_URL_COMMAND = "https://epunla-command-api.herokuapp.com";
+
+// const BASE_URL_QUERY = "https://localhost:5001";
+// const BASE_URL_COMMAND = "https://localhost:44227";
 
 const getQueryUrl = (url) => {
   return `${BASE_URL_QUERY}${API_VERSION}${url}`;
