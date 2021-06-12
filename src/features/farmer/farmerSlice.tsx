@@ -5,6 +5,7 @@ import { Claim } from "./farmer-models/claim";
 import { FarmCrop } from "./farmer-models/farm-crop";
 import { ErrorMessage } from "../../models/error-message";
 import { StatusCrop } from "./farmer-models/status-crop.enum";
+import { FarmerProfile } from "./farmer-models/farmer-profile";
 // import { StatusCrop } from "./farmer-models/status-crop.enum";
 
 interface FarmerState {
@@ -17,6 +18,7 @@ interface FarmerState {
   lookups: Dictionary<LookupItem>;
   selectedClaim: Claim;
   reloadTable: boolean;
+  profile: FarmerProfile;
 }
 
 const initialState: FarmerState = {
@@ -29,6 +31,7 @@ const initialState: FarmerState = {
   reloadTable: false,
   lookups: {},
   selectedClaim: null,
+  profile: null,
 };
 
 // REDUCERS
@@ -55,6 +58,10 @@ export const farmerSlice = createSlice({
       state.error = null;
       state.isLoading = false;
       state.isSaving = false;
+    },
+    onLogout: (state: FarmerState) => {
+      state.error = null;
+      state.profile = null;
     },
 
     // SAVING
@@ -90,6 +97,13 @@ export const farmerSlice = createSlice({
     },
 
     // FETCHING
+    onLoadFarmerProfileSuccess: (
+      state: FarmerState,
+      action: PayloadAction<FarmerProfile>
+    ) => {
+      state.isLoading = false;
+      state.profile = action.payload;
+    },
     loadFarmsSuccess: (state: FarmerState, action: PayloadAction<Farm[]>) => {
       state.isLoading = false;
       state.farms = action.payload;

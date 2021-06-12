@@ -6,14 +6,17 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles, Theme, createStyles, Button } from "@material-ui/core";
 import ClaimRow from "./claim-row";
 import { deleteClaim } from "../farmerActions";
-import { selectClaims, selectSelectedClaim } from "../farmerSelectors";
+import {
+  selectClaims,
+  selectIsPending,
+  selectSelectedClaim,
+} from "../farmerSelectors";
 import ClaimRowHeader from "./claim-row-header";
 import ClaimRowDetail from "./claim-row-detail";
 import ConfirmationModal from "../../../components/modals/confirmation-modal";
 import ClaimFilter from "./claim-filter";
 import ClaimFormModal from "./claim-form-modal";
 import AddIcon from "@material-ui/icons/Add";
-import { selectIsPending } from "../../../app/+states/userSlice";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

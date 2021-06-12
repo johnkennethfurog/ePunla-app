@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Farmer } from "../../features/farmer/farmer-models/farmer";
 import { ErrorMessage } from "../../models/error-message";
 import {
   FarmerSigninPayload,
@@ -19,7 +18,6 @@ const TOKEN = "token";
 interface UserState {
   loading: boolean;
   error: ErrorMessage[];
-  user: Farmer;
   isLoggedin: boolean;
   isPending: false;
 }
@@ -27,7 +25,6 @@ interface UserState {
 const initialState: UserState = {
   loading: false,
   error: [],
-  user: null,
   isPending: false,
   isLoggedin: !!localStorage.getItem(TOKEN),
 };
@@ -35,12 +32,8 @@ const initialState: UserState = {
 const AUTHENTICATION_MODULE = "/Authentication";
 const FARMER_MODULE = "/Farmer";
 
-const onUserAuthenticated = (
-  state: UserState,
-  action: PayloadAction<Farmer>
-) => {
+const onUserAuthenticated = (state: UserState) => {
   state.loading = false;
-  state.user = action.payload;
   state.isLoggedin = true;
 };
 
@@ -59,7 +52,6 @@ const UserSlice = createSlice({
       state.loading = true;
     },
     onLogout: (state: UserState) => {
-      state.user = null;
       state.loading = false;
       state.isLoggedin = false;
     },
@@ -77,6 +69,7 @@ const {
   onError,
   onValidateMobileNumberSuccess,
   onLogout,
+  onSignUpSuccess,
 } = UserSlice.actions;
 
 export const logout = (): AppThunk => (dispatch) => {
@@ -99,10 +92,10 @@ export const signIn =
 
     clientQueryApiRequest()
       .post(url, payload)
-      .then((response: AxiosResponse<{ token: string; user: Farmer }>) => {
+      .then((response: AxiosResponse<{ token: string }>) => {
         const { data } = response;
         localStorage.setItem(TOKEN, data.token);
-        dispatch(onSignInSuccess(data.user));
+        dispatch(onSignInSuccess());
         successCallback();
       })
       .catch((err: ErrorMessage[]) => {
@@ -123,10 +116,10 @@ export const signUp =
 
     clientCommandApiRequest()
       .post(url, payload)
-      .then((response: AxiosResponse<{ token: string; user: Farmer }>) => {
+      .then((response: AxiosResponse<{ token: string }>) => {
         const { data } = response;
         localStorage.setItem(TOKEN, data.token);
-        dispatch(onSignInSuccess(data.user));
+        dispatch(onSignUpSuccess());
         successCallback();
       })
       .catch((err: ErrorMessage[]) => {
@@ -164,11 +157,5 @@ export const selectUserLoading = (state: RootState) => state.user.loading;
 export const selectUserError = (state: RootState) => state.user.error;
 export const selectIsAuthenticated = (state: RootState) =>
   state.user.isLoggedin;
-
-export const selectUserAvatar = (state: RootState) => state.user.user?.avatar;
-export const selectUserFullname = (state: RootState) =>
-  `${state.user.user?.firstName} ${state.user.user?.lastName}`;
-export const selectIsPending = (state: RootState) =>
-  state.user?.user?.status === "Pending";
 
 export default UserSlice.reducer;

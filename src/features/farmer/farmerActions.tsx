@@ -16,6 +16,7 @@ import { ErrorMessage } from "../../models/error-message";
 import moment from "moment";
 import { FarmCropSavePayload } from "./farmer-models/farm-crop-save-payload";
 import { FarmSavePayload } from "./farmer-models/farm-save-payload";
+import { FarmerProfile } from "./farmer-models/farmer-profile";
 
 const FARMER_MODULE = "/farmer";
 const PHOTO_MODULE = "/photo";
@@ -25,10 +26,12 @@ const {
   load,
   save,
   reset,
+  onLogout,
 
   loadFarmsSuccess,
   loadClaimsSuccess,
   loadCropsSuccess,
+  onLoadFarmerProfileSuccess,
 
   uploadPhotoSuccess,
   saveClaimSuccess,
@@ -40,7 +43,23 @@ const {
   deleteCropSuccess,
 } = farmerSlice.actions;
 
+export const farmerLogout = onLogout;
+
 // FETCHING
+export const fetchProfile = (): AppThunk => (dispatch) => {
+  dispatch(load());
+
+  clientQueryApiRequest()
+    .get(FARMER_MODULE + "/profile")
+    .then((response: AxiosResponse<FarmerProfile>) => {
+      dispatch(onLoadFarmerProfileSuccess(response.data));
+    })
+    .catch((err: any) => {
+      dispatch(error(err));
+      dispatch(showError("Unable to get Farms"));
+    });
+};
+
 export const fetchFarms = (): AppThunk => (dispatch) => {
   dispatch(load());
 

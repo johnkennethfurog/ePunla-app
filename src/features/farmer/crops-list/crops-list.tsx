@@ -6,7 +6,7 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles, Theme, createStyles, Button } from "@material-ui/core";
 import CropRow from "./crops-row";
 import CropsFilter from "./crops-filter";
-import { selectCrops } from "../farmerSelectors";
+import { selectCrops, selectIsPending } from "../farmerSelectors";
 import CropRowHeader from "./crops-row-header";
 import { FarmCrop } from "../farmer-models/farm-crop";
 import ConfirmationModal from "../../../components/modals/confirmation-modal";
@@ -20,7 +20,6 @@ import CropHarvestModal from "./crops-harvest-modal";
 import { ActionModule } from "../../../models/action-module.enum";
 import AddIcon from "@material-ui/icons/Add";
 import CropsSaveModal from "./crops-save-modal";
-import { selectIsPending } from "../../../app/+states/userSlice";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

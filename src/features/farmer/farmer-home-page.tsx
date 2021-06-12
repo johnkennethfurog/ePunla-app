@@ -14,20 +14,23 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 
-import DrawerStyle from "./home-page.style";
-import drawerItems from "../utils/drawer-items";
-import FarmList from "../features/farmer/farm-list/farm-list";
-import ClaimList from "../features/farmer/claim-list/claim-list";
-import CropList from "../features/farmer/crops-list/crops-list";
+import DrawerStyle from "./farmer-home-page.style";
+import drawerItems from "../../utils/drawer-items";
+import FarmList from "./farm-list/farm-list";
+import ClaimList from "./claim-list/claim-list";
+import CropList from "./crops-list/crops-list";
+
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../app/+states/userSlice";
 import {
-  logout,
   selectIsPending,
-  selectUserAvatar,
-  selectUserFullname,
-} from "./+states/userSlice";
+  selectFarmerAvatar,
+  selectFarmerFullname,
+} from "./farmerSelectors";
 import { Alert } from "@material-ui/lab";
+import { useEffect } from "react";
+import { fetchProfile } from "./farmerActions";
 
 const HomePage = () => {
   const classes = DrawerStyle();
@@ -36,12 +39,16 @@ const HomePage = () => {
 
   const [open, setOpen] = React.useState(true);
 
-  const avatar = useSelector(selectUserAvatar);
-  const fullName = useSelector(selectUserFullname);
+  const avatar = useSelector(selectFarmerAvatar);
+  const fullName = useSelector(selectFarmerFullname);
   const isPending = useSelector(selectIsPending);
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement>();
   const openMenu = Boolean(anchorEl);
+
+  useEffect(() => {
+    dispatch(fetchProfile());
+  }, []);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

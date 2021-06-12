@@ -7,7 +7,7 @@ import SigninPage from "./app/signin-page";
 import { makeStyles } from "@material-ui/core";
 import MessagePrompt from "./components/message-prompt/message-prompt";
 import ProtectedRoute from "./utils/guarded-route";
-const HomePage = React.lazy(() => import("./app/home-page"));
+const HomePage = React.lazy(() => import("./features/farmer/farmer-home-page"));
 
 const useStyle = makeStyles((theme) => ({
   root: {
