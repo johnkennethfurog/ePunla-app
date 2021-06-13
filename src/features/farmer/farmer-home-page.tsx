@@ -20,7 +20,7 @@ import FarmList from "./farm-list/farm-list";
 import ClaimList from "./claim-list/claim-list";
 import CropList from "./crops-list/crops-list";
 
-import { Avatar, Menu, MenuItem } from "@material-ui/core";
+import { Avatar, Hidden, Menu, MenuItem, useTheme } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../app/+states/userSlice";
 import {
@@ -37,7 +37,8 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [open, setOpen] = React.useState(true);
+  const theme = useTheme();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const avatar = useSelector(selectFarmerAvatar);
   const fullName = useSelector(selectFarmerFullname);
@@ -69,37 +70,45 @@ const HomePage = () => {
     setAnchorEl(null);
   };
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
   const onClickDrawerItem = (route: string) => {
     history.push(route);
   };
 
+  const drawer = (
+    <div>
+      <div className={classes.toolbar} />
+
+      <List>
+        {drawerItems.map((item, index) => (
+          <ListItem
+            button
+            key={index}
+            onClick={() => onClickDrawerItem(item.route)}
+          >
+            <ListItemIcon>{item.iconComponent}</ListItemIcon>
+            <ListItemText primary={item.title} />
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
+
   return (
     <div className={classes.root}>
       <CssBaseline />
       {/* TOOLBAR */}
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
             edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
+            onClick={handleDrawerToggle}
+            className={classes.menuButton}
           >
             <MenuIcon />
           </IconButton>
@@ -139,49 +148,41 @@ const HomePage = () => {
       </AppBar>
 
       {/* DRAWER */}
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
-        classes={{
-          paper: clsx({
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          }),
-        }}
-      >
-        <div className={classes.toolbar}>
-          <div style={{ flex: 1, padding: 10 }}>
-            <Typography variant="h6" color="textPrimary">
-              E- Punla
-            </Typography>
-            <Typography variant="caption" color="textSecondary">
-              Version 0.0.1
-            </Typography>
-          </div>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <List>
-          {drawerItems.map((item, index) => (
-            <ListItem
-              button
-              key={index}
-              onClick={() => onClickDrawerItem(item.route)}
-            >
-              <ListItemIcon>{item.iconComponent}</ListItemIcon>
-              <ListItemText primary={item.title} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
+      <nav className={classes.drawer}>
+        <Hidden smUp implementation="css">
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+
+        <Hidden xsDown>
+          <Drawer
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            variant="permanent"
+            open={true}
+            anchor="left"
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+      </nav>
 
       {/* ROUTER */}
       <main className={classes.content}>
         <div className={classes.toolbar} />
+
         {!!isPending && (
           <Alert style={{ marginBottom: 10 }} severity="warning">
             Your registration status is still <b>Pending</b> and still waiting
