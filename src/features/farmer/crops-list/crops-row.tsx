@@ -5,25 +5,31 @@ import {
   createStyles,
   makeStyles,
   Theme,
+  useMediaQuery,
+  useTheme,
+  Menu,
+  MenuItem,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 import Status from "../../../components/status/status";
 
-import PanToolIcon from "@material-ui/icons/PanTool";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-import { FarmCrop } from "../farmer-models/farm-crop";
-import { StatusCrop } from "../farmer-models/status-crop.enum";
+import { FarmCrop } from "../+models/farm-crop";
+import { StatusCrop } from "../+models/status-crop.enum";
 
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { ActionType } from "../../../models/action-type.enum";
 import { doAction } from "../../../app/+states/commonSlice";
 import { ActionModule } from "../../../models/action-module.enum";
+import { Hidden } from "@material-ui/core";
 
 type CropRowProps = {
   crop: FarmCrop;
+  isOpen: boolean;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -35,42 +41,85 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const CropRow = (props: CropRowProps) => {
-  const { crop } = props;
+  const { crop, isOpen } = props;
 
   const style = useStyles();
+  const theme = useTheme();
   const dispatch = useDispatch();
+  const isBigScreen = useMediaQuery(theme.breakpoints.up("md"));
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement>();
+
+  useEffect(() => {
+    dispatchAction(ActionType.ExpandCollapsedCrops, null, false);
+  }, [isBigScreen]);
 
   const onHarvest = () => {
-    dispatchAction(ActionType.HarvestCrops);
+    dispatchAction(ActionType.HarvestCrops, crop);
+    onCloseMenu();
   };
 
   const onEdit = () => {
-    dispatchAction(ActionType.UpdateCrops);
+    dispatchAction(ActionType.UpdateCrops, crop);
+    onCloseMenu();
   };
 
   const onDelete = () => {
-    dispatchAction(ActionType.DeleteCrops);
+    dispatchAction(ActionType.DeleteCrops, crop);
+    onCloseMenu();
   };
 
-  const dispatchAction = (action: ActionType) => {
+  const onCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const onOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const dispatchAction = (
+    action: ActionType,
+    data: FarmCrop,
+    expand?: boolean
+  ) => {
     dispatch(
       doAction({
-        data: crop,
+        data,
         actionType: action,
         actionModule: ActionModule.FarmerCropsModule,
+        expand,
       })
+    );
+  };
+
+  const onExpand = () => {
+    dispatchAction(
+      ActionType.ExpandCollapsedCrops,
+      isOpen ? null : crop,
+      !isOpen
     );
   };
 
   return (
     <TableRow key={crop.farmCropId}>
-      <TableCell className={style.cell}>
-        {moment(crop.plantedDate).format("MM-DD-YYYY")}
-      </TableCell>
+      <Hidden mdUp>
+        <TableCell className={style.cell}>
+          <IconButton aria-label="expand row" size="small" onClick={onExpand}>
+            {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+      </Hidden>
+
+      <Hidden smDown>
+        <TableCell className={style.cell}>
+          {moment(crop.plantedDate).format("MM-DD-YYYY")}
+        </TableCell>
+      </Hidden>
       <TableCell className={style.cell}>{crop.crop}</TableCell>
-      <TableCell className={style.cell}>{crop.category}</TableCell>
-      <TableCell className={style.cell}>{crop.farm}</TableCell>
-      <TableCell className={style.cell}>{crop.areaSize} sqm.</TableCell>
+      <Hidden smDown>
+        <TableCell className={style.cell}>{crop.category}</TableCell>
+        <TableCell className={style.cell}>{crop.farm}</TableCell>
+        <TableCell className={style.cell}>{crop.areaSize} sqm.</TableCell>
+      </Hidden>
       <TableCell className={style.cell}>
         {
           <Status
@@ -84,15 +133,20 @@ const CropRow = (props: CropRowProps) => {
       <TableCell className={style.cell}>
         {crop.status === StatusCrop.Planted && (
           <>
-            <IconButton onClick={onEdit} aria-label="edit">
-              <EditIcon />
+            <IconButton onClick={onOpenMenu} aria-label="edit">
+              <MoreVertIcon />
             </IconButton>
-            <IconButton onClick={onDelete} aria-label="delete">
-              <DeleteIcon />
-            </IconButton>
-            <IconButton onClick={onHarvest} aria-label="harvest">
-              <PanToolIcon />
-            </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={onCloseMenu}
+            >
+              <MenuItem onClick={onEdit}>Edit</MenuItem>
+              <MenuItem onClick={onHarvest}>Harvest</MenuItem>
+              <MenuItem onClick={onDelete}>Delete</MenuItem>
+            </Menu>
           </>
         )}
       </TableCell>

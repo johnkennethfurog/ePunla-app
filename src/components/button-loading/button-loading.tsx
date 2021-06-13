@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import {
   selectIsLoading,
   selectIsSaving,
-} from "../../features/farmer/farmerSelectors";
+} from "../../features/farmer/+state/farmerSelectors";
 
 import { selectUserLoading } from "../../app/+states/userSlice";
 

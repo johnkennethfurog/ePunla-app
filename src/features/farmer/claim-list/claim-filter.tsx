@@ -9,9 +9,9 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
-import { fetchClaims } from "../farmerActions";
-import { StatusClaimList } from "../farmer-models/status-claim.enum";
-import { selectReloadTable } from "../farmerSelectors";
+import { fetchClaims } from "../+state/farmerActions";
+import { StatusClaimList } from "../+models/status-claim.enum";
+import { selectReloadTable } from "../+state/farmerSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -1,3 +1,4 @@
+import { Hidden } from "@material-ui/core";
 import {
   Box,
   Collapse,
@@ -9,7 +10,8 @@ import {
   Theme,
 } from "@material-ui/core";
 import React from "react";
-import { Claim } from "../farmer-models/claim";
+import { Claim } from "../+models/claim";
+import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,6 +25,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     label: {
       fontWeight: "bold",
+      display: "block",
+      marginTop: 15,
     },
     image: {
       objectFit: "cover",
@@ -60,6 +64,20 @@ const ClaimRowDetail = (props: ClaimRowDetailProps) => {
 
             {/* DESCRIPTION */}
             <Grid item xs={12} sm={12} md={8} lg={8}>
+              <Hidden mdUp>
+                {/* DATE FILED */}
+                <span className={style.label}>Date Filed:</span>
+                <span>{moment(claim.filingDate).format("MM-DD-YYYY")}</span>
+
+                {/* FARM */}
+                <span className={style.label}>Farm:</span>
+                <span>{claim.farm}</span>
+
+                {/* Damaged Area */}
+                <span className={style.label}>Damaged Area:</span>
+                <span>{claim.damagedArea}</span>
+              </Hidden>
+
               <span className={style.label}>Description:</span>
               {!!claim.description && <p>{claim.description}</p>}
               {!claim.description && (

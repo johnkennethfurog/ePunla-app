@@ -139,7 +139,7 @@ export const fetchLookups =
       });
   };
 
-export const fetchBarangays = (): AppThunk => (dispatch, getState) => {
+export const fetchBarangays = (): AppThunk => (dispatch) => {
   clientQueryApiRequest()
     .get("/masterlist/barangays")
     .then((response: AxiosResponse<Barangay[]>) => {

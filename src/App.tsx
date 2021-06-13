@@ -7,6 +7,7 @@ import SigninPage from "./app/signin-page";
 import { makeStyles } from "@material-ui/core";
 import MessagePrompt from "./components/message-prompt/message-prompt";
 import ProtectedRoute from "./utils/guarded-route";
+import Pageloader from "./components/page-loader/page-loader";
 const HomePage = React.lazy(() => import("./features/farmer/farmer-home-page"));
 
 const useStyle = makeStyles((theme) => ({
@@ -28,7 +29,7 @@ function App() {
         </Route>
 
         <ProtectedRoute path="/" authenticationPath="signin">
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Pageloader />}>
             <HomePage />
           </Suspense>
         </ProtectedRoute>

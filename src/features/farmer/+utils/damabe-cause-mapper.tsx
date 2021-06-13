@@ -1,7 +1,7 @@
-import { DamageCause } from "../farmer-models/claim";
-import { ClaimCausePayload } from "../farmer-models/claim-save-payload";
-import { DamageCauseOption } from "../farmer-models/damage-cause-option";
-import { DamageCauseList } from "../farmer-models/damage-cause.enum";
+import { DamageCause } from "../+models/claim";
+import { ClaimCausePayload } from "../+models/claim-save-payload";
+import { DamageCauseOption } from "../+models/damage-cause-option";
+import { DamageCauseList } from "../+models/damage-cause.enum";
 
 export const mapToDamageCauseOptions = (
   damageCauses: ClaimCausePayload[]

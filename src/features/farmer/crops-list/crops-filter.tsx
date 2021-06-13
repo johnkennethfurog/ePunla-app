@@ -21,9 +21,9 @@ import useDateInput from "../../../hooks/useDateInput";
 import useInput from "../../../hooks/useInput";
 import useLookup from "../../../hooks/useLookup";
 import { LookupItem } from "../../../models/lookup-item";
-import { fetchCrops } from "../farmerActions";
-import { StatusCropList } from "../farmer-models/status-crop.enum";
-import { selectReloadTable } from "../farmerSelectors";
+import { fetchCrops } from "../+state/farmerActions";
+import { StatusCropList } from "../+models/status-crop.enum";
+import { selectReloadTable } from "../+state/farmerSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

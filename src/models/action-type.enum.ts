@@ -4,7 +4,10 @@ export enum ActionType {
   UpdateCrops,
   DeleteCrops,
   HarvestCrops,
+  ExpandCollapsedCrops,
   // FARM
   UpdateFarm,
   DeleteFarm,
+  CreateFarm,
+  ExpandCollapsedFarm,
 }

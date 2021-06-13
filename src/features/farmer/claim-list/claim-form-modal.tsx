@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectClaim } from "../farmerSlice";
+import { selectClaim } from "../+state/farmerSlice";
 
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
@@ -22,15 +22,15 @@ import {
   fetchCrops,
   saveClaim,
   uploadPhoto,
-} from "../farmerActions";
-import { selectCrops, selectIsSaving } from "../farmerSelectors";
-import { Claim } from "../farmer-models/claim";
+} from "../+state/farmerActions";
+import { selectCrops, selectIsSaving } from "../+state/farmerSelectors";
+import { Claim } from "../+models/claim";
 import ClaimDamageCause from "./claim-damage-cause";
 import {
   ClaimCausePayload,
   ClaimSavePayload,
-} from "../farmer-models/claim-save-payload";
-import { MapToDamageCausePayload } from "../farmer-utils/damabe-cause-mapper";
+} from "../+models/claim-save-payload";
+import { MapToDamageCausePayload } from "../+utils/damabe-cause-mapper";
 import ImageUploader from "../../../components/image-uploader/image-uploader";
 import { ImageUploadResponse } from "../../../models/image-upload-response";
 import ErrorAlert from "../../../components/error-alert/error-alert";

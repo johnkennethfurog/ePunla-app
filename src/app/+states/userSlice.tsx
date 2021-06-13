@@ -11,7 +11,7 @@ import {
 } from "../../utils/client";
 import { AxiosResponse } from "axios";
 import { showError } from "./messagePromptSlice";
-import { FarmerSignupPayload } from "../../features/farmer/farmer-models/farmer-signup-payload";
+import { FarmerSignupPayload } from "../../features/farmer/+models/farmer-signup-payload";
 
 const TOKEN = "token";
 

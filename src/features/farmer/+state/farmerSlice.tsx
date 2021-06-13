@@ -1,12 +1,11 @@
 import { createSlice, Dictionary, PayloadAction } from "@reduxjs/toolkit";
-import { LookupItem } from "../../models/lookup-item";
-import { Farm } from "./farmer-models/farm";
-import { Claim } from "./farmer-models/claim";
-import { FarmCrop } from "./farmer-models/farm-crop";
-import { ErrorMessage } from "../../models/error-message";
-import { StatusCrop } from "./farmer-models/status-crop.enum";
-import { FarmerProfile } from "./farmer-models/farmer-profile";
-// import { StatusCrop } from "./farmer-models/status-crop.enum";
+import { LookupItem } from "../../../models/lookup-item";
+import { Farm } from "../+models/farm";
+import { Claim } from "../+models/claim";
+import { FarmCrop } from "../+models/farm-crop";
+import { ErrorMessage } from "../../../models/error-message";
+import { StatusCrop } from "../+models/status-crop.enum";
+import { FarmerProfile } from "../+models/farmer-profile";
 
 interface FarmerState {
   farms: Farm[];
@@ -60,8 +59,7 @@ export const farmerSlice = createSlice({
       state.isSaving = false;
     },
     onLogout: (state: FarmerState) => {
-      state.error = null;
-      state.profile = null;
+      state = { ...initialState };
     },
 
     // SAVING

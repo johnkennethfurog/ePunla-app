@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -6,11 +6,11 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles, Theme, createStyles, Button } from "@material-ui/core";
 import CropRow from "./crops-row";
 import CropsFilter from "./crops-filter";
-import { selectCrops, selectIsPending } from "../farmerSelectors";
+import { selectCrops, selectIsPending } from "../+state/farmerSelectors";
 import CropRowHeader from "./crops-row-header";
-import { FarmCrop } from "../farmer-models/farm-crop";
+import { FarmCrop } from "../+models/farm-crop";
 import ConfirmationModal from "../../../components/modals/confirmation-modal";
-import { deleteCrop } from "../farmerActions";
+import { deleteCrop } from "../+state/farmerActions";
 import {
   doneAction,
   selectActionToPerform,
@@ -20,6 +20,8 @@ import CropHarvestModal from "./crops-harvest-modal";
 import { ActionModule } from "../../../models/action-module.enum";
 import AddIcon from "@material-ui/icons/Add";
 import CropsSaveModal from "./crops-save-modal";
+import EmptyList from "../../../components/empty-list/empty-list";
+import CropRowDetail from "./crops-row-detail";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,6 +45,7 @@ const CropList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(() => false);
   const [showHarvestModal, setShowHarvestModal] = useState(() => false);
   const [showCropFormModal, setShowCropFormModal] = useState(() => false);
+  const [expand, setExpand] = useState(() => false);
 
   const crops = useSelector(selectCrops);
   const actionToPerform = useSelector(selectActionToPerform);
@@ -51,7 +54,7 @@ const CropList = () => {
   useEffect(() => {
     if (!actionToPerform) return;
 
-    const { actionType, data, actionModule } = actionToPerform;
+    const { actionType, data, actionModule, expand } = actionToPerform;
     let crop = data as FarmCrop;
 
     if (actionModule !== ActionModule.FarmerCropsModule) return;
@@ -69,6 +72,10 @@ const CropList = () => {
 
       case ActionType.UpdateCrops:
         setShowCropFormModal(true);
+        break;
+
+      case ActionType.ExpandCollapsedCrops:
+        setExpand(expand);
         break;
 
       default:
@@ -116,11 +123,23 @@ const CropList = () => {
         <Table className={style.table} aria-label="farm table">
           <CropRowHeader />
           <TableBody>
-            {crops.map((crop) => (
-              <CropRow crop={crop} key={crop.farmCropId.toString()} />
-            ))}
+            {crops.map((crop) => {
+              const isOpen =
+                selectedCrop?.farmCropId === crop.farmCropId && expand;
+
+              return (
+                <Fragment key={crop.farmCropId.toString()}>
+                  <CropRow isOpen={isOpen} crop={crop} />
+                  <CropRowDetail isOpen={isOpen} crop={crop} />
+                </Fragment>
+              );
+            })}
           </TableBody>
         </Table>
+
+        {crops.length === 0 && (
+          <EmptyList label="You don't have any planted crops." />
+        )}
 
         <ConfirmationModal
           open={showDeleteModal}

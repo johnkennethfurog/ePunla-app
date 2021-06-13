@@ -1,22 +1,29 @@
 import { AxiosResponse } from "axios";
-import { AppThunk } from "../../app/store";
+import { AppThunk } from "../../../app/store";
 import {
   clientCommandApiRequest,
   clientQueryApiRequest,
-} from "../../utils/client";
+} from "../../../utils/client";
 import { farmerSlice } from "./farmerSlice";
-import { Claim } from "./farmer-models/claim";
-import { FarmCrop } from "./farmer-models/farm-crop";
-import { Farm } from "./farmer-models/farm";
-import { SearchCrop } from "./farmer-models/search-crop";
-import { ImageUploadResponse } from "../../models/image-upload-response";
-import { ClaimSavePayload } from "./farmer-models/claim-save-payload";
-import { showError, showSuccess } from "../../app/+states/messagePromptSlice";
-import { ErrorMessage } from "../../models/error-message";
+import { Claim } from "../+models/claim";
+import { FarmCrop } from "../+models/farm-crop";
+import { Farm } from "../+models/farm";
+import { SearchCrop } from "../+models/search-crop";
+import { ImageUploadResponse } from "../../../models/image-upload-response";
+import { ClaimSavePayload } from "../+models/claim-save-payload";
+import {
+  showError,
+  showSuccess,
+} from "../../../app/+states/messagePromptSlice";
+import { ErrorMessage } from "../../../models/error-message";
 import moment from "moment";
-import { FarmCropSavePayload } from "./farmer-models/farm-crop-save-payload";
-import { FarmSavePayload } from "./farmer-models/farm-save-payload";
-import { FarmerProfile } from "./farmer-models/farmer-profile";
+import { FarmCropSavePayload } from "../+models/farm-crop-save-payload";
+import { FarmSavePayload } from "../+models/farm-save-payload";
+import { FarmerProfile } from "../+models/farmer-profile";
+import { ActionType } from "../../../models/action-type.enum";
+import { ActionModule } from "../../../models/action-module.enum";
+import { doAction } from "../../../app/+states/commonSlice";
+import { StatusFarmer } from "../+models/status-farmer.enum";
 
 const FARMER_MODULE = "/farmer";
 const PHOTO_MODULE = "/photo";
@@ -60,19 +67,38 @@ export const fetchProfile = (): AppThunk => (dispatch) => {
     });
 };
 
-export const fetchFarms = (): AppThunk => (dispatch) => {
-  dispatch(load());
+export const fetchFarms =
+  (approvedOnly?: boolean): AppThunk =>
+  (dispatch, getState) => {
+    const state = getState();
 
-  clientQueryApiRequest()
-    .get(FARMER_MODULE + "/farms")
-    .then((response: AxiosResponse<Farm[]>) => {
-      dispatch(loadFarmsSuccess(response.data));
-    })
-    .catch((err: any) => {
-      dispatch(error(err));
-      dispatch(showError("Unable to get Farms"));
-    });
-};
+    dispatch(load());
+
+    clientQueryApiRequest()
+      .get(`${FARMER_MODULE}/farms${approvedOnly ? "?status=approved" : ""}`)
+      .then((response: AxiosResponse<Farm[]>) => {
+        if (
+          state.farmer.profile.status === StatusFarmer.Pending &&
+          response.data.length === 0
+        ) {
+          dispatch(
+            doAction({
+              data: null,
+              actionType: ActionType.CreateFarm,
+              actionModule: ActionModule.FarmerFarmsModule,
+            })
+          );
+        }
+
+        dispatch(loadFarmsSuccess(response.data));
+      })
+      .catch((err: any) => {
+        console.log("err", err);
+
+        dispatch(error(err));
+        dispatch(showError("Unable to get Farms"));
+      });
+  };
 
 export const fetchClaims =
   (status: string): AppThunk =>
@@ -134,7 +160,7 @@ export const saveClaim =
 
     clientCommandApiRequest()
       .post(FARMER_MODULE + "/claims/save", claim)
-      .then((response: AxiosResponse) => {
+      .then(() => {
         dispatch(saveClaimSuccess());
         dispatch(showSuccess("Claims saved successfully!"));
         onSaveSuccess();
@@ -176,7 +202,7 @@ export const saveFarmCrop =
 
     clientCommandApiRequest()
       .post(FARMER_MODULE + "/crops/save", farmCrop)
-      .then((response: AxiosResponse) => {
+      .then(() => {
         dispatch(saveFarmCropSuccess());
         dispatch(showSuccess("Farm crop saved successfully!"));
         onSaveSuccess();
@@ -193,7 +219,7 @@ export const saveFarm =
 
     clientCommandApiRequest()
       .post(FARMER_MODULE + "/farms/save", farm)
-      .then((response: AxiosResponse) => {
+      .then(() => {
         dispatch(saveFarmSuccess());
         dispatch(showSuccess("Farm saved successfully!"));
         onSaveSuccess();

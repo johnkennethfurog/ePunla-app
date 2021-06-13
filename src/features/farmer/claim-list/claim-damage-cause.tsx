@@ -1,11 +1,11 @@
 import { FormGroup, FormLabel } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { ClaimCausePayload } from "../farmer-models/claim-save-payload";
-import { DamageCauseOption } from "../farmer-models/damage-cause-option";
+import { ClaimCausePayload } from "../+models/claim-save-payload";
+import { DamageCauseOption } from "../+models/damage-cause-option";
 import {
   mapToClaimCausePayload,
   mapToDamageCauseOptions,
-} from "../farmer-utils/damabe-cause-mapper";
+} from "../+utils/damabe-cause-mapper";
 import ClaimDamageCauseOption from "./claim-damage-cause-option";
 
 type ClaimDamageCauseProps = {

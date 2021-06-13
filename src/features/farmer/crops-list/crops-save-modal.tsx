@@ -25,10 +25,14 @@ import useDateInput from "../../../hooks/useDateInput";
 import useInput from "../../../hooks/useInput";
 import useLookup from "../../../hooks/useLookup";
 import { LookupItem } from "../../../models/lookup-item";
-import { FarmCrop } from "../farmer-models/farm-crop";
-import { FarmCropSavePayload } from "../farmer-models/farm-crop-save-payload";
-import { addValidationError, fetchFarms, saveFarmCrop } from "../farmerActions";
-import { selectFarms, selectIsSaving } from "../farmerSelectors";
+import { FarmCrop } from "../+models/farm-crop";
+import { FarmCropSavePayload } from "../+models/farm-crop-save-payload";
+import {
+  addValidationError,
+  fetchFarms,
+  saveFarmCrop,
+} from "../+state/farmerActions";
+import { selectFarms, selectIsSaving } from "../+state/farmerSelectors";
 
 type CropsSaveModalProps = {
   farmCrop?: FarmCrop;
@@ -56,14 +60,14 @@ const CropsSaveModal = (props: CropsSaveModalProps) => {
 
   useEffect(() => {
     if (!!isOpen) {
-      setIsNew(!!farmCrop);
+      setIsNew(!farmCrop);
 
       setFarmId(farmCrop?.farmId.toString() || "");
       setAreaSize(farmCrop?.areaSize.toString() || "");
       setDatePlanted(moment(farmCrop?.plantedDate));
       setCrop(farmCrop?.cropId || "");
 
-      dispatch(fetchFarms());
+      dispatch(fetchFarms(true));
     }
   }, [isOpen]);
 

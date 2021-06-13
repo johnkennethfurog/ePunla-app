@@ -5,18 +5,19 @@ import TableBody from "@material-ui/core/TableBody";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, Theme, createStyles, Button } from "@material-ui/core";
 import ClaimRow from "./claim-row";
-import { deleteClaim } from "../farmerActions";
+import { deleteClaim } from "../+state/farmerActions";
 import {
   selectClaims,
   selectIsPending,
   selectSelectedClaim,
-} from "../farmerSelectors";
+} from "../+state/farmerSelectors";
 import ClaimRowHeader from "./claim-row-header";
 import ClaimRowDetail from "./claim-row-detail";
 import ConfirmationModal from "../../../components/modals/confirmation-modal";
 import ClaimFilter from "./claim-filter";
 import ClaimFormModal from "./claim-form-modal";
 import AddIcon from "@material-ui/icons/Add";
+import EmptyList from "../../../components/empty-list/empty-list";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -126,6 +127,10 @@ const ClaimList = () => {
             })}
           </TableBody>
         </Table>
+
+        {claims.length === 0 && (
+          <EmptyList label="You don't have any claims." />
+        )}
 
         <ConfirmationModal
           open={showDeleteModal}

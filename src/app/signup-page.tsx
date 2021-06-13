@@ -12,7 +12,6 @@ import {
   StepLabel,
   Stepper,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
@@ -24,17 +23,14 @@ import TanauanLogo from "../assets/tanauan_logo.png";
 import ButtonLoading from "../components/button-loading/button-loading";
 import useInput from "../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
-import { signIn, signUp, validateMobileNumber } from "./+states/userSlice";
+import { signUp, validateMobileNumber } from "./+states/userSlice";
 import { useHistory } from "react-router";
 import { showError } from "./+states/messagePromptSlice";
 import { SimpleDropDown } from "../components/select/selects";
 import { LookupItem } from "../models/lookup-item";
-import ErrorAlert from "../components/error-alert/error-alert";
 import { fetchBarangays, selectBarangay } from "./+states/commonSlice";
-import ImageUploader, {
-  ProfileUploader,
-} from "../components/image-uploader/image-uploader";
-import { uploadPhoto } from "../features/farmer/farmerActions";
+import { ProfileUploader } from "../components/image-uploader/image-uploader";
+import { uploadPhoto } from "../features/farmer/+state/farmerActions";
 import { ImageUploadResponse } from "../models/image-upload-response";
 
 const useStyle = makeStyles((theme) => ({
@@ -44,6 +40,7 @@ const useStyle = makeStyles((theme) => ({
     alignItems: "center",
     height: "100%",
     padding: theme.spacing(2),
+    backgroundColor: "#fafafa",
   },
   signinform: {
     padding: theme.spacing(2),
@@ -88,7 +85,7 @@ const SignupPage = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const history = useHistory();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
+
   const steps = getSteps();
   const barangays = useSelector(selectBarangay);
 
@@ -111,10 +108,6 @@ const SignupPage = () => {
   const [streetAddress, bindAddress] = useInput("");
   const [areaId, bindAreaId] = useInput<string | number>("");
   const [barangayId, bindBarangayId] = useInput<string | number>("");
-
-  useEffect(() => {
-    // use full screen to adjust screen design
-  }, [fullScreen]);
 
   useEffect(() => {
     dispatch(fetchBarangays());

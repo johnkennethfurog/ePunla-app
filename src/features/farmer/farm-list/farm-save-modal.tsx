@@ -17,15 +17,15 @@ import AppDatePicker from "../../../components/date-picker/date-picker";
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
 import { LookupItem } from "../../../models/lookup-item";
-import { Farm } from "../farmer-models/farm";
-import { selectIsSaving } from "../farmerSelectors";
+import { Farm } from "../+models/farm";
+import { selectIsSaving } from "../+state/farmerSelectors";
 import {
   fetchBarangays,
   selectBarangay,
 } from "../../../app/+states/commonSlice";
 import { Coordinates } from "../../../models/coordinates";
 import LocationMarker from "./farm-location-marker";
-import { addValidationError, saveFarm } from "../farmerActions";
+import { addValidationError, saveFarm } from "../+state/farmerActions";
 import ErrorAlert from "../../../components/error-alert/error-alert";
 
 type FarmSaveModalProps = {
@@ -67,7 +67,7 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
       return;
     }
 
-    setIsNew(!!farm);
+    setIsNew(!farm);
 
     setFarmName(farm?.name || "");
     setAddress(farm?.streetAddress || "");
@@ -172,7 +172,7 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
 
   return (
     <Dialog open={isOpen} onClose={closeFarmSaveModal} fullWidth maxWidth="lg">
-      <DialogTitle>{isNew ? "Enrolll Farm" : "Update Farm"}</DialogTitle>
+      <DialogTitle>{!!isNew ? "Enrolll Farm" : "Update Farm"}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid container spacing={2} item xs={12} sm={12} md={4} lg={4} xl={4}>
@@ -233,16 +233,18 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
             </Grid>
           </Grid>
           <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
-            <GoogleMapReact
-              onClick={onSelectLocation}
-              bootstrapURLKeys={{
-                key: "AIzaSyAxZUt26k60tbv0UIiDIyEsQOfEUmFGhCc",
-              }}
-              defaultCenter={coordinates || tanauan_coords}
-              defaultZoom={!!coordinates ? 15 : 12.5}
-            >
-              {!!coordinates && <LocationMarker {...coordinates} />}
-            </GoogleMapReact>
+            <div style={{ height: "100%", minHeight: 300 }}>
+              <GoogleMapReact
+                onClick={onSelectLocation}
+                bootstrapURLKeys={{
+                  key: "AIzaSyAxZUt26k60tbv0UIiDIyEsQOfEUmFGhCc",
+                }}
+                defaultCenter={coordinates || tanauan_coords}
+                defaultZoom={!!coordinates ? 15 : 12.5}
+              >
+                {!!coordinates && <LocationMarker {...coordinates} />}
+              </GoogleMapReact>
+            </div>
           </Grid>
         </Grid>
       </DialogContent>

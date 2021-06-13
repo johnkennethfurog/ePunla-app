@@ -1,4 +1,4 @@
-import { DamageCause } from "../features/farmer/farmer-models/damage-cause.enum";
+import { DamageCause } from "../features/farmer/+models/damage-cause.enum";
 import { LookupItem } from "../models/lookup-item";
 
 const enumToLookup = (Enum: any): LookupItem[] => {

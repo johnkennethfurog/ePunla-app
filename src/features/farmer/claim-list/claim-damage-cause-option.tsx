@@ -5,7 +5,7 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { DamageCauseOption } from "../farmer-models/damage-cause-option";
+import { DamageCauseOption } from "../+models/damage-cause-option";
 
 type ClaimDamageCauseOptionProps = {
   index: number;

@@ -5,19 +5,21 @@ import {
   createStyles,
   makeStyles,
   Theme,
+  Hidden,
+  Menu,
+  MenuItem,
 } from "@material-ui/core";
 import React from "react";
 import Status from "../../../components/status/status";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
-import { Claim } from "../farmer-models/claim";
-import { StatusClaim } from "../farmer-models/status-claim.enum";
+import { Claim } from "../+models/claim";
+import { StatusClaim } from "../+models/status-claim.enum";
 import moment from "moment";
-import { selectClaim } from "../farmerSlice";
+import { selectClaim } from "../+state/farmerSlice";
 import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,9 +42,24 @@ const ClaimRow = (props: ClaimRowProps) => {
 
   const style = useStyles();
   const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement>();
 
-  const onClickView = () => {
+  const editClaim = () => {
     dispatch(selectClaim(claim));
+    onCloseMenu();
+  };
+
+  const deleteClaim = () => {
+    onDelete(claim.claimId);
+    onCloseMenu();
+  };
+
+  const onCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const onOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
   return (
@@ -52,13 +69,16 @@ const ClaimRow = (props: ClaimRowProps) => {
           {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         </IconButton>
       </TableCell>
-
-      <TableCell className={style.cell}>
-        {moment(claim.filingDate).format("MM-DD-YYYY")}
-      </TableCell>
-      <TableCell className={style.cell}>{claim.farm}</TableCell>
+      <Hidden smDown>
+        <TableCell className={style.cell}>
+          {moment(claim.filingDate).format("MM-DD-YYYY")}
+        </TableCell>
+        <TableCell className={style.cell}>{claim.farm}</TableCell>
+      </Hidden>
       <TableCell className={style.cell}>{claim.crop}</TableCell>
-      <TableCell className={style.cell}>{claim.damagedArea}</TableCell>
+      <Hidden smDown>
+        <TableCell className={style.cell}>{claim.damagedArea}</TableCell>
+      </Hidden>
       <TableCell className={style.cell}>
         {
           <Status
@@ -72,16 +92,19 @@ const ClaimRow = (props: ClaimRowProps) => {
       <TableCell className={style.cell}>
         {claim.status === StatusClaim.Pending && (
           <>
-            <IconButton onClick={onClickView} aria-label="edit">
-              <EditIcon />
+            <IconButton onClick={onOpenMenu} aria-label="edit">
+              <MoreVertIcon />
             </IconButton>
 
-            <IconButton
-              onClick={() => onDelete(claim.claimId)}
-              aria-label="delete"
+            <Menu
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={onCloseMenu}
             >
-              <DeleteIcon />
-            </IconButton>
+              <MenuItem onClick={editClaim}>Edit</MenuItem>
+              <MenuItem onClick={deleteClaim}>Delete</MenuItem>
+            </Menu>
           </>
         )}
       </TableCell>

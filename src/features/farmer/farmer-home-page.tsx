@@ -27,10 +27,10 @@ import {
   selectIsPending,
   selectFarmerAvatar,
   selectFarmerFullname,
-} from "./farmerSelectors";
+} from "./+state/farmerSelectors";
 import { Alert } from "@material-ui/lab";
 import { useEffect } from "react";
-import { fetchProfile } from "./farmerActions";
+import { farmerLogout, fetchProfile } from "./+state/farmerActions";
 
 const HomePage = () => {
   const classes = DrawerStyle();
@@ -57,6 +57,7 @@ const HomePage = () => {
   const handleLogout = () => {
     history.push("signin");
     dispatch(logout());
+    dispatch(farmerLogout());
     setAnchorEl(null);
   };
 

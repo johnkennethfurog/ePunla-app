@@ -1,5 +1,5 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import farmerReducer from "../features/farmer/farmerSlice";
+import farmerReducer from "../features/farmer/+state/farmerSlice";
 import commonReducer from "./+states/commonSlice";
 import messagePromptSliceReducer from "./+states/messagePromptSlice";
 import userReducer from "./+states/userSlice";

@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, Theme, createStyles, Button } from "@material-ui/core";
 import FarmRow, { FarmRowHeader } from "./farm-rows";
-import { fetchFarms, resetFarmerAction } from "../farmerActions";
-import { selectFarms, selectReloadTable } from "../farmerSelectors";
+import { fetchFarms, resetFarmerAction } from "../+state/farmerActions";
+import {
+  selectFarms,
+  selectProfile,
+  selectReloadTable,
+} from "../+state/farmerSelectors";
 import FarmSaveModal from "./farm-save-modal";
 import {
   doneAction,
@@ -14,9 +18,11 @@ import {
 } from "../../../app/+states/commonSlice";
 import { ActionModule } from "../../../models/action-module.enum";
 import { ActionType } from "../../../models/action-type.enum";
-import { Farm } from "../farmer-models/farm";
+import { Farm } from "../+models/farm";
 import AddIcon from "@material-ui/icons/Add";
 import ConfirmationModal from "../../../components/modals/confirmation-modal";
+import EmptyList from "../../../components/empty-list/empty-list";
+import FarmRowDetail from "./farm-rows-detail";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,14 +45,18 @@ const FarmList = () => {
 
   const actionToPerform = useSelector(selectActionToPerform);
   const reloadTable = useSelector(selectReloadTable);
+  const profile = useSelector(selectProfile);
 
-  const [selectedFarm, setSelectedFarm] = useState(() => null);
+  const [selectedFarm, setSelectedFarm] = useState<Farm>(() => null);
   const [showFarmSaveModal, setShowFarmSaveModal] = useState(() => false);
   const [showDeleteModal, setShowDeleteModal] = useState(() => false);
+  const [expand, setExpand] = useState(() => false);
 
   useEffect(() => {
-    dispatch(fetchFarms());
-  }, []);
+    if (!!profile) {
+      dispatch(fetchFarms());
+    }
+  }, [profile]);
 
   useEffect(() => {
     if (!!reloadTable) {
@@ -57,7 +67,7 @@ const FarmList = () => {
   useEffect(() => {
     if (!actionToPerform) return;
 
-    const { actionType, data, actionModule } = actionToPerform;
+    const { actionType, data, actionModule, expand } = actionToPerform;
     let farm = data as Farm;
 
     if (actionModule !== ActionModule.FarmerFarmsModule) return;
@@ -71,6 +81,15 @@ const FarmList = () => {
 
       case ActionType.UpdateFarm:
         setShowFarmSaveModal(true);
+        break;
+
+      case ActionType.CreateFarm:
+        setShowFarmSaveModal(true);
+        break;
+
+      case ActionType.ExpandCollapsedFarm:
+        setExpand(expand);
+        // do nothing
         break;
 
       default:
@@ -111,11 +130,22 @@ const FarmList = () => {
         <Table className={style.table} aria-label="farm table">
           <FarmRowHeader />
           <TableBody>
-            {farms.map((farm) => (
-              <FarmRow farm={farm} key={farm.farmId.toString()} />
-            ))}
+            {farms.map((farm) => {
+              const isOpen = selectedFarm?.farmId === farm.farmId && expand;
+              return (
+                <Fragment key={farm.farmId.toString()}>
+                  <FarmRow
+                    isOpen={isOpen}
+                    farm={farm}
+                    key={farm.farmId.toString()}
+                  />
+                  <FarmRowDetail farm={farm} isOpen={isOpen} />
+                </Fragment>
+              );
+            })}
           </TableBody>
         </Table>
+        {farms.length === 0 && <EmptyList label="Farm List is empty." />}
       </Paper>
       <FarmSaveModal
         farm={selectedFarm}

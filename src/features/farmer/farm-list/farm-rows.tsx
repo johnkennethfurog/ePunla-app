@@ -6,19 +6,25 @@ import {
   createStyles,
   makeStyles,
   Theme,
+  useMediaQuery,
+  Hidden,
+  useTheme,
 } from "@material-ui/core";
 import React from "react";
 import Status from "../../../components/status/status";
-import { Farm } from "../farmer-models/farm";
-import { StatusFarm } from "../farmer-models/status-farm.enum";
+import { Farm } from "../+models/farm";
+import { StatusFarm } from "../+models/status-farm.enum";
 
 import EditIcon from "@material-ui/icons/Edit";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import { ActionType } from "../../../models/action-type.enum";
 import { useDispatch } from "react-redux";
 import { doAction } from "../../../app/+states/commonSlice";
 import { ActionModule } from "../../../models/action-module.enum";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,39 +39,65 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type FarmRowProps = {
   farm: Farm;
+  isOpen: boolean;
 };
 
 const FarmRow = (props: FarmRowProps) => {
-  const { farm } = props;
+  const { farm, isOpen } = props;
 
   const style = useStyles();
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const isBigScreen = useMediaQuery(theme.breakpoints.up("md"));
+
+  useEffect(() => {
+    dispatchAction(ActionType.ExpandCollapsedFarm, null, false);
+  }, [isBigScreen]);
 
   const onEdit = () => {
-    dispatchAction(ActionType.UpdateFarm);
+    dispatchAction(ActionType.UpdateFarm, farm);
   };
 
   const onDelete = () => {
-    dispatchAction(ActionType.DeleteFarm);
+    dispatchAction(ActionType.DeleteFarm, farm);
   };
 
-  const dispatchAction = (action: ActionType) => {
+  const dispatchAction = (action: ActionType, data: Farm, expand?: boolean) => {
     dispatch(
       doAction({
-        data: farm,
+        data,
         actionType: action,
         actionModule: ActionModule.FarmerFarmsModule,
+        expand,
       })
+    );
+  };
+
+  const onExpand = () => {
+    dispatchAction(
+      ActionType.ExpandCollapsedFarm,
+      isOpen ? null : farm,
+      !isOpen
     );
   };
 
   return (
     <TableRow key={farm.farmId}>
+      <Hidden mdUp>
+        <TableCell className={style.cell}>
+          <IconButton aria-label="expand row" size="small" onClick={onExpand}>
+            {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+      </Hidden>
+
       <TableCell className={style.cell}>{farm.name}</TableCell>
-      <TableCell className={style.cell}>{farm.areaSize}</TableCell>
-      <TableCell className={style.cell}>{farm.streetAddress}</TableCell>
-      <TableCell className={style.cell}>{farm.barangay}</TableCell>
-      <TableCell className={style.cell}>{farm.barangayArea}</TableCell>
+      <Hidden smDown>
+        <TableCell className={style.cell}>{farm.areaSize}</TableCell>
+        <TableCell className={style.cell}>{farm.streetAddress}</TableCell>
+        <TableCell className={style.cell}>{farm.barangay}</TableCell>
+        <TableCell className={style.cell}>{farm.barangayArea}</TableCell>
+      </Hidden>
       <TableCell className={style.cell}>
         {
           <Status
@@ -92,11 +124,16 @@ export const FarmRowHeader = () => {
   return (
     <TableHead>
       <TableRow className={style.rowHeader}>
+        <Hidden mdUp>
+          <TableCell></TableCell>
+        </Hidden>
         <TableCell>Name</TableCell>
-        <TableCell>Area Size</TableCell>
-        <TableCell>Address</TableCell>
-        <TableCell>Barangay</TableCell>
-        <TableCell>Area</TableCell>
+        <Hidden smDown>
+          <TableCell>Area Size</TableCell>
+          <TableCell>Address</TableCell>
+          <TableCell>Barangay</TableCell>
+          <TableCell>Area</TableCell>
+        </Hidden>
         <TableCell>Status</TableCell>
         <TableCell></TableCell>
       </TableRow>

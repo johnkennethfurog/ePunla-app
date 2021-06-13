@@ -1,3 +1,4 @@
+import { Hidden } from "@material-ui/core";
 import {
   makeStyles,
   Theme,
@@ -23,11 +24,15 @@ const ClaimRowHeader = () => {
     <TableHead className={style.rowHeader}>
       <TableRow>
         <TableCell></TableCell>
-        <TableCell>Date Filed</TableCell>
-        <TableCell>Farm</TableCell>
+        <Hidden smDown>
+          <TableCell>Date Filed</TableCell>
+          <TableCell>Farm</TableCell>
+        </Hidden>
         <TableCell>Crop</TableCell>
-        <TableCell>Damaged Area</TableCell>
-        <TableCell>Claim Status</TableCell>
+        <Hidden smDown>
+          <TableCell>Damaged Area</TableCell>
+        </Hidden>
+        <TableCell>Status</TableCell>
         <TableCell></TableCell>
       </TableRow>
     </TableHead>

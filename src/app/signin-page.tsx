@@ -20,7 +20,7 @@ import DoaLogo from "../assets/department_of_agri.png";
 import TanauanLogo from "../assets/tanauan_logo.png";
 import ButtonLoading from "../components/button-loading/button-loading";
 import useInput from "../hooks/useInput";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signIn } from "./+states/userSlice";
 import { useHistory } from "react-router";
 import { showError } from "./+states/messagePromptSlice";
@@ -32,6 +32,7 @@ const useStyle = makeStyles((theme) => ({
     alignItems: "center",
     height: "100%",
     padding: theme.spacing(2),
+    backgroundColor: "#fafafa",
   },
   signinform: {
     padding: theme.spacing(2),

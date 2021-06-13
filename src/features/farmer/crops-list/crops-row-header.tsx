@@ -5,6 +5,7 @@ import {
   makeStyles,
   Theme,
   TableHead,
+  Hidden,
 } from "@material-ui/core";
 import React from "react";
 
@@ -22,12 +23,20 @@ export const CropRowHeader = () => {
   return (
     <TableHead>
       <TableRow className={style.rowHeader}>
-        <TableCell>Date Planted</TableCell>
+        <Hidden mdUp>
+          <TableCell></TableCell>
+        </Hidden>
+        <Hidden smDown>
+          <TableCell>Date Planted</TableCell>
+        </Hidden>
         <TableCell>Crop</TableCell>
-        <TableCell>Category</TableCell>
-        <TableCell>Farm</TableCell>
-        <TableCell>Area Size</TableCell>
-        <TableCell>Crop Status</TableCell>
+        <Hidden smDown>
+          <TableCell>Category</TableCell>
+          <TableCell>Farm</TableCell>
+          <TableCell>Area Size</TableCell>
+        </Hidden>
+
+        <TableCell>Status</TableCell>
         <TableCell></TableCell>
       </TableRow>
     </TableHead>

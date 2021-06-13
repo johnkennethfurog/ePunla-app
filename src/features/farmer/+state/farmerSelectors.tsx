@@ -1,4 +1,5 @@
-import { RootState } from "../../app/store";
+import { RootState } from "../../../app/store";
+import { StatusFarmer } from "../+models/status-farmer.enum";
 
 // SELECTOR
 export const selectFarms = (state: RootState) => state.farmer.farms;
@@ -15,9 +16,9 @@ export const selectIsLoading = (state: RootState) => state.farmer.isLoading;
 export const selectIsSaving = (state: RootState) => state.farmer.isSaving;
 export const selectReloadTable = (state: RootState) => state.farmer.reloadTable;
 
+export const selectProfile = (state: RootState) => state.farmer.profile;
 export const selectFarmerAvatar = (state: RootState) =>
   state.farmer.profile?.avatar;
 export const selectFarmerFullname = (state: RootState) =>
   `${state.farmer.profile?.firstName} ${state.farmer.profile?.lastName}`;
-export const selectIsPending = (state: RootState) =>
-  state.farmer?.profile?.status === "Pending";
+export const selectIsPending = (state: RootState) => false; //state.farmer?.profile?.status === StatusFarmer.Pending;
