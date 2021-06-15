@@ -9,6 +9,8 @@ export const selectSelectedClaim = (state: RootState) =>
   state.farmer.selectedClaim;
 
 export const selectCrops = (state: RootState) => state.farmer.crops;
+export const selectCropsToHarvest = (state: RootState) =>
+  state.farmer.cropsToHarvest;
 
 export const selectError = (state: RootState) =>
   state.farmer.error?.map((err) => err.message) || [];
@@ -21,4 +23,5 @@ export const selectFarmerAvatar = (state: RootState) =>
   state.farmer.profile?.avatar;
 export const selectFarmerFullname = (state: RootState) =>
   `${state.farmer.profile?.firstName} ${state.farmer.profile?.lastName}`;
-export const selectIsPending = (state: RootState) => false; //state.farmer?.profile?.status === StatusFarmer.Pending;
+export const selectIsPending = (state: RootState) =>
+  state.farmer?.profile?.status === StatusFarmer.Pending;

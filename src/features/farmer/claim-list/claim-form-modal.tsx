@@ -20,10 +20,15 @@ import { LookupItem } from "../../../models/lookup-item";
 import {
   addValidationError,
   fetchCrops,
+  fetchFarms,
   saveClaim,
   uploadPhoto,
 } from "../+state/farmerActions";
-import { selectCrops, selectIsSaving } from "../+state/farmerSelectors";
+import {
+  selectCrops,
+  selectFarms,
+  selectIsSaving,
+} from "../+state/farmerSelectors";
 import { Claim } from "../+models/claim";
 import ClaimDamageCause from "./claim-damage-cause";
 import {
@@ -35,6 +40,7 @@ import ImageUploader from "../../../components/image-uploader/image-uploader";
 import { ImageUploadResponse } from "../../../models/image-upload-response";
 import ErrorAlert from "../../../components/error-alert/error-alert";
 import ButtonLoading from "../../../components/button-loading/button-loading";
+import { StatusCrop } from "../+models/status-crop.enum";
 
 type ClaimFormModalProps = {
   claim?: Claim;
@@ -76,14 +82,18 @@ const ClaimFormModal = (props: ClaimFormModalProps) => {
   const [farmCropId, bindFarmCropId, setFarmCropId] = useInput("");
   const [description, bindDescription, setDescription] = useInput("");
   const [damagedArea, bindDamagedArea, setDamagedArea] = useInput("");
+  const [farmId, bindFarmId, setFarmId] = useInput("");
 
   const [image, setImage] = useState<string>(claim?.photoUrl);
   const [imageToUpload, setImageToUpload] = useState<File>();
   const [claimCauses, setClaimCauses] = useState<ClaimCausePayload[]>(() => []);
+
+  const [farmsLookup, setFarmsLookup] = useState<LookupItem[]>(() => []);
   const [cropsLookup, setCropsLookup] = useState<LookupItem[]>(() => []);
 
   const isSaving = useSelector(selectIsSaving);
   const crops = useSelector(selectCrops);
+  const farms = useSelector(selectFarms);
 
   useEffect(() => {
     if (!!isOpen) {
@@ -92,10 +102,12 @@ const ClaimFormModal = (props: ClaimFormModalProps) => {
       setDescription(claim?.description || "");
       setDamagedArea(claim?.damagedArea || "Full");
       setImage(claim?.photoUrl);
+      setFarmId(claim?.farmId.toString() || "");
 
+      dispatch(fetchFarms(true));
       dispatch(
         fetchCrops({
-          status: "planted",
+          status: StatusCrop.Planted,
         })
       );
 
@@ -107,12 +119,27 @@ const ClaimFormModal = (props: ClaimFormModalProps) => {
 
   useEffect(() => {
     if (!!isOpen) {
-      const lookup = crops.map((x) => {
+      const lookup = farms.map((x) => {
         return {
-          value: x.crop,
-          id: x.farmCropId,
+          value: x.name,
+          id: x.farmId,
         } as LookupItem;
       });
+
+      setFarmsLookup(lookup);
+    }
+  }, [farms, isOpen]);
+
+  useEffect(() => {
+    if (!!isOpen) {
+      const lookup = crops
+        .filter((x) => x.farmId === +farmId)
+        .map((x) => {
+          return {
+            value: x.crop,
+            id: x.farmCropId,
+          } as LookupItem;
+        });
 
       if (!!claim) {
         lookup.push({
@@ -123,16 +150,23 @@ const ClaimFormModal = (props: ClaimFormModalProps) => {
 
       setCropsLookup(lookup);
     }
-  }, [crops, isOpen]);
+  }, [crops, isOpen, farmId]);
 
   const onSave = () => {
+    if (!farmCropId) {
+      dispatch(addValidationError("Kindly select a crop."));
+      return;
+    }
+
     if (claimCauses.length === 0) {
       dispatch(addValidationError("Kindly select atleast 1 Cause of Damage."));
       return;
     }
 
-    if (!farmCropId) {
-      dispatch(addValidationError("Kindly select a crop."));
+    if (!claimCauses.every((x) => !!x.damagedAreaSize)) {
+      dispatch(
+        addValidationError("Selected Cause of damage must have an area size.")
+      );
       return;
     }
 
@@ -188,6 +222,18 @@ const ClaimFormModal = (props: ClaimFormModalProps) => {
                   fullWidth
                   bind={bindDamagedArea}
                   options={damagedAreaLookup}
+                  hideEmptyOption={true}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                <SimpleDropDown
+                  id="farm"
+                  label="Farm"
+                  required
+                  fullWidth
+                  bind={bindFarmId}
+                  options={farmsLookup}
                   hideEmptyOption={true}
                 />
               </Grid>

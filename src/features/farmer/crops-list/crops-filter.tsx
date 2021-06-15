@@ -22,7 +22,7 @@ import useInput from "../../../hooks/useInput";
 import useLookup from "../../../hooks/useLookup";
 import { LookupItem } from "../../../models/lookup-item";
 import { fetchCrops } from "../+state/farmerActions";
-import { StatusCropList } from "../+models/status-crop.enum";
+import { StatusCrop, StatusCropList } from "../+models/status-crop.enum";
 import { selectReloadTable } from "../+state/farmerSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,7 +53,7 @@ const CropsFilter = () => {
   const dispatch = useDispatch();
   const style = useStyles();
 
-  const [status, bindStatus] = useInput("");
+  const [status, bindStatus] = useInput(StatusCrop.Planted);
 
   const [crop, bindCrop] = useLookup(null);
 

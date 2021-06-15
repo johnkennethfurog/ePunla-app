@@ -116,7 +116,6 @@ const CropRow = (props: CropRowProps) => {
       </Hidden>
       <TableCell className={style.cell}>{crop.crop}</TableCell>
       <Hidden smDown>
-        <TableCell className={style.cell}>{crop.category}</TableCell>
         <TableCell className={style.cell}>{crop.farm}</TableCell>
         <TableCell className={style.cell}>{crop.areaSize} sqm.</TableCell>
       </Hidden>

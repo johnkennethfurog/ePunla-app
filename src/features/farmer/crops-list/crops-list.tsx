@@ -22,6 +22,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CropsSaveModal from "./crops-save-modal";
 import EmptyList from "../../../components/empty-list/empty-list";
 import CropRowDetail from "./crops-row-detail";
+import BannerCropToHarvest from "../../../components/banner-crop-to-harvest/banner-crop-to-harvest";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -118,6 +119,7 @@ const CropList = () => {
         </div>
       )}
 
+      <BannerCropToHarvest />
       <Paper className={style.container}>
         <CropsFilter />
         <Table className={style.table} aria-label="farm table">

@@ -31,7 +31,6 @@ export const CropRowHeader = () => {
         </Hidden>
         <TableCell>Crop</TableCell>
         <Hidden smDown>
-          <TableCell>Category</TableCell>
           <TableCell>Farm</TableCell>
           <TableCell>Area Size</TableCell>
         </Hidden>

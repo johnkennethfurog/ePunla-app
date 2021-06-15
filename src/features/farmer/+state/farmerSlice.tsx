@@ -6,11 +6,13 @@ import { FarmCrop } from "../+models/farm-crop";
 import { ErrorMessage } from "../../../models/error-message";
 import { StatusCrop } from "../+models/status-crop.enum";
 import { FarmerProfile } from "../+models/farmer-profile";
+import moment from "moment";
 
 interface FarmerState {
   farms: Farm[];
   claims: Claim[];
   crops: FarmCrop[];
+  cropsToHarvest: FarmCrop[];
   isLoading: boolean;
   isSaving: boolean;
   error: ErrorMessage[];
@@ -24,6 +26,7 @@ const initialState: FarmerState = {
   farms: [],
   claims: [],
   crops: [],
+  cropsToHarvest: [],
   error: [],
   isLoading: false,
   isSaving: false,
@@ -38,7 +41,7 @@ export const farmerSlice = createSlice({
   name: "farms",
   initialState,
   reducers: {
-    // LOCAL USED
+    // LOCAL USE
     error: (state: FarmerState, action: PayloadAction<any>) => {
       state.isLoading = false;
       state.isSaving = false;
@@ -75,15 +78,19 @@ export const farmerSlice = createSlice({
       state.reloadTable = true;
     },
     harvestCropSuccess: (state: FarmerState, action: PayloadAction<number>) => {
-      const { crops } = state;
+      const { crops, cropsToHarvest } = state;
       state.isSaving = false;
 
       const farmCropId = action.payload;
       const cropIndex = crops.findIndex((x) => x.farmCropId === farmCropId);
+      const updatedCropsToHarvest = cropsToHarvest.filter(
+        (x) => x.farmCropId !== farmCropId
+      );
       crops[cropIndex].status = StatusCrop.Harvested;
 
       state.crops = [...crops];
       state.isLoading = false;
+      state.cropsToHarvest = updatedCropsToHarvest;
     },
     saveFarmCropSuccess: (state: FarmerState) => {
       state.isSaving = false;
@@ -114,8 +121,16 @@ export const farmerSlice = createSlice({
       state: FarmerState,
       action: PayloadAction<FarmCrop[]>
     ) => {
+      const { payload } = action;
+      const cropForHarvest = payload.filter(
+        (x) =>
+          x.status === StatusCrop.Planted &&
+          !!moment(x.estimatedHarvestDate).isBefore
+      );
+
       state.isLoading = false;
-      state.crops = action.payload;
+      state.crops = payload;
+      state.cropsToHarvest = cropForHarvest;
     },
 
     // DELETING

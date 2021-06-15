@@ -63,10 +63,6 @@ const CropRowDetail = (props: CropRowDetailProps) => {
               <span>{crop.farm}</span>
             </Grid>
             <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
-              <span className={style.label}>Category:</span>
-              <span>{crop.category}</span>
-            </Grid>
-            <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
               <span className={style.label}>Area Size:</span>
               <span>{crop.areaSize} sqm.</span>
             </Grid>

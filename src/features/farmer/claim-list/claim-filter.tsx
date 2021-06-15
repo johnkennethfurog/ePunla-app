@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
 import { fetchClaims } from "../+state/farmerActions";
-import { StatusClaimList } from "../+models/status-claim.enum";
+import { StatusClaim, StatusClaimList } from "../+models/status-claim.enum";
 import { selectReloadTable } from "../+state/farmerSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,7 +28,7 @@ const ClaimFilter = () => {
 
   const reloadTable = useSelector(selectReloadTable);
 
-  const [status, bindStatus] = useInput("");
+  const [status, bindStatus] = useInput(StatusClaim.Pending);
 
   useEffect(() => {
     dispatch(fetchClaims(!!status ? status : null));
