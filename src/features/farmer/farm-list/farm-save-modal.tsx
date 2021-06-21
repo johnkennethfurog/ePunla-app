@@ -86,12 +86,14 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
       return;
     }
 
-    const lookup = barangays.map((x) => {
-      return {
-        value: x.barangay,
-        id: x.barangayId,
-      } as LookupItem;
-    });
+    const lookup = barangays
+      .filter((x) => x.isActive)
+      .map((x) => {
+        return {
+          value: x.barangay,
+          id: x.barangayId,
+        } as LookupItem;
+      });
     setBarangayLookup(lookup);
   }, [barangays, isOpen]);
 
@@ -101,12 +103,14 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
     }
 
     const brgy = barangays.find((x) => x.barangayId === barangayId);
-    const lookup = brgy.areas.map((x) => {
-      return {
-        value: x.area,
-        id: x.barangayAreaId,
-      } as LookupItem;
-    });
+    const lookup = brgy.areas
+      .filter((x) => x.areaIsActive)
+      .map((x) => {
+        return {
+          value: x.area,
+          id: x.barangayAreaId,
+        } as LookupItem;
+      });
 
     setAreaLookup(lookup);
   }, [barangayId, isOpen, barangays]);

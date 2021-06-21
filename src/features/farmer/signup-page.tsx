@@ -18,20 +18,20 @@ import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import DoaLogo from "../assets/department_of_agri.png";
-import TanauanLogo from "../assets/tanauan_logo.png";
-import ButtonLoading from "../components/button-loading/button-loading";
-import useInput from "../hooks/useInput";
+import DoaLogo from "../../assets/department_of_agri.png";
+import TanauanLogo from "../../assets/tanauan_logo.png";
+import ButtonLoading from "../../components/button-loading/button-loading";
+import useInput from "../../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
-import { signUp, validateMobileNumber } from "./+states/userSlice";
+import { signUp, validateMobileNumber } from "../../app/+states/userSlice";
 import { useHistory } from "react-router";
-import { showError } from "./+states/messagePromptSlice";
-import { SimpleDropDown } from "../components/select/selects";
-import { LookupItem } from "../models/lookup-item";
-import { fetchBarangays, selectBarangay } from "./+states/commonSlice";
-import { ProfileUploader } from "../components/image-uploader/image-uploader";
-import { uploadPhoto } from "../features/farmer/+state/farmerActions";
-import { ImageUploadResponse } from "../models/image-upload-response";
+import { showError } from "../../app/+states/messagePromptSlice";
+import { SimpleDropDown } from "../../components/select/selects";
+import { LookupItem } from "../../models/lookup-item";
+import { fetchBarangays, selectBarangay } from "../../app/+states/commonSlice";
+import { ProfileUploader } from "../../components/image-uploader/image-uploader";
+import { uploadPhoto } from "../../features/farmer/+state/farmerActions";
+import { ImageUploadResponse } from "../../models/image-upload-response";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -114,12 +114,14 @@ const SignupPage = () => {
   }, []);
 
   useEffect(() => {
-    const lookup = barangays.map((x) => {
-      return {
-        value: x.barangay,
-        id: x.barangayId,
-      } as LookupItem;
-    });
+    const lookup = barangays
+      .filter((x) => x.isActive)
+      .map((x) => {
+        return {
+          value: x.barangay,
+          id: x.barangayId,
+        } as LookupItem;
+      });
     setBarangayLookup(lookup);
   }, [barangays]);
 
@@ -129,12 +131,14 @@ const SignupPage = () => {
     }
 
     const brgy = barangays.find((x) => x.barangayId === barangayId);
-    const lookup = brgy.areas.map((x) => {
-      return {
-        value: x.area,
-        id: x.barangayAreaId,
-      } as LookupItem;
-    });
+    const lookup = brgy.areas
+      .filter((x) => !!x.areaIsActive)
+      .map((x) => {
+        return {
+          value: x.area,
+          id: x.barangayAreaId,
+        } as LookupItem;
+      });
 
     setAreaLookup(lookup);
   }, [barangayId, barangays]);

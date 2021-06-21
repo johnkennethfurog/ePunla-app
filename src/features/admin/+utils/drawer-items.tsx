@@ -1,29 +1,24 @@
 import React from "react";
-import { DrawerItem } from "../models/drawer-item";
+import { DrawerItem } from "../../../models/drawer-item";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import LandscapeIcon from "@material-ui/icons/Landscape";
-import EcoIcon from "@material-ui/icons/Eco";
+
 const drawerItems: DrawerItem[] = [
   {
     iconComponent: <DashboardIcon />,
     title: "Dashboard",
-    route: "/dashboard",
+    route: "/admin/dashboard",
   },
   {
     iconComponent: <LandscapeIcon />,
     title: "Farms",
-    route: "/farms",
-  },
-  {
-    iconComponent: <EcoIcon />,
-    title: "Crops",
-    route: "/crops",
+    route: "/admin/farms",
   },
   {
     iconComponent: <AssignmentIcon />,
     title: "Claims",
-    route: "/claims",
+    route: "/admin/claims",
   },
 ];
 
