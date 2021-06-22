@@ -12,13 +12,12 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import Status from "../../../components/status/status";
-import { Farm } from "../+models/farm";
+import Farm from "../+models/farm";
 import { StatusFarm } from "../../../models/status-farm.enum";
 
 import EditIcon from "@material-ui/icons/Edit";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import DeleteIcon from "@material-ui/icons/Delete";
 
 import { ActionType } from "../../../models/action-type.enum";
 import { useDispatch } from "react-redux";
@@ -54,12 +53,12 @@ const FarmRow = (props: FarmRowProps) => {
     dispatchAction(ActionType.ExpandCollapsedFarm, null, false);
   }, [isBigScreen]);
 
-  const onEdit = () => {
-    dispatchAction(ActionType.UpdateFarm, farm);
+  const onApprove = () => {
+    dispatchAction(ActionType.AdminApproveFarm, farm);
   };
 
-  const onDelete = () => {
-    dispatchAction(ActionType.DeleteFarm, farm);
+  const onDecline = () => {
+    dispatchAction(ActionType.AdminDeclineFarm, farm);
   };
 
   const dispatchAction = (action: ActionType, data: Farm, expand?: boolean) => {
@@ -67,7 +66,7 @@ const FarmRow = (props: FarmRowProps) => {
       doAction({
         data,
         actionType: action,
-        actionModule: ActionModule.FarmerFarmsModule,
+        actionModule: ActionModule.AdminFarmsModule,
         expand,
       })
     );
@@ -75,7 +74,7 @@ const FarmRow = (props: FarmRowProps) => {
 
   const onExpand = () => {
     dispatchAction(
-      ActionType.ExpandCollapsedFarm,
+      ActionType.AdminExpandCollapsedFarm,
       isOpen ? null : farm,
       !isOpen
     );
@@ -91,12 +90,12 @@ const FarmRow = (props: FarmRowProps) => {
         </TableCell>
       </Hidden>
 
-      <TableCell className={style.cell}>{farm.name}</TableCell>
+      <TableCell className={style.cell}>{farm.farm}</TableCell>
       <Hidden smDown>
         <TableCell className={style.cell}>{farm.areaSize}</TableCell>
-        <TableCell className={style.cell}>{farm.streetAddress}</TableCell>
+        <TableCell className={style.cell}>{farm.address}</TableCell>
         <TableCell className={style.cell}>{farm.barangay}</TableCell>
-        <TableCell className={style.cell}>{farm.barangayArea}</TableCell>
+        <TableCell className={style.cell}>{farm.area}</TableCell>
       </Hidden>
       <TableCell className={style.cell}>
         {
@@ -110,7 +109,7 @@ const FarmRow = (props: FarmRowProps) => {
       </TableCell>
       <TableCell className={style.cell}>
         {farm.status === StatusFarm.Pending && (
-          <IconButton onClick={onEdit} aria-label="edit">
+          <IconButton onClick={onApprove} aria-label="edit">
             <EditIcon />
           </IconButton>
         )}

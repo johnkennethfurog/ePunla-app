@@ -9,12 +9,15 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
-import { fetchClaims } from "../+state/farmerActions";
+import { fetchClaims } from "../+state/adminActions";
 import {
   StatusClaim,
   StatusClaimList,
 } from "../../../models/status-claim.enum";
-import { selectReloadTable } from "../+state/farmerSelectors";
+import { selectReloadTable } from "../+state/adminSelectors";
+import { Page, PagedRequest } from "../../../models/paged-request";
+import { ClaimSearchField } from "../+models/claim-search-field";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,17 +34,39 @@ const ClaimFilter = () => {
 
   const reloadTable = useSelector(selectReloadTable);
 
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
   const [status, bindStatus] = useInput(StatusClaim.Pending);
 
   useEffect(() => {
-    dispatch(fetchClaims(!!status ? status : null));
+    loadClaims();
   }, [status]);
 
   useEffect(() => {
     if (!!reloadTable) {
-      dispatch(fetchClaims(!!status ? status : null));
+      loadClaims();
     }
   }, [reloadTable]);
+
+  const loadClaims = () => {
+    const page: Page = {
+      pageNumber,
+      pageSize,
+    };
+
+    const searchField: ClaimSearchField = {
+      status: !!status ? status : null,
+      barangayId: null,
+      searchText: null,
+    };
+
+    const payload: PagedRequest<ClaimSearchField> = {
+      page,
+      searchField,
+    };
+    dispatch(fetchClaims(payload));
+  };
 
   return (
     <form className={style.searchForm}>

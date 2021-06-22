@@ -3,6 +3,8 @@ import { Farm } from "../features/farmer/+models/farm";
 import { FarmCrop } from "../features/farmer/+models/farm-crop";
 import { ActionModule } from "./action-module.enum";
 import { ActionType } from "./action-type.enum";
+import AdminClaim from "../features/admin/+models/claim";
+import AdminFarm from "../features/admin/+models/farm";
 
 export interface ActionTodo {
   data: ActionData;
@@ -11,4 +13,4 @@ export interface ActionTodo {
   expand?: boolean;
 }
 
-type ActionData = Claim | FarmCrop | Farm;
+type ActionData = Claim | FarmCrop | Farm | AdminClaim | AdminFarm;

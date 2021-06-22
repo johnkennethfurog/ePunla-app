@@ -1,4 +1,4 @@
-import { LookupItem } from "../../../models/lookup-item";
+import { LookupItem } from "./lookup-item";
 
 export enum StatusClaim {
   Pending = "Pending",

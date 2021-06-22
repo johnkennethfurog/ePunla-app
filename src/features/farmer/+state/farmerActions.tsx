@@ -23,7 +23,7 @@ import { FarmerProfile } from "../+models/farmer-profile";
 import { ActionType } from "../../../models/action-type.enum";
 import { ActionModule } from "../../../models/action-module.enum";
 import { doAction } from "../../../app/+states/commonSlice";
-import { StatusFarmer } from "../+models/status-farmer.enum";
+import { StatusFarmer } from "../../../models/status-farmer.enum";
 
 const FARMER_MODULE = "/farmer";
 const PHOTO_MODULE = "/photo";

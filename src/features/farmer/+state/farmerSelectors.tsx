@@ -1,5 +1,5 @@
 import { RootState } from "../../../app/store";
-import { StatusFarmer } from "../+models/status-farmer.enum";
+import { StatusFarmer } from "../../../models/status-farmer.enum";
 
 // SELECTOR
 export const selectFarms = (state: RootState) => state.farmer.farms;

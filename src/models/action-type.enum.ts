@@ -10,4 +10,14 @@ export enum ActionType {
   DeleteFarm,
   CreateFarm,
   ExpandCollapsedFarm,
+
+  // ADMIN CLAIM
+  AdminExpandCollapsedCrops,
+  AdminApproveClaim,
+  AdminDeclineClaim,
+
+  // ADMIN FARM
+  AdminExpandCollapsedFarm,
+  AdminApproveFarm,
+  AdminDeclineFarm,
 }

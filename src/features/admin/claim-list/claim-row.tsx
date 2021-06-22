@@ -16,11 +16,13 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
-import { Claim } from "../+models/claim";
+import Claim from "../+models/claim";
 import { StatusClaim } from "../../../models/status-claim.enum";
 import moment from "moment";
-import { selectClaim } from "../+state/farmerSlice";
 import { useDispatch } from "react-redux";
+import { ActionType } from "../../../models/action-type.enum";
+import { doAction } from "../../../app/+states/commonSlice";
+import { ActionModule } from "../../../models/action-module.enum";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,26 +34,47 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type ClaimRowProps = {
   claim: Claim;
-  onExpand: () => void;
-  onDelete: (claimId: number) => void;
   isOpen: boolean;
 };
 
 const ClaimRow = (props: ClaimRowProps) => {
-  const { claim, onExpand, isOpen, onDelete } = props;
+  const { claim, isOpen } = props;
 
   const style = useStyles();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement>();
 
-  const editClaim = () => {
-    dispatch(selectClaim(claim));
+  const approveClaim = () => {
+    dispatchAction(ActionType.AdminApproveClaim, claim);
     onCloseMenu();
   };
 
-  const deleteClaim = () => {
-    onDelete(claim.claimId);
+  const declineClaim = () => {
+    dispatchAction(ActionType.AdminDeclineClaim, claim);
     onCloseMenu();
+  };
+
+  const dispatchAction = (
+    action: ActionType,
+    data: Claim,
+    expand?: boolean
+  ) => {
+    dispatch(
+      doAction({
+        data,
+        actionType: action,
+        actionModule: ActionModule.AdminClaimsModile,
+        expand,
+      })
+    );
+  };
+
+  const onExpand = () => {
+    dispatchAction(
+      ActionType.ExpandCollapsedFarm,
+      isOpen ? null : claim,
+      !isOpen
+    );
   };
 
   const onCloseMenu = () => {
@@ -73,10 +96,10 @@ const ClaimRow = (props: ClaimRowProps) => {
         <TableCell className={style.cell}>
           {moment(claim.filingDate).format("MM-DD-YYYY")}
         </TableCell>
-        <TableCell className={style.cell}>{claim.farm}</TableCell>
       </Hidden>
-      <TableCell className={style.cell}>{claim.crop}</TableCell>
+      <TableCell className={style.cell}>{claim.farm}</TableCell>
       <Hidden smDown>
+        <TableCell className={style.cell}>{claim.crop}</TableCell>
         <TableCell className={style.cell}>{claim.damagedArea}</TableCell>
       </Hidden>
       <TableCell className={style.cell}>
@@ -102,8 +125,8 @@ const ClaimRow = (props: ClaimRowProps) => {
               open={Boolean(anchorEl)}
               onClose={onCloseMenu}
             >
-              <MenuItem onClick={editClaim}>Edit</MenuItem>
-              <MenuItem onClick={deleteClaim}>Delete</MenuItem>
+              <MenuItem onClick={approveClaim}>Approve</MenuItem>
+              <MenuItem onClick={declineClaim}>Decline</MenuItem>
             </Menu>
           </>
         )}
