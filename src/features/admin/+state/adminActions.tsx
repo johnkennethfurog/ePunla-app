@@ -5,7 +5,7 @@ import {
   clientQueryApiRequest,
 } from "../../../utils/client";
 import { adminSlice } from "./adminSlice";
-import Claim from "../+models/claim";
+import { PagedClaim } from "../+models/claim";
 import Farm from "../+models/farm";
 import {
   showError,
@@ -19,6 +19,7 @@ import { doAction } from "../../../app/+states/commonSlice";
 import { PagedRequest } from "../../../models/paged-request";
 import { ClaimSearchField } from "../+models/claim-search-field";
 import { FarmSearchField } from "../+models/farm-search-field";
+import { ValidateClaimPayload } from "../+models/validate-claim-payload";
 
 const ADMIN_MODULE = "/admin";
 
@@ -28,12 +29,35 @@ const {
   save,
   reset,
   onLogout,
+  validateClaimSuccess,
 
   loadFarmsSuccess,
   loadClaimsSuccess,
 } = adminSlice.actions;
 
 export const farmerLogout = onLogout;
+
+// SAVING
+export const validateClaim =
+  (
+    claimId: number,
+    payload: ValidateClaimPayload,
+    onValidateSuccess: () => void
+  ): AppThunk =>
+  (dispatch) => {
+    dispatch(save());
+
+    clientCommandApiRequest()
+      .put(`${ADMIN_MODULE}/claims/${claimId}/validate`, payload)
+      .then(() => {
+        dispatch(validateClaimSuccess());
+        onValidateSuccess();
+      })
+      .catch((err: any) => {
+        dispatch(error(err));
+        dispatch(showError("Unable to get Claims"));
+      });
+  };
 
 // FETCHING
 
@@ -64,7 +88,7 @@ export const fetchClaims =
 
     clientQueryApiRequest()
       .post(ADMIN_MODULE + "/claims", searchField)
-      .then((response: AxiosResponse<Claim[]>) => {
+      .then((response: AxiosResponse<PagedClaim>) => {
         dispatch(loadClaimsSuccess(response.data));
       })
       .catch((err: any) => {

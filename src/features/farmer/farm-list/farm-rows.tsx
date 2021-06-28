@@ -18,7 +18,6 @@ import { StatusFarm } from "../../../models/status-farm.enum";
 import EditIcon from "@material-ui/icons/Edit";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import DeleteIcon from "@material-ui/icons/Delete";
 
 import { ActionType } from "../../../models/action-type.enum";
 import { useDispatch } from "react-redux";
@@ -56,10 +55,6 @@ const FarmRow = (props: FarmRowProps) => {
 
   const onEdit = () => {
     dispatchAction(ActionType.UpdateFarm, farm);
-  };
-
-  const onDelete = () => {
-    dispatchAction(ActionType.DeleteFarm, farm);
   };
 
   const dispatchAction = (action: ActionType, data: Farm, expand?: boolean) => {

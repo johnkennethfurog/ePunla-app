@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Farm from "../+models/farm";
-import Claim from "../+models/claim";
+import { PagedClaim } from "../+models/claim";
 
 import { ErrorMessage } from "../../../models/error-message";
 interface AdminState {
   farms: Farm[];
-  claims: Claim[];
+  claims: PagedClaim;
   isLoading: boolean;
   isSaving: boolean;
   error: ErrorMessage[];
@@ -14,7 +14,10 @@ interface AdminState {
 
 const initialState: AdminState = {
   farms: [],
-  claims: [],
+  claims: {
+    page: { totalCount: 0 },
+    values: [],
+  },
   error: [],
   isLoading: false,
   isSaving: false,
@@ -46,11 +49,14 @@ export const adminSlice = createSlice({
     onLogout: (state: AdminState) => {
       state = { ...initialState };
     },
-
-    // SAVING
     save: (state: AdminState) => {
       state.isSaving = true;
       state.error = null;
+    },
+    // SAVING
+    validateClaimSuccess: (state: AdminState) => {
+      state.isSaving = false;
+      state.reloadTable = true;
     },
     // FETCHING
 
@@ -58,7 +64,10 @@ export const adminSlice = createSlice({
       state.isLoading = false;
       state.farms = action.payload;
     },
-    loadClaimsSuccess: (state: AdminState, action: PayloadAction<Claim[]>) => {
+    loadClaimsSuccess: (
+      state: AdminState,
+      action: PayloadAction<PagedClaim>
+    ) => {
       state.isLoading = false;
       state.claims = action.payload;
     },

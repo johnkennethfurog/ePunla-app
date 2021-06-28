@@ -26,10 +26,10 @@ const ClaimRowHeader = () => {
         <TableCell></TableCell>
         <Hidden smDown>
           <TableCell>Date Filed</TableCell>
-          <TableCell>Farm</TableCell>
         </Hidden>
-        <TableCell>Crop</TableCell>
+        <TableCell>Farm</TableCell>
         <Hidden smDown>
+          <TableCell>Crop</TableCell>
           <TableCell>Damaged Area</TableCell>
         </Hidden>
         <TableCell>Status</TableCell>

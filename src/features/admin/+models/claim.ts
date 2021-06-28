@@ -1,3 +1,9 @@
+import { PagedResponse } from "../../../models/paged-response";
+
+export interface PagedClaim {
+  page: PagedResponse;
+  values: Claim[];
+}
 export default interface Claim {
   claimId: number;
   filingDate: Date;

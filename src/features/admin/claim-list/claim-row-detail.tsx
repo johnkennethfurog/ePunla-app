@@ -51,7 +51,7 @@ const ClaimRowDetail = (props: ClaimRowDetailProps) => {
     <TableRow key={claim.claimId.toString() + "_detail"}>
       <TableCell className={style.cell} colSpan={7}>
         <Collapse in={isOpen} timeout="auto" unmountOnExit>
-          <Grid container className={style.rootGrid} spacing={5}>
+          <Grid container className={style.rootGrid} spacing={2}>
             {/* ATTACHED IMAGE */}
             <Grid item xs={12} sm={12} md={4} lg={4}>
               {!claim.photoUrl && (
@@ -63,15 +63,15 @@ const ClaimRowDetail = (props: ClaimRowDetailProps) => {
             </Grid>
 
             {/* DESCRIPTION */}
-            <Grid item xs={12} sm={12} md={8} lg={8}>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
               <Hidden mdUp>
                 {/* DATE FILED */}
                 <span className={style.label}>Date Filed:</span>
                 <span>{moment(claim.filingDate).format("MM-DD-YYYY")}</span>
 
-                {/* FARM */}
-                <span className={style.label}>Farm:</span>
-                <span>{claim.farm}</span>
+                {/* CROP */}
+                <span className={style.label}>Crop:</span>
+                <span>{claim.crop}</span>
 
                 {/* Damaged Area */}
                 <span className={style.label}>Damaged Area:</span>
@@ -95,6 +95,43 @@ const ClaimRowDetail = (props: ClaimRowDetailProps) => {
                     {dmg.damageType} - {dmg.damagedAreaSize} sqm.
                   </p>
                 ))}
+
+              {/* VALIDATION DATE */}
+              {!!claim.validationDate && (
+                <>
+                  <span className={style.label}>Validation Date:</span>
+                  <span>
+                    {moment(claim.validationDate).format("MM-DD-YYYY")}
+                  </span>
+                </>
+              )}
+
+              {/* VALIDATION REMARKS */}
+              {!!claim.remarks && (
+                <>
+                  <span className={style.label}>Remarks:</span>
+                  <span>{claim.remarks}</span>
+                </>
+              )}
+            </Grid>
+
+            {/* FARMER DETAIL */}
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Hidden mdUp>
+                <span className={style.label}>Farm:</span>
+                <span>{claim.farm}</span>
+              </Hidden>
+              {/* FARMER */}
+              <span className={style.label}>Farmer:</span>
+              <span>{`${claim.firstName} ${claim.lastName}`}</span>
+
+              {/* FARM ADDRESS*/}
+              <span className={style.label}>Farm Address:</span>
+              <span>{`${claim.address}, ${claim.area}, ${claim.barangay}`}</span>
+
+              {/* FARMER NUMBER */}
+              <span className={style.label}>Mobile Number:</span>
+              <span>{`+63${claim.mobileNumber}`}</span>
             </Grid>
           </Grid>
         </Collapse>

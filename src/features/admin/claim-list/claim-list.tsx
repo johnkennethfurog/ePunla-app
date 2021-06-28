@@ -5,10 +5,10 @@ import TableBody from "@material-ui/core/TableBody";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, Theme, createStyles } from "@material-ui/core";
 import ClaimRow from "./claim-row";
-import { selectClaims } from "../+state/adminSelectors";
+import { selectClaims, selectClaimsPageCount } from "../+state/adminSelectors";
 import ClaimRowHeader from "./claim-row-header";
 import ClaimRowDetail from "./claim-row-detail";
-import ConfirmationModal from "../../../components/modals/confirmation-modal";
+import TablePagination from "@material-ui/core/TablePagination";
 import ClaimFilter from "./claim-filter";
 
 import EmptyList from "../../../components/empty-list/empty-list";
@@ -19,6 +19,7 @@ import {
 import Claim from "../+models/claim";
 import { ActionModule } from "../../../models/action-module.enum";
 import { ActionType } from "../../../models/action-type.enum";
+import ClaimValidateModal from "./claim-validate-modal";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,11 +40,16 @@ const ClaimList = () => {
   const style = useStyles();
 
   const claims = useSelector(selectClaims);
+  const pageCount = useSelector(selectClaimsPageCount);
+
   const actionToPerform = useSelector(selectActionToPerform);
 
-  const [showDeleteModal, setShowDeleteModal] = useState(() => false);
+  const [showValidationModal, setShowValidationModal] = useState(() => false);
   const [selectedClaim, setSelectedClaim] = useState<Claim>(() => null);
   const [expand, setExpand] = useState(() => false);
+  const [isApproved, setIsApproved] = useState(() => false);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     return () => {};
@@ -61,13 +67,17 @@ const ClaimList = () => {
 
     switch (actionType) {
       case ActionType.DeleteFarm:
-        setShowDeleteModal(true);
+        setShowValidationModal(true);
         break;
 
       case ActionType.AdminDeclineClaim:
+        setIsApproved(false);
+        setShowValidationModal(true);
         break;
 
       case ActionType.AdminApproveClaim:
+        setIsApproved(true);
+        setShowValidationModal(true);
         break;
 
       case ActionType.ExpandCollapsedFarm:
@@ -84,15 +94,26 @@ const ClaimList = () => {
   }, [actionToPerform]);
 
   const onClose = () => {
-    setShowDeleteModal(false);
+    setShowValidationModal(false);
   };
 
-  const onConfirm = () => {};
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPageNumber(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPageSize(parseInt(event.target.value, 10));
+    setPageNumber(0);
+    // setRowsPerPage(parseInt(event.target.value, 10));
+    // setPage(0);
+  };
 
   return (
     <>
       <Paper className={style.container}>
-        <ClaimFilter />
+        <ClaimFilter pageNumber={pageNumber} pageSize={pageSize} />
         <Table className={style.table} aria-label="farm table">
           <ClaimRowHeader />
           <TableBody>
@@ -121,14 +142,21 @@ const ClaimList = () => {
           <EmptyList label="You don't have any claims." />
         )}
 
-        <ConfirmationModal
-          open={showDeleteModal}
-          title="Delete Claim"
-          content="Are you sure you want to delete this claim?"
-          btnNoTitle="No"
-          btnYesTitle="Yes"
-          onClickBtnNo={onClose}
-          onClickBtnYes={onConfirm}
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={pageCount}
+          rowsPerPage={pageSize}
+          page={pageNumber}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+
+        <ClaimValidateModal
+          isApproved={isApproved}
+          claimId={selectedClaim?.claimId}
+          isOpen={showValidationModal}
+          onClose={onClose}
         />
       </Paper>
     </>
