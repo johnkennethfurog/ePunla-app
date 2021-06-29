@@ -1,10 +1,13 @@
 import { RootState } from "../../../app/store";
 // SELECTOR
-export const selectFarms = (state: RootState) => state.admin.farms;
 
 export const selectClaims = (state: RootState) => state.admin.claims.values;
 export const selectClaimsPageCount = (state: RootState) =>
   state.admin.claims.page.totalCount;
+
+export const selectFarms = (state: RootState) => state.admin.farms.values;
+export const selectFarmsPageCount = (state: RootState) =>
+  state.admin.farms.page.totalCount;
 
 export const selectError = (state: RootState) =>
   state.admin.error?.map((err) => err.message) || [];

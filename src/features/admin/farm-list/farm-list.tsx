@@ -3,10 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import Paper from "@material-ui/core/Paper";
-import { makeStyles, Theme, createStyles } from "@material-ui/core";
+import {
+  makeStyles,
+  Theme,
+  createStyles,
+  TablePagination,
+} from "@material-ui/core";
 import FarmRow, { FarmRowHeader } from "./farm-rows";
-import { fetchFarms } from "../+state/adminActions";
-import { selectFarms, selectReloadTable } from "../+state/adminSelectors";
+import { selectFarms, selectFarmsPageCount } from "../+state/adminSelectors";
 import {
   doneAction,
   selectActionToPerform,
@@ -15,13 +19,12 @@ import { ActionModule } from "../../../models/action-module.enum";
 import { ActionType } from "../../../models/action-type.enum";
 import Farm from "../+models/farm";
 
-import ConfirmationModal from "../../../components/modals/confirmation-modal";
 import EmptyList from "../../../components/empty-list/empty-list";
 import FarmRowDetail from "./farm-rows-detail";
-import { Page, PagedRequest } from "../../../models/paged-request";
-import { FarmSearchField } from "../+models/farm-search-field";
+import FarmFilter from "./farm-filter";
+import FarmValidateModal from "./farm-validate-modal";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     container: {
       padding: 10,
@@ -36,45 +39,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const FarmList = () => {
-  const farms = useSelector(selectFarms);
   const dispatch = useDispatch();
   const style = useStyles();
 
+  const farms = useSelector(selectFarms);
+  const pageCount = useSelector(selectFarmsPageCount);
+
   const actionToPerform = useSelector(selectActionToPerform);
-  const reloadTable = useSelector(selectReloadTable);
 
   const [selectedFarm, setSelectedFarm] = useState<Farm>(() => null);
-  const [showDeleteModal, setShowDeleteModal] = useState(() => false);
+  const [showValidationModal, setShowValidationModal] = useState(() => false);
   const [expand, setExpand] = useState(() => false);
+  const [isApproved, setIsApproved] = useState(() => false);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
 
-  useEffect(() => {
-    loadFarms();
-  }, []);
-
-  useEffect(() => {
-    if (!!reloadTable) {
-      loadFarms();
-    }
-  }, [reloadTable]);
-
-  const loadFarms = () => {
-    const page: Page = {
-      pageNumber: 1,
-      pageSize: 10,
-    };
-
-    const searchField: FarmSearchField = {
-      status: null,
-      barangayId: null,
-      searchText: null,
-    };
-
-    const payload: PagedRequest<FarmSearchField> = {
-      page,
-      searchField,
-    };
-    dispatch(fetchFarms(payload));
-  };
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (!actionToPerform) return;
@@ -88,9 +68,13 @@ const FarmList = () => {
 
     switch (actionType) {
       case ActionType.AdminApproveFarm:
+        setIsApproved(true);
+        setShowValidationModal(true);
         break;
 
       case ActionType.AdminDeclineFarm:
+        setIsApproved(false);
+        setShowValidationModal(true);
         break;
 
       case ActionType.AdminExpandCollapsedFarm:
@@ -106,18 +90,25 @@ const FarmList = () => {
     dispatch(doneAction());
   }, [actionToPerform]);
 
-  const closeDeleteModal = () => {
-    setShowDeleteModal(false);
+  const onClose = () => {
+    setShowValidationModal(false);
   };
 
-  const onConfirmDelete = () => {
-    // dispatch(deleteCrop(selectedCrop?.farmCropId));
-    setShowDeleteModal(false);
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPageNumber(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPageSize(parseInt(event.target.value, 10));
+    setPageNumber(0);
   };
 
   return (
     <>
       <Paper className={style.container}>
+        <FarmFilter pageNumber={pageNumber} pageSize={pageSize} />
         <Table className={style.table} aria-label="farm table">
           <FarmRowHeader />
           <TableBody>
@@ -137,17 +128,24 @@ const FarmList = () => {
           </TableBody>
         </Table>
         {farms.length === 0 && <EmptyList label="Farm List is empty." />}
-      </Paper>
 
-      <ConfirmationModal
-        open={showDeleteModal}
-        title="Delete Farm"
-        content="Are you sure you want to delete this farm?"
-        btnNoTitle="No"
-        btnYesTitle="Yes"
-        onClickBtnNo={closeDeleteModal}
-        onClickBtnYes={onConfirmDelete}
-      />
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={pageCount}
+          rowsPerPage={pageSize}
+          page={pageNumber}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+
+        <FarmValidateModal
+          isApproved={isApproved}
+          farmId={selectedFarm?.farmId}
+          isOpen={showValidationModal}
+          onClose={onClose}
+        />
+      </Paper>
     </>
   );
 };

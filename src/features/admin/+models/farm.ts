@@ -1,3 +1,9 @@
+import { PagedResponse } from "../../../models/paged-response";
+
+export interface PagedFarm {
+  page: PagedResponse;
+  values: Farm[];
+}
 export default interface Farm {
   farmId: number;
   farm: string;

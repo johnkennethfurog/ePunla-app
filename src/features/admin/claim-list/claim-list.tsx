@@ -106,8 +106,6 @@ const ClaimList = () => {
   ) => {
     setPageSize(parseInt(event.target.value, 10));
     setPageNumber(0);
-    // setRowsPerPage(parseInt(event.target.value, 10));
-    // setPage(0);
   };
 
   return (

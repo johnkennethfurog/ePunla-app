@@ -6,16 +6,17 @@ import {
   createStyles,
   makeStyles,
   Theme,
-  useMediaQuery,
   Hidden,
   useTheme,
+  Menu,
+  MenuItem,
 } from "@material-ui/core";
 import React from "react";
 import Status from "../../../components/status/status";
 import Farm from "../+models/farm";
 import { StatusFarm } from "../../../models/status-farm.enum";
 
-import EditIcon from "@material-ui/icons/Edit";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
@@ -25,7 +26,7 @@ import { doAction } from "../../../app/+states/commonSlice";
 import { ActionModule } from "../../../models/action-module.enum";
 import { useEffect } from "react";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     rowHeader: {
       backgroundColor: "rgb(244, 246, 248)",
@@ -46,12 +47,8 @@ const FarmRow = (props: FarmRowProps) => {
 
   const style = useStyles();
   const dispatch = useDispatch();
-  const theme = useTheme();
-  const isBigScreen = useMediaQuery(theme.breakpoints.up("md"));
 
-  useEffect(() => {
-    dispatchAction(ActionType.ExpandCollapsedFarm, null, false);
-  }, [isBigScreen]);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement>();
 
   const onApprove = () => {
     dispatchAction(ActionType.AdminApproveFarm, farm);
@@ -80,15 +77,21 @@ const FarmRow = (props: FarmRowProps) => {
     );
   };
 
+  const onCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const onOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   return (
     <TableRow key={farm.farmId}>
-      <Hidden mdUp>
-        <TableCell className={style.cell}>
-          <IconButton aria-label="expand row" size="small" onClick={onExpand}>
-            {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-      </Hidden>
+      <TableCell className={style.cell}>
+        <IconButton aria-label="expand row" size="small" onClick={onExpand}>
+          {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </IconButton>
+      </TableCell>
 
       <TableCell className={style.cell}>{farm.farm}</TableCell>
       <Hidden smDown>
@@ -109,9 +112,21 @@ const FarmRow = (props: FarmRowProps) => {
       </TableCell>
       <TableCell className={style.cell}>
         {farm.status === StatusFarm.Pending && (
-          <IconButton onClick={onApprove} aria-label="edit">
-            <EditIcon />
-          </IconButton>
+          <>
+            <IconButton onClick={onOpenMenu} aria-label="edit">
+              <MoreVertIcon />
+            </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={onCloseMenu}
+            >
+              <MenuItem onClick={onApprove}>Approve</MenuItem>
+              <MenuItem onClick={onDecline}>Decline</MenuItem>
+            </Menu>
+          </>
         )}
       </TableCell>
     </TableRow>
@@ -123,9 +138,7 @@ export const FarmRowHeader = () => {
   return (
     <TableHead>
       <TableRow className={style.rowHeader}>
-        <Hidden mdUp>
-          <TableCell></TableCell>
-        </Hidden>
+        <TableCell></TableCell>
         <TableCell>Name</TableCell>
         <Hidden smDown>
           <TableCell>Area Size</TableCell>

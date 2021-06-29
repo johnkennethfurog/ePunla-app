@@ -10,14 +10,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
-import { fetchClaims } from "../+state/adminActions";
-import {
-  StatusClaim,
-  StatusClaimList,
-} from "../../../models/status-claim.enum";
+import { fetchFarms } from "../+state/adminActions";
+import { StatusFarm, StatusFarmList } from "../../../models/status-farm.enum";
 import { selectReloadTable } from "../+state/adminSelectors";
 import { Page, PagedRequest } from "../../../models/paged-request";
-import { ClaimSearchField } from "../+models/claim-search-field";
+import { FarmSearchField } from "../+models/farm-search-field";
 import { useState } from "react";
 import {
   fetchBarangays,
@@ -36,12 +33,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-type ClaimFilterProps = {
+type FarmFilterProps = {
   pageNumber: number;
   pageSize: number;
 };
 
-const ClaimFilter = (props: ClaimFilterProps) => {
+const FarmFilter = (props: FarmFilterProps) => {
   const { pageNumber, pageSize } = props;
   const dispatch = useDispatch();
   const style = useStyles();
@@ -53,7 +50,7 @@ const ClaimFilter = (props: ClaimFilterProps) => {
   const [barangayLookup, setBarangayLookup] = useState<LookupItem[]>(() => []);
   const [searchText, setSearchText] = useState("");
 
-  const [status, bindStatus] = useInput(StatusClaim.Pending);
+  const [status, bindStatus] = useInput(StatusFarm.Pending);
   const [barangayId, bindBarangayId] = useInput<string | number>("");
 
   const [query, bindQuery] = useInput("");
@@ -90,38 +87,38 @@ const ClaimFilter = (props: ClaimFilterProps) => {
   }, [barangays]);
 
   useEffect(() => {
-    loadClaims();
+    loadFarms();
   }, [status, searchText, barangayId, pageSize, pageNumber]);
 
   useEffect(() => {
     if (!!reloadTable) {
-      loadClaims();
+      loadFarms();
     }
   }, [reloadTable]);
 
-  const loadClaims = () => {
+  const loadFarms = () => {
     const page: Page = {
       pageNumber: pageNumber + 1,
       pageSize,
     };
 
-    const searchField: ClaimSearchField = {
+    const searchField: FarmSearchField = {
       status: !!status ? status : null,
       barangayId: !!barangayId ? +barangayId : null,
       searchText: searchText,
     };
 
-    const payload: PagedRequest<ClaimSearchField> = {
+    const payload: PagedRequest<FarmSearchField> = {
       page,
       searchField,
     };
 
-    dispatch(fetchClaims(payload));
+    dispatch(fetchFarms(payload));
   };
 
   return (
     <form className={style.searchForm}>
-      <Typography gutterBottom>Search Claims</Typography>
+      <Typography gutterBottom>Search Farms</Typography>
       <Grid spacing={2} container>
         <Grid item xs={12} sm={12} md={6} lg={6}>
           <TextField
@@ -134,10 +131,10 @@ const ClaimFilter = (props: ClaimFilterProps) => {
         <Grid item xs={12} sm={6} md={3} lg={3}>
           <SimpleDropDown
             id="status"
-            label="Claim Status"
+            label="Farm Status"
             fullWidth
             bind={bindStatus}
-            options={StatusClaimList}
+            options={StatusFarmList}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3} lg={3}>
@@ -154,4 +151,4 @@ const ClaimFilter = (props: ClaimFilterProps) => {
   );
 };
 
-export default ClaimFilter;
+export default FarmFilter;

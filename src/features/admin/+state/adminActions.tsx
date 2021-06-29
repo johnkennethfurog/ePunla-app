@@ -6,7 +6,7 @@ import {
 } from "../../../utils/client";
 import { adminSlice } from "./adminSlice";
 import { PagedClaim } from "../+models/claim";
-import Farm from "../+models/farm";
+import Farm, { PagedFarm } from "../+models/farm";
 import {
   showError,
   showSuccess,
@@ -20,6 +20,7 @@ import { PagedRequest } from "../../../models/paged-request";
 import { ClaimSearchField } from "../+models/claim-search-field";
 import { FarmSearchField } from "../+models/farm-search-field";
 import { ValidateClaimPayload } from "../+models/validate-claim-payload";
+import { ValidateFarmPayload } from "../+models/validate-farm-payload";
 
 const ADMIN_MODULE = "/admin";
 
@@ -30,6 +31,7 @@ const {
   reset,
   onLogout,
   validateClaimSuccess,
+  validateFarmSuccess,
 
   loadFarmsSuccess,
   loadClaimsSuccess,
@@ -55,7 +57,28 @@ export const validateClaim =
       })
       .catch((err: any) => {
         dispatch(error(err));
-        dispatch(showError("Unable to get Claims"));
+        dispatch(showError("Unable to validate Claim"));
+      });
+  };
+
+export const validateFarm =
+  (
+    farmId: number,
+    payload: ValidateFarmPayload,
+    onValidateSuccess: () => void
+  ): AppThunk =>
+  (dispatch) => {
+    dispatch(save());
+
+    clientCommandApiRequest()
+      .put(`${ADMIN_MODULE}/farms/${farmId}/validate`, payload)
+      .then(() => {
+        dispatch(validateFarmSuccess());
+        onValidateSuccess();
+      })
+      .catch((err: any) => {
+        dispatch(error(err));
+        dispatch(showError("Unable to validate Farm"));
       });
   };
 
@@ -70,7 +93,7 @@ export const fetchFarms =
 
     clientQueryApiRequest()
       .post(`${ADMIN_MODULE}/farms`, searchField)
-      .then((response: AxiosResponse<Farm[]>) => {
+      .then((response: AxiosResponse<PagedFarm>) => {
         dispatch(loadFarmsSuccess(response.data));
       })
       .catch((err: any) => {
