@@ -1,9 +1,9 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import Paper from "@material-ui/core/Paper";
-import { makeStyles, Theme, createStyles } from "@material-ui/core";
+import { makeStyles, Theme, createStyles, Button } from "@material-ui/core";
 import ClaimRow from "./claim-row";
 import { selectClaims, selectClaimsPageCount } from "../+state/adminSelectors";
 import ClaimRowHeader from "./claim-row-header";
@@ -20,6 +20,9 @@ import Claim from "../+models/claim";
 import { ActionModule } from "../../../models/action-module.enum";
 import { ActionType } from "../../../models/action-type.enum";
 import ClaimValidateModal from "./claim-validate-modal";
+import { useReactToPrint } from "react-to-print";
+import ClaimListToPrint from "./claim-list-to-print";
+import PrintIcon from "@material-ui/icons/Print";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,10 +30,13 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: 10,
     },
     table: {},
-    newButtonDiv: {
+    printButtonDiv: {
       display: "flex",
       justifyContent: "flex-end",
       marginBottom: 10,
+    },
+    toPrintContainer: {
+      display: "none",
     },
   })
 );
@@ -38,6 +44,11 @@ const useStyles = makeStyles((theme: Theme) =>
 const ClaimList = () => {
   const dispatch = useDispatch();
   const style = useStyles();
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "Claims",
+  });
 
   const claims = useSelector(selectClaims);
   const pageCount = useSelector(selectClaimsPageCount);
@@ -108,8 +119,26 @@ const ClaimList = () => {
     setPageNumber(0);
   };
 
+  const onPrint = () => {
+    if (claims.length > 0) {
+      handlePrint();
+    }
+  };
+
   return (
     <>
+      <div className={style.printButtonDiv}>
+        <Button color="primary" onClick={onPrint} startIcon={<PrintIcon />}>
+          Print
+        </Button>
+      </div>
+
+      <div className={style.toPrintContainer}>
+        <div ref={componentRef}>
+          <ClaimListToPrint claims={claims} />
+        </div>
+      </div>
+
       <Paper className={style.container}>
         <ClaimFilter pageNumber={pageNumber} pageSize={pageSize} />
         <Table className={style.table} aria-label="farm table">

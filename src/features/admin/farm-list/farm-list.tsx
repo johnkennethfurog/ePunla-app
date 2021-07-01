@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,6 +8,7 @@ import {
   Theme,
   createStyles,
   TablePagination,
+  Button,
 } from "@material-ui/core";
 import FarmRow, { FarmRowHeader } from "./farm-rows";
 import { selectFarms, selectFarmsPageCount } from "../+state/adminSelectors";
@@ -23,6 +24,9 @@ import EmptyList from "../../../components/empty-list/empty-list";
 import FarmRowDetail from "./farm-rows-detail";
 import FarmFilter from "./farm-filter";
 import FarmValidateModal from "./farm-validate-modal";
+import PrintIcon from "@material-ui/icons/Print";
+import { useReactToPrint } from "react-to-print";
+import FarmListToPrint from "./farm-list-to-print";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -30,10 +34,13 @@ const useStyles = makeStyles(() =>
       padding: 10,
     },
     table: {},
-    newButtonDiv: {
+    printButtonDiv: {
       display: "flex",
       justifyContent: "flex-end",
       marginBottom: 10,
+    },
+    toPrintContainer: {
+      display: "none",
     },
   })
 );
@@ -53,6 +60,11 @@ const FarmList = () => {
   const [isApproved, setIsApproved] = useState(() => false);
   const [pageNumber, setPageNumber] = useState(0);
   const [pageSize, setPageSize] = useState(10);
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "Farms",
+  });
 
   useEffect(() => {}, []);
 
@@ -105,8 +117,25 @@ const FarmList = () => {
     setPageNumber(0);
   };
 
+  const onPrint = () => {
+    if (farms.length > 0) {
+      handlePrint();
+    }
+  };
+
   return (
     <>
+      <div className={style.printButtonDiv}>
+        <Button color="primary" onClick={onPrint} startIcon={<PrintIcon />}>
+          Print
+        </Button>
+      </div>
+
+      <div className={style.toPrintContainer}>
+        <div ref={componentRef}>
+          <FarmListToPrint farms={farms} />
+        </div>
+      </div>
       <Paper className={style.container}>
         <FarmFilter pageNumber={pageNumber} pageSize={pageSize} />
         <Table className={style.table} aria-label="farm table">
