@@ -20,6 +20,11 @@ const drawerItems: DrawerItem[] = [
     title: "Claims",
     route: "/admin/claims",
   },
+  {
+    iconComponent: <AssignmentIcon />,
+    title: "Crops",
+    route: "/admin/crops",
+  },
 ];
 
 export default drawerItems;

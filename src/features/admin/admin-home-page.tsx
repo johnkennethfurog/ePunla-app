@@ -16,6 +16,7 @@ import { Alert } from "@material-ui/lab";
 import { useEffect } from "react";
 // import { farmerLogout, fetchProfile } from "./+state/farmerActions";
 import Shell from "../../components/shell/shell";
+import CropList from "./crops-list/crops-list";
 
 const AdminPage = () => {
   const dispatch = useDispatch();
@@ -51,6 +52,9 @@ const AdminPage = () => {
           </Route>
           <Route path={`${path}/claims`}>
             <ClaimList />
+          </Route>
+          <Route path={`${path}/crops`}>
+            <CropList />
           </Route>
         </Switch>
       </>

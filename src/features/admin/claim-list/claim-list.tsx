@@ -77,10 +77,6 @@ const ClaimList = () => {
     setSelectedClaim(claim);
 
     switch (actionType) {
-      case ActionType.DeleteFarm:
-        setShowValidationModal(true);
-        break;
-
       case ActionType.AdminDeclineClaim:
         setIsApproved(false);
         setShowValidationModal(true);
@@ -91,7 +87,7 @@ const ClaimList = () => {
         setShowValidationModal(true);
         break;
 
-      case ActionType.ExpandCollapsedFarm:
+      case ActionType.AdminExpandCollapsedClaim:
         setExpand(expand);
         // do nothing
         break;

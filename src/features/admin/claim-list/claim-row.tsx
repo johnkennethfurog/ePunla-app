@@ -71,7 +71,7 @@ const ClaimRow = (props: ClaimRowProps) => {
 
   const onExpand = () => {
     dispatchAction(
-      ActionType.ExpandCollapsedFarm,
+      ActionType.AdminExpandCollapsedClaim,
       isOpen ? null : claim,
       !isOpen
     );

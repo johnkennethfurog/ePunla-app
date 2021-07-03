@@ -5,6 +5,7 @@ import { ActionModule } from "./action-module.enum";
 import { ActionType } from "./action-type.enum";
 import AdminClaim from "../features/admin/+models/claim";
 import AdminFarm from "../features/admin/+models/farm";
+import { Crop } from "../features/admin/+models/crop";
 
 export interface ActionTodo {
   data: ActionData;
@@ -13,4 +14,4 @@ export interface ActionTodo {
   expand?: boolean;
 }
 
-type ActionData = Claim | FarmCrop | Farm | AdminClaim | AdminFarm;
+type ActionData = Claim | FarmCrop | Farm | AdminClaim | AdminFarm | Crop;

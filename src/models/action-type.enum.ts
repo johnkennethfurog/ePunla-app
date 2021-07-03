@@ -12,7 +12,7 @@ export enum ActionType {
   ExpandCollapsedFarm,
 
   // ADMIN CLAIM
-  AdminExpandCollapsedCrops,
+  AdminExpandCollapsedClaim,
   AdminApproveClaim,
   AdminDeclineClaim,
 
@@ -20,4 +20,9 @@ export enum ActionType {
   AdminExpandCollapsedFarm,
   AdminApproveFarm,
   AdminDeclineFarm,
+
+  // ADMIN CROP
+  AdminUpdateCrops,
+  AdminDeleteCrops,
+  AdminExpandCollapsedCrops,
 }

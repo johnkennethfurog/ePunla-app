@@ -21,8 +21,12 @@ import { ClaimSearchField } from "../+models/claim-search-field";
 import { FarmSearchField } from "../+models/farm-search-field";
 import { ValidateClaimPayload } from "../+models/validate-claim-payload";
 import { ValidateFarmPayload } from "../+models/validate-farm-payload";
+import { CropSearchField } from "../+models/crop-search-field";
+import { PagedCrop } from "../+models/crop";
+import { Category } from "../+models/category";
 
 const ADMIN_MODULE = "/admin";
+const MASTER_LIST_MODULE = "/masterlist";
 
 const {
   error,
@@ -35,6 +39,8 @@ const {
 
   loadFarmsSuccess,
   loadClaimsSuccess,
+  loadCategoriesSuccess,
+  loadCropsSuccess,
 } = adminSlice.actions;
 
 export const farmerLogout = onLogout;
@@ -119,6 +125,36 @@ export const fetchClaims =
         dispatch(showError("Unable to get Claims"));
       });
   };
+
+export const fetchCrops =
+  (searchField: PagedRequest<CropSearchField>): AppThunk =>
+  (dispatch) => {
+    dispatch(load());
+
+    clientQueryApiRequest()
+      .post(MASTER_LIST_MODULE + "/crops", searchField)
+      .then((response: AxiosResponse<PagedCrop>) => {
+        dispatch(loadCropsSuccess(response.data));
+      })
+      .catch((err: any) => {
+        dispatch(error(err));
+        dispatch(showError("Unable to get Crops"));
+      });
+  };
+
+export const fetchCategories = (): AppThunk => (dispatch) => {
+  dispatch(load());
+
+  clientQueryApiRequest()
+    .get(MASTER_LIST_MODULE + "/categories")
+    .then((response: AxiosResponse<Category[]>) => {
+      dispatch(loadCategoriesSuccess(response.data));
+    })
+    .catch((err: any) => {
+      dispatch(error(err));
+      dispatch(showError("Unable to get Crop Categories"));
+    });
+};
 
 // LOCAL USED
 export const addValidationError =

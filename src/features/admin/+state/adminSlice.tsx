@@ -3,12 +3,16 @@ import Farm, { PagedFarm } from "../+models/farm";
 import { PagedClaim } from "../+models/claim";
 
 import { ErrorMessage } from "../../../models/error-message";
+import { Category } from "../+models/category";
+import { PagedCrop } from "../+models/crop";
 interface AdminState {
   farms: PagedFarm;
   claims: PagedClaim;
+  crops: PagedCrop;
   isLoading: boolean;
   isSaving: boolean;
   error: ErrorMessage[];
+  categories: Category[];
   reloadTable: boolean;
 }
 
@@ -21,6 +25,11 @@ const initialState: AdminState = {
     page: { totalCount: 0 },
     values: [],
   },
+  crops: {
+    page: { totalCount: 0 },
+    values: [],
+  },
+  categories: [],
   error: [],
   isLoading: false,
   isSaving: false,
@@ -77,6 +86,17 @@ export const adminSlice = createSlice({
     ) => {
       state.isLoading = false;
       state.claims = action.payload;
+    },
+    loadCropsSuccess: (state: AdminState, action: PayloadAction<PagedCrop>) => {
+      state.isLoading = false;
+      state.crops = action.payload;
+    },
+    loadCategoriesSuccess: (
+      state: AdminState,
+      action: PayloadAction<Category[]>
+    ) => {
+      state.isLoading = false;
+      state.categories = action.payload;
     },
   },
 });
