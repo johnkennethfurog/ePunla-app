@@ -3,7 +3,9 @@ export enum ActionModule {
   FarmerClaimsModule,
   FarmerCropsModule,
   FarmerFarmsModule,
+
   AdminClaimsModile,
   AdminFarmsModule,
   AdminCropsModule,
+  AdminBarangaysModule,
 }

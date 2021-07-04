@@ -17,6 +17,7 @@ import { useEffect } from "react";
 // import { farmerLogout, fetchProfile } from "./+state/farmerActions";
 import Shell from "../../components/shell/shell";
 import CropList from "./crops-list/crops-list";
+import BarangayList from "./barangay-list/barangay-list";
 
 const AdminPage = () => {
   const dispatch = useDispatch();
@@ -53,6 +54,9 @@ const AdminPage = () => {
           </Route>
           <Route path={`${path}/crops`}>
             <CropList />
+          </Route>
+          <Route path={`${path}/barangays`}>
+            <BarangayList />
           </Route>
         </Switch>
       </>

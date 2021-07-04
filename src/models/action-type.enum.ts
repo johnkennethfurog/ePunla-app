@@ -25,4 +25,9 @@ export enum ActionType {
   AdminUpdateCrops,
   AdminDeleteCrops,
   AdminExpandCollapsedCrops,
+
+  // ADMIN BARANGAY
+  AdminUpdateBarangay,
+  AdminDeleteBarangay,
+  AdminExpandCollapsedBarangay,
 }

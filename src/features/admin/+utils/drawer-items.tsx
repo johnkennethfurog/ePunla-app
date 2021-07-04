@@ -23,8 +23,13 @@ const drawerItems: DrawerItem[] = [
   },
   {
     iconComponent: <EcoIcon />,
-    title: "Crops",
+    title: "Crops Masterlist",
     route: "/admin/crops",
+  },
+  {
+    iconComponent: <EcoIcon />,
+    title: "Barangays Masterlist",
+    route: "/admin/barangays",
   },
 ];
 

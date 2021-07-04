@@ -110,7 +110,7 @@ const CropRow = (props: CropRowProps) => {
       <TableCell className={style.cell}>
         {crop.isActive && (
           <>
-            <IconButton onClick={onOpenMenu} aria-label="edit">
+            <IconButton onClick={onOpenMenu} size="small" aria-label="edit">
               <MoreVertIcon />
             </IconButton>
 
