@@ -1,10 +1,15 @@
 import { Alert } from "@material-ui/lab";
 import React from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
 import { selectError } from "../../features/farmer/+state/farmerSelectors";
 
-const ErrorAlert = () => {
-  const errors = useSelector(selectError);
+type ErrorAlertProps = {
+  errorSelector: (state: RootState) => string[];
+};
+const ErrorAlert = (props: ErrorAlertProps) => {
+  const { errorSelector } = props;
+  const errors = useSelector(errorSelector);
 
   return (
     <>

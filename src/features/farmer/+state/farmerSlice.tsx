@@ -125,7 +125,7 @@ export const farmerSlice = createSlice({
       const cropForHarvest = payload.filter(
         (x) =>
           x.status === StatusCrop.Planted &&
-          !!moment(x.estimatedHarvestDate).isBefore
+          !!moment(x.estimatedHarvestDate).isBefore()
       );
 
       state.isLoading = false;

@@ -18,7 +18,7 @@ import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
 import { LookupItem } from "../../../models/lookup-item";
 import { Farm } from "../+models/farm";
-import { selectIsSaving } from "../+state/farmerSelectors";
+import { selectError, selectIsSaving } from "../+state/farmerSelectors";
 import {
   fetchBarangays,
   selectBarangay,
@@ -52,8 +52,9 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
   const [address, bindAddress, setAddress] = useInput("");
   const [areaSize, bindAreaSize, setAreaSize] = useInput("");
   const [areaId, bindAreaId, setAreaId] = useInput<string | number>("");
-  const [barangayId, bindBarangayId, setBarangayId] =
-    useInput<string | number>("");
+  const [barangayId, bindBarangayId, setBarangayId] = useInput<string | number>(
+    ""
+  );
 
   const [coordinates, setCoordinates] = useState<Coordinates>(null);
   const [barangayLookup, setBarangayLookup] = useState<LookupItem[]>(() => []);
@@ -259,7 +260,7 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
         </Button>
         <ButtonLoading onClick={onSave} autoFocus text="Save" />
       </DialogActions>
-      <ErrorAlert />
+      <ErrorAlert errorSelector={selectError} />
     </Dialog>
   );
 };

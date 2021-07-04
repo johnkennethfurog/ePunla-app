@@ -28,6 +28,7 @@ import AddIcon from "@material-ui/icons/Add";
 import EmptyList from "../../../components/empty-list/empty-list";
 import CropRowDetail from "./crops-row-detail";
 import BannerCropToHarvest from "../../../components/banner-crop-to-harvest/banner-crop-to-harvest";
+import CropsSaveModal from "./crops-save-modal";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -165,11 +166,11 @@ const CropList = () => {
           onClickBtnYes={onConfirmDelete}
         />
 
-        {/* <CropsSaveModal
+        <CropsSaveModal
           isOpen={showCropFormModal}
-          farmCrop={selectedCrop}
+          crop={selectedCrop}
           onClose={closeFormModal}
-        /> */}
+        />
       </Paper>
     </>
   );

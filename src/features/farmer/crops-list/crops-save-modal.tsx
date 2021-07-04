@@ -32,7 +32,11 @@ import {
   fetchFarms,
   saveFarmCrop,
 } from "../+state/farmerActions";
-import { selectFarms, selectIsSaving } from "../+state/farmerSelectors";
+import {
+  selectError,
+  selectFarms,
+  selectIsSaving,
+} from "../+state/farmerSelectors";
 
 type CropsSaveModalProps = {
   farmCrop?: FarmCrop;
@@ -177,7 +181,7 @@ const CropsSaveModal = (props: CropsSaveModalProps) => {
         </Button>
         <ButtonLoading onClick={onSave} autoFocus text="Save" />
       </DialogActions>
-      <ErrorAlert />
+      <ErrorAlert errorSelector={selectError} />
     </Dialog>
   );
 };

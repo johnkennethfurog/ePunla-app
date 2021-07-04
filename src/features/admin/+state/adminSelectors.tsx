@@ -16,6 +16,6 @@ export const selectCropsPageCount = (state: RootState) =>
 export const selectError = (state: RootState) =>
   state.admin.error?.map((err) => err.message) || [];
 export const selectIsLoading = (state: RootState) => state.admin.isLoading;
-export const selectIsSaving = (state: RootState) => state.admin.isSaving;
+export const selectAdminIsSaving = (state: RootState) => state.admin.isSaving;
 export const selectReloadTable = (state: RootState) => state.admin.reloadTable;
 export const selectCategories = (state: RootState) => state.admin.categories;

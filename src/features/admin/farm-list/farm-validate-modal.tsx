@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ButtonLoading from "../../../components/button-loading/button-loading";
 
 import { validateFarm } from "../+state/adminActions";
-import { selectIsSaving } from "../+state/adminSelectors";
+import { selectAdminIsSaving } from "../+state/adminSelectors";
 import { ValidateFarmPayload } from "../+models/validate-farm-payload";
 import useInput from "../../../hooks/useInput";
 
@@ -29,7 +29,7 @@ const FarmValidateModal = (props: FarmValidateModalProps) => {
 
   const [remarks, bindRemarks] = useInput("");
 
-  const isSaving = useSelector(selectIsSaving);
+  const isSaving = useSelector(selectAdminIsSaving);
 
   const closeHarvestModal = () => {
     if (!isSaving) {

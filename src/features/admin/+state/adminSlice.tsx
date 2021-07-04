@@ -74,6 +74,10 @@ export const adminSlice = createSlice({
       state.isSaving = false;
       state.reloadTable = true;
     },
+    saveCropSuccess: (state: AdminState) => {
+      state.isSaving = false;
+      state.reloadTable = true;
+    },
     // FETCHING
 
     loadFarmsSuccess: (state: AdminState, action: PayloadAction<PagedFarm>) => {

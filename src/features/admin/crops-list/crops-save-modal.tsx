@@ -1,185 +1,159 @@
-// import {
-//   Button,
-//   Dialog,
-//   DialogActions,
-//   DialogContent,
-//   DialogTitle,
-//   Grid,
-//   InputAdornment,
-//   TextField,
-// } from "@material-ui/core";
-// import moment from "moment";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  InputAdornment,
+  TextField,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import {
-//   fetchCropsLookups,
-//   clearCropLookup,
-//   selectCropsLookup,
-// } from "../../../app/+states/commonSlice";
-// import AppAsyncAutoComplete from "../../../components/autocomplete/app-async-autocomplete";
-// import ButtonLoading from "../../../components/button-loading/button-loading";
-// import AppDatePicker from "../../../components/date-picker/date-picker";
-// import ErrorAlert from "../../../components/error-alert/error-alert";
-// import { SimpleDropDown } from "../../../components/select/selects";
-// import useDateInput from "../../../hooks/useDateInput";
-// import useInput from "../../../hooks/useInput";
-// import useLookup from "../../../hooks/useLookup";
-// import { LookupItem } from "../../../models/lookup-item";
-// import { FarmCrop } from "../+models/farm-crop";
-// import { FarmCropSavePayload } from "../+models/farm-crop-save-payload";
-// import {
-//   addValidationError,
-//   fetchFarms,
-//   saveFarmCrop,
-// } from "../+state/farmerActions";
-// import { selectFarms, selectIsSaving } from "../+state/farmerSelectors";
+import { useDispatch, useSelector } from "react-redux";
 
-// type CropsSaveModalProps = {
-//   farmCrop?: FarmCrop;
-//   isOpen: boolean;
-//   onClose: () => void;
-// };
+import ButtonLoading from "../../../components/button-loading/button-loading";
+import ErrorAlert from "../../../components/error-alert/error-alert";
+import { SimpleDropDown } from "../../../components/select/selects";
+import useInput from "../../../hooks/useInput";
+import { LookupItem } from "../../../models/lookup-item";
+import { Crop } from "../+models/crop";
+import { CropSavePayload } from "../+models/crop-save-payload";
+import { addValidationError, saveCrop } from "../+state/adminActions";
+import {
+  selectAdminIsSaving,
+  selectCategories,
+  selectError,
+} from "../+state/adminSelectors";
 
-// const CropsSaveModal = (props: CropsSaveModalProps) => {
-//   const { isOpen, onClose, farmCrop } = props;
+type CropsSaveModalProps = {
+  crop?: Crop;
+  isOpen: boolean;
+  onClose: () => void;
+};
 
-//   const dispatch = useDispatch();
+const CropsSaveModal = (props: CropsSaveModalProps) => {
+  const { isOpen, onClose, crop } = props;
 
-//   const isSaving = useSelector(selectIsSaving);
-//   const farms = useSelector(selectFarms);
+  const dispatch = useDispatch();
 
-//   const [isNew, setIsNew] = useState(true);
-//   const [farmsLookup, setFarmsLookup] = useState<LookupItem[]>(() => []);
+  const isSaving = useSelector(selectAdminIsSaving);
+  const categories = useSelector(selectCategories);
 
-//   const [cropId, bindCrop, setCrop] = useLookup(null);
+  const [isNew, setIsNew] = useState(true);
+  const [categoriesLookup, setCategoriesLookup] = useState<LookupItem[]>(
+    () => []
+  );
 
-//   const [datePlanted, bindDatePlanted, setDatePlanted] = useDateInput(moment());
+  const [categoryId, bindCategoryId, setCategoryId] = useInput("");
+  const [duration, bindduration, setduration] = useInput("");
+  const [cropName, bindCropName, setCropName] = useInput("");
 
-//   const [farmId, bindFarmId, setFarmId] = useInput("");
-//   const [areaSize, bindAreaSize, setAreaSize] = useInput("");
+  useEffect(() => {
+    if (!!isOpen) {
+      setIsNew(!crop);
 
-//   useEffect(() => {
-//     if (!!isOpen) {
-//       setIsNew(!farmCrop);
+      setCategoryId(crop?.categoryId.toString() || "");
+      setduration(crop?.duration.toString() || "");
+      setCropName(crop?.crop.toString() || "");
+    }
+  }, [isOpen]);
 
-//       setFarmId(farmCrop?.farmId.toString() || "");
-//       setAreaSize(farmCrop?.areaSize.toString() || "");
-//       setDatePlanted(moment(farmCrop?.plantedDate));
-//       setCrop(farmCrop?.cropId || "");
+  useEffect(() => {
+    if (!!isOpen) {
+      const lookup = categories.map((x) => {
+        return {
+          value: x.category,
+          id: x.categoryId,
+        } as LookupItem;
+      });
 
-//       dispatch(fetchFarms(true));
-//     }
-//   }, [isOpen]);
+      setCategoriesLookup(lookup);
+    }
+  }, [categories, isOpen]);
 
-//   useEffect(() => {
-//     if (!!isOpen) {
-//       const lookup = farms.map((x) => {
-//         return {
-//           value: x.name,
-//           id: x.farmId,
-//         } as LookupItem;
-//       });
+  const closeCropsModal = () => {
+    if (!isSaving) {
+      onClose();
+    }
+  };
 
-//       setFarmsLookup(lookup);
-//     }
-//   }, [farms, isOpen]);
+  const onSave = () => {
+    if (!cropName) {
+      dispatch(addValidationError("Crop name is required."));
+      return;
+    }
 
-//   const closeCropsModal = () => {};
+    if (!categoryId) {
+      dispatch(addValidationError("Kindly select a category."));
+      return;
+    }
 
-//   const onSave = () => {
-//     if (!farmId) {
-//       dispatch(addValidationError("Kindly select a farm."));
-//       return;
-//     }
+    if (!duration || +duration <= 0) {
+      dispatch(addValidationError("Kindly state the crop's duration."));
+      return;
+    }
 
-//     if (!cropId) {
-//       dispatch(addValidationError("Kindly select a crop."));
-//       return;
-//     }
+    const payload: CropSavePayload = {
+      cropId: crop?.cropId,
+      categoryId: +categoryId,
+      duration: +duration,
+      crop: cropName,
+    };
 
-//     if (!areaSize || +areaSize <= 0) {
-//       dispatch(addValidationError("Kindly state the planted crop's are size."));
-//       return;
-//     }
+    dispatch(saveCrop(payload, onClose));
+  };
 
-//     const payload: FarmCropSavePayload = {
-//       farmCropId: farmCrop?.farmCropId,
-//       cropId: +cropId,
-//       areaSize: +areaSize,
-//       datePlanted: datePlanted.toDate(),
-//       farmId: +farmId,
-//     };
+  return (
+    <Dialog open={isOpen} onClose={closeCropsModal} fullWidth maxWidth="sm">
+      <DialogTitle>{isNew ? "New Crop" : "Update Crop"}</DialogTitle>
+      <DialogContent>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+            <SimpleDropDown
+              id="category"
+              label="category"
+              required
+              fullWidth
+              bind={bindCategoryId}
+              options={categoriesLookup}
+              hideEmptyOption={true}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+            <TextField
+              label="Crop"
+              fullWidth
+              {...bindCropName}
+              required
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+            <TextField
+              type="number"
+              label="Duration"
+              fullWidth
+              {...bindduration}
+              required
+              variant="outlined"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">day(s)</InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button disabled={isSaving} onClick={onClose} color="primary">
+          Cancel
+        </Button>
+        <ButtonLoading onClick={onSave} autoFocus text="Save" />
+      </DialogActions>
+      <ErrorAlert errorSelector={selectError} />
+    </Dialog>
+  );
+};
 
-//     dispatch(saveFarmCrop(payload, onClose));
-//   };
-
-//   return (
-//     <Dialog open={isOpen} onClose={closeCropsModal} fullWidth maxWidth="sm">
-//       <DialogTitle>{isNew ? "Enroll Crop" : "Harvest Crop"}</DialogTitle>
-//       <DialogContent>
-//         <Grid container spacing={2}>
-//           <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-//             <SimpleDropDown
-//               id="farm"
-//               label="Farm"
-//               required
-//               fullWidth
-//               bind={bindFarmId}
-//               options={farmsLookup}
-//               hideEmptyOption={true}
-//             />
-//           </Grid>
-//           <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-//             <AppAsyncAutoComplete
-//               required
-//               initialValue={{ id: farmCrop?.cropId, value: farmCrop?.crop }}
-//               loadLookups={(keyword: string) => {
-//                 dispatch(fetchCropsLookups(keyword));
-//               }}
-//               clearLookups={() => {
-//                 dispatch(clearCropLookup());
-//               }}
-//               lookupSelector={selectCropsLookup}
-//               label="Select Crop"
-//               id="selectCrop"
-//               {...bindCrop}
-//             />
-//           </Grid>
-//           <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-//             <AppDatePicker
-//               required
-//               label="Planted Date"
-//               inputVariant={"outlined"}
-//               maxDate={moment()}
-//               {...bindDatePlanted}
-//             />
-//           </Grid>
-//           <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-//             <TextField
-//               type="number"
-//               label="Area Size"
-//               fullWidth
-//               {...bindAreaSize}
-//               required
-//               variant="outlined"
-//               InputProps={{
-//                 endAdornment: (
-//                   <InputAdornment position="end">sqm.</InputAdornment>
-//                 ),
-//               }}
-//             />
-//           </Grid>
-//         </Grid>
-//       </DialogContent>
-//       <DialogActions>
-//         <Button disabled={isSaving} onClick={onClose} color="primary">
-//           Cancel
-//         </Button>
-//         <ButtonLoading onClick={onSave} autoFocus text="Save" />
-//       </DialogActions>
-//       <ErrorAlert />
-//     </Dialog>
-//   );
-// };
-
-// export default CropsSaveModal;
+export default CropsSaveModal;

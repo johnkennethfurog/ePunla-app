@@ -14,6 +14,7 @@ import {
 } from "../../features/farmer/+state/farmerSelectors";
 
 import { selectUserLoading } from "../../app/+states/userSlice";
+import { selectAdminIsSaving } from "../../features/admin/+state/adminSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,8 +43,11 @@ const ButtonLoading = (props: ButtonLoadingProps) => {
   const { onClick, text, autoFocus } = props;
   const loading = useSelector(selectIsLoading);
   const isUserLoading = useSelector(selectUserLoading);
+  const isAdminSaving = useSelector(selectAdminIsSaving);
   const isSaving = useSelector(selectIsSaving);
   const style = useStyles();
+
+  const showLoading = loading || isSaving || isUserLoading || isAdminSaving;
 
   return (
     <div className={style.wrapper}>
@@ -51,12 +55,12 @@ const ButtonLoading = (props: ButtonLoadingProps) => {
         autoFocus
         variant="contained"
         color="primary"
-        disabled={loading || isSaving}
+        disabled={showLoading}
         onClick={onClick}
       >
         {text}
       </Button>
-      {(loading || isSaving || isUserLoading) && (
+      {showLoading && (
         <CircularProgress size={24} className={style.buttonProgress} />
       )}
     </div>

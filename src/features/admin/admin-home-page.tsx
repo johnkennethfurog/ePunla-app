@@ -36,8 +36,6 @@ const AdminPage = () => {
     // dispatch(farmerLogout());
   };
 
-  console.log(`${path}farms`);
-
   return (
     <Shell
       drawerItems={drawerItems}

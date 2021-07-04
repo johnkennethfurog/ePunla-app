@@ -2,6 +2,7 @@ import React from "react";
 import { DrawerItem } from "../../../models/drawer-item";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import EcoIcon from "@material-ui/icons/Eco";
 import LandscapeIcon from "@material-ui/icons/Landscape";
 
 const drawerItems: DrawerItem[] = [
@@ -21,7 +22,7 @@ const drawerItems: DrawerItem[] = [
     route: "/admin/claims",
   },
   {
-    iconComponent: <AssignmentIcon />,
+    iconComponent: <EcoIcon />,
     title: "Crops",
     route: "/admin/crops",
   },

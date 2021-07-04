@@ -26,6 +26,7 @@ import {
 } from "../+state/farmerActions";
 import {
   selectCrops,
+  selectError,
   selectFarms,
   selectIsSaving,
 } from "../+state/farmerSelectors";
@@ -304,7 +305,7 @@ const ClaimFormModal = (props: ClaimFormModalProps) => {
         <ButtonLoading onClick={onSave} autoFocus text="Save" />
       </DialogActions>
 
-      <ErrorAlert />
+      <ErrorAlert errorSelector={selectError} />
     </Dialog>
   );
 };

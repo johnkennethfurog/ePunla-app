@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ButtonLoading from "../../../components/button-loading/button-loading";
 
 import { validateClaim } from "../+state/adminActions";
-import { selectIsSaving } from "../+state/adminSelectors";
+import { selectAdminIsSaving } from "../+state/adminSelectors";
 import { ValidateClaimPayload } from "../+models/validate-claim-payload";
 import useInput from "../../../hooks/useInput";
 
@@ -29,7 +29,7 @@ const ClaimValidateModal = (props: ClaimValidateModalProps) => {
 
   const [remarks, bindRemarks] = useInput("");
 
-  const isSaving = useSelector(selectIsSaving);
+  const isSaving = useSelector(selectAdminIsSaving);
 
   const closeHarvestModal = () => {
     if (!isSaving) {

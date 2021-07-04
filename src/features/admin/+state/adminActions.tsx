@@ -12,10 +12,6 @@ import {
   showSuccess,
 } from "../../../app/+states/messagePromptSlice";
 import { ErrorMessage } from "../../../models/error-message";
-import moment from "moment";
-import { ActionType } from "../../../models/action-type.enum";
-import { ActionModule } from "../../../models/action-module.enum";
-import { doAction } from "../../../app/+states/commonSlice";
 import { PagedRequest } from "../../../models/paged-request";
 import { ClaimSearchField } from "../+models/claim-search-field";
 import { FarmSearchField } from "../+models/farm-search-field";
@@ -24,6 +20,7 @@ import { ValidateFarmPayload } from "../+models/validate-farm-payload";
 import { CropSearchField } from "../+models/crop-search-field";
 import { PagedCrop } from "../+models/crop";
 import { Category } from "../+models/category";
+import { CropSavePayload } from "../+models/crop-save-payload";
 
 const ADMIN_MODULE = "/admin";
 const MASTER_LIST_MODULE = "/masterlist";
@@ -36,6 +33,7 @@ const {
   onLogout,
   validateClaimSuccess,
   validateFarmSuccess,
+  saveCropSuccess,
 
   loadFarmsSuccess,
   loadClaimsSuccess,
@@ -85,6 +83,25 @@ export const validateFarm =
       .catch((err: any) => {
         dispatch(error(err));
         dispatch(showError("Unable to validate Farm"));
+      });
+  };
+
+export const saveCrop =
+  (payload: CropSavePayload, onSaveSuccess: () => void): AppThunk =>
+  (dispatch) => {
+    dispatch(save());
+
+    clientCommandApiRequest()
+      .post(`${MASTER_LIST_MODULE}/crops/save`, payload)
+      .then(() => {
+        dispatch(saveCropSuccess());
+        dispatch(showSuccess("Crops saved!"));
+        onSaveSuccess();
+      })
+      .catch((err: ErrorMessage[]) => {
+        const errorMessage = err[0].message || "Unable to save Crops";
+        dispatch(error(err));
+        dispatch(showError(errorMessage));
       });
   };
 
