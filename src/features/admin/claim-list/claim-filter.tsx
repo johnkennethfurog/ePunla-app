@@ -73,14 +73,12 @@ const ClaimFilter = (props: ClaimFilterProps) => {
   }, [query]);
 
   useEffect(() => {
-    const lookup = barangays
-      .filter((x) => x.isActive)
-      .map((x) => {
-        return {
-          value: x.barangay,
-          id: x.barangayId,
-        } as LookupItem;
-      });
+    const lookup = barangays.map((x) => {
+      return {
+        value: x.barangay,
+        id: x.barangayId,
+      } as LookupItem;
+    });
 
     lookup.unshift({
       value: "All",

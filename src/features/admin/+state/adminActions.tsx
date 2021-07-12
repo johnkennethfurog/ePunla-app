@@ -21,6 +21,8 @@ import { CropSearchField } from "../+models/crop-search-field";
 import { PagedCrop } from "../+models/crop";
 import { Category } from "../+models/category";
 import { CropSavePayload } from "../+models/crop-save-payload";
+import { BarangaySavePayload } from "../+models/barangay-save-payload";
+import { BarangayStatusPayload } from "../+models/barangay-status-payload";
 
 const ADMIN_MODULE = "/admin";
 const MASTER_LIST_MODULE = "/masterlist";
@@ -34,6 +36,8 @@ const {
   validateClaimSuccess,
   validateFarmSuccess,
   saveCropSuccess,
+  saveBarangaySuccess,
+  saveBarangayStatusSuccess,
 
   loadFarmsSuccess,
   loadClaimsSuccess,
@@ -102,6 +106,44 @@ export const saveCrop =
         const errorMessage = err[0].message || "Unable to save Crops";
         dispatch(error(err));
         dispatch(showError(errorMessage));
+      });
+  };
+
+export const saveBarangay =
+  (payload: BarangaySavePayload, onSaveSuccess: () => void): AppThunk =>
+  (dispatch) => {
+    dispatch(save());
+
+    clientCommandApiRequest()
+      .post(`${MASTER_LIST_MODULE}/barangays/save`, payload)
+      .then(() => {
+        dispatch(saveBarangaySuccess());
+        dispatch(showSuccess("Barangay saved!"));
+        onSaveSuccess();
+      })
+      .catch((err: ErrorMessage[]) => {
+        const errorMessage = err[0]?.message || "Unable to save Barangay";
+        // dispatch(error(err));
+        dispatch(showError(errorMessage));
+      });
+  };
+
+export const updateBarangayStatus =
+  (barangayId: number, payload: BarangayStatusPayload): AppThunk =>
+  (dispatch) => {
+    dispatch(save());
+
+    clientCommandApiRequest()
+      .put(
+        `${MASTER_LIST_MODULE}/barangays/${barangayId}/changeStatus`,
+        payload
+      )
+      .then(() => {
+        dispatch(saveBarangayStatusSuccess());
+      })
+      .catch((err: any) => {
+        dispatch(error(err));
+        dispatch(showError("Unable to update Barangay Status"));
       });
   };
 
@@ -185,3 +227,4 @@ export const addValidationError =
 // DELETING
 
 export const resetAdminAction = reset;
+export const loadAdminAction = load;

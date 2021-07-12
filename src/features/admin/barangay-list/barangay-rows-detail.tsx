@@ -61,10 +61,23 @@ const BarangayRowDetail = (props: BarangayRowDetailProps) => {
             <Grid container>
               {barangay.areas.map((area) => {
                 return (
-                  <Grid item xs={6} sm={6} md={6} lg={4} xl={3}>
+                  <Grid
+                    key={area.barangayAreaId.toString()}
+                    item
+                    xs={6}
+                    sm={6}
+                    md={6}
+                    lg={4}
+                    xl={3}
+                  >
                     <div>
                       <span className={style.primary}>{area.area}</span>
-                      <span className={style.secondary}>
+                      <span
+                        className={style.secondary}
+                        style={{
+                          color: area.areaIsActive ? "green" : "indianred",
+                        }}
+                      >
                         {area.areaIsActive ? "Active" : "Inactive"}
                       </span>
                     </div>

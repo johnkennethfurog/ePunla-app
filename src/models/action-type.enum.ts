@@ -28,6 +28,6 @@ export enum ActionType {
 
   // ADMIN BARANGAY
   AdminUpdateBarangay,
-  AdminDeleteBarangay,
+  AdminUpdateStatusBarangay,
   AdminExpandCollapsedBarangay,
 }

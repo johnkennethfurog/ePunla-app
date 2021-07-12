@@ -27,7 +27,6 @@ import AddIcon from "@material-ui/icons/Add";
 // import CropsSaveModal from "./crops-save-modal";
 import EmptyList from "../../../components/empty-list/empty-list";
 import CropRowDetail from "./crops-row-detail";
-import BannerCropToHarvest from "../../../components/banner-crop-to-harvest/banner-crop-to-harvest";
 import CropsSaveModal from "./crops-save-modal";
 
 const useStyles = makeStyles((theme: Theme) =>

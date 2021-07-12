@@ -22,6 +22,7 @@ import AddIcon from "@material-ui/icons/Add";
 import ConfirmationModal from "../../../components/modals/confirmation-modal";
 import EmptyList from "../../../components/empty-list/empty-list";
 import BarangayRowDetails from "./barangay-rows-detail";
+import { loadAdminAction, updateBarangayStatus } from "../+state/adminActions";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,7 +52,9 @@ const BarangayList = () => {
   const [showBarangaySaveModal, setShowBarangaySaveModal] = useState(
     () => false
   );
-  const [showDeleteModal, setShowDeleteModal] = useState(() => false);
+  const [showUpdateStatusModal, setShowUpdateStatusModal] = useState(
+    () => false
+  );
   const [expand, setExpand] = useState(() => false);
 
   useEffect(() => {
@@ -61,6 +64,7 @@ const BarangayList = () => {
   useEffect(() => {
     if (!!reloadTable) {
       dispatch(fetchBarangays());
+      dispatch(loadAdminAction());
     }
   }, [reloadTable]);
 
@@ -75,8 +79,8 @@ const BarangayList = () => {
     setSelectedBarangay(barangay);
 
     switch (actionType) {
-      case ActionType.AdminDeleteBarangay:
-        setShowDeleteModal(true);
+      case ActionType.AdminUpdateStatusBarangay:
+        setShowUpdateStatusModal(true);
         break;
 
       case ActionType.AdminUpdateBarangay:
@@ -105,13 +109,19 @@ const BarangayList = () => {
     setShowBarangaySaveModal(true);
   };
 
-  const closeDeleteModal = () => {
-    setShowDeleteModal(false);
+  const closeUpdateStatusModal = () => {
+    setShowUpdateStatusModal(false);
   };
 
-  const onConfirmDelete = () => {
-    // dispatch(deleteCrop(selectedCrop?.BarangayCropId));
-    setShowDeleteModal(false);
+  const onConfirmUpdateStatus = () => {
+    const { isActive, barangayId } = selectedBarangay;
+
+    dispatch(
+      updateBarangayStatus(barangayId, {
+        isActive: !isActive,
+      })
+    );
+    setShowUpdateStatusModal(false);
   };
 
   return (
@@ -126,18 +136,18 @@ const BarangayList = () => {
         </Button>
       </div>
       <Paper className={style.container}>
-        <Table className={style.table} aria-label="Barangay table">
+        <Table className={style.table} aria-label="Barangay table" size="small">
           <BarangayRowHeader />
           <TableBody>
             {Barangays.map((brgy) => {
               const isOpen =
                 selectedBarangay?.barangayId === brgy.barangayId && expand;
               return (
-                <Fragment key={brgy.barangay.toString()}>
+                <Fragment key={brgy.barangayId.toString()}>
                   <BarangayRow
                     isOpen={isOpen}
                     barangay={brgy}
-                    key={brgy.barangay.toString()}
+                    key={brgy.barangayId.toString()}
                   />
                   <BarangayRowDetails barangay={brgy} isOpen={isOpen} />
                 </Fragment>
@@ -149,20 +159,24 @@ const BarangayList = () => {
           <EmptyList label="Barangay List is empty." />
         )}
       </Paper>
-      {/* <BarangaySaveModal
+      <BarangaySaveModal
         barangay={selectedBarangay}
         isOpen={showBarangaySaveModal}
         onClose={closeBarangaySaveModal}
-      /> */}
+      />
 
       <ConfirmationModal
-        open={showDeleteModal}
-        title="Delete Barangay"
-        content="Are you sure you want to delete this Barangay?"
+        open={showUpdateStatusModal}
+        title={`${
+          selectedBarangay?.isActive ? "Deactivate" : "Activate"
+        } Barangay`}
+        content={`Are you sure you want to ${
+          selectedBarangay?.isActive ? "deactivate" : "activate"
+        } this Barangay?`}
         btnNoTitle="No"
         btnYesTitle="Yes"
-        onClickBtnNo={closeDeleteModal}
-        onClickBtnYes={onConfirmDelete}
+        onClickBtnNo={closeUpdateStatusModal}
+        onClickBtnYes={onConfirmUpdateStatus}
       />
     </>
   );

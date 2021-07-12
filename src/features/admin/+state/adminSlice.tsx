@@ -78,6 +78,14 @@ export const adminSlice = createSlice({
       state.isSaving = false;
       state.reloadTable = true;
     },
+    saveBarangaySuccess: (state: AdminState) => {
+      state.isSaving = false;
+      state.reloadTable = true;
+    },
+    saveBarangayStatusSuccess: (state: AdminState) => {
+      state.isSaving = false;
+      state.reloadTable = true;
+    },
     // FETCHING
 
     loadFarmsSuccess: (state: AdminState, action: PayloadAction<PagedFarm>) => {

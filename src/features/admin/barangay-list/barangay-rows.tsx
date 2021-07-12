@@ -57,10 +57,12 @@ const BarangayRow = (props: BarangayRowProps) => {
 
   const onEdit = () => {
     dispatchAction(ActionType.AdminUpdateBarangay, barangay);
+    onCloseMenu();
   };
 
-  const onDelete = () => {
-    dispatchAction(ActionType.AdminDeleteBarangay, barangay);
+  const onUpdateStatus = () => {
+    dispatchAction(ActionType.AdminUpdateStatusBarangay, barangay);
+    onCloseMenu();
   };
 
   const dispatchAction = (
@@ -94,29 +96,30 @@ const BarangayRow = (props: BarangayRowProps) => {
         </IconButton>
       </TableCell>
       <TableCell className={style.cell}>{barangay.barangay}</TableCell>
-      <TableCell className={style.cell}>
+      <TableCell
+        className={style.cell}
+        style={{
+          color: barangay.isActive ? "green" : "indianred",
+        }}
+      >
         {barangay.isActive ? "Active" : "Inactive"}
       </TableCell>
       <TableCell className={style.cell}>
-        <>
-          <IconButton onClick={onOpenMenu} size="small" aria-label="edit">
-            <MoreVertIcon />
-          </IconButton>
+        <IconButton onClick={onOpenMenu} size="small" aria-label="edit">
+          <MoreVertIcon />
+        </IconButton>
 
-          <Menu
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={onCloseMenu}
-          >
-            {barangay.isActive && (
-              <>
-                <MenuItem onClick={onEdit}>Edit</MenuItem>
-                <MenuItem onClick={onDelete}>Delete</MenuItem>
-              </>
-            )}
-          </Menu>
-        </>
+        <Menu
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={onCloseMenu}
+        >
+          <MenuItem onClick={onEdit}>Edit</MenuItem>
+          <MenuItem onClick={onUpdateStatus}>
+            {barangay.isActive ? "Deactivate" : "Activate"}
+          </MenuItem>
+        </Menu>
       </TableCell>
     </TableRow>
   );
