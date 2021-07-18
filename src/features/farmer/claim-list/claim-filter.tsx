@@ -14,7 +14,7 @@ import {
   StatusClaim,
   StatusClaimList,
 } from "../../../models/status-claim.enum";
-import { selectReloadTable } from "../+state/farmerSelectors";
+import { selectreloadData } from "../+state/farmerSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,7 +29,7 @@ const ClaimFilter = () => {
   const dispatch = useDispatch();
   const style = useStyles();
 
-  const reloadTable = useSelector(selectReloadTable);
+  const reloadData = useSelector(selectreloadData);
 
   const [status, bindStatus] = useInput(StatusClaim.Pending);
 
@@ -38,10 +38,10 @@ const ClaimFilter = () => {
   }, [status]);
 
   useEffect(() => {
-    if (!!reloadTable) {
+    if (!!reloadData) {
       dispatch(fetchClaims(!!status ? status : null));
     }
-  }, [reloadTable]);
+  }, [reloadData]);
 
   return (
     <form className={style.searchForm}>

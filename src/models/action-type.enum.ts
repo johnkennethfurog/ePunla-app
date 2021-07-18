@@ -15,6 +15,7 @@ export enum ActionType {
   AdminExpandCollapsedClaim,
   AdminApproveClaim,
   AdminDeclineClaim,
+  AdminViewClaim,
 
   // ADMIN FARM
   AdminExpandCollapsedFarm,

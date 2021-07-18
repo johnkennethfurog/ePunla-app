@@ -4,6 +4,7 @@ export enum StatusClaim {
   Pending = "Pending",
   Claimed = "Claimed",
   Denied = "Denied",
+  ForVerification = "ForVerification",
 }
 
 export const StatusClaimList: LookupItem[] = Object.values(StatusClaim).map(

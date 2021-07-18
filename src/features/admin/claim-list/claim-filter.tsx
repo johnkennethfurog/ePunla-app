@@ -15,7 +15,7 @@ import {
   StatusClaim,
   StatusClaimList,
 } from "../../../models/status-claim.enum";
-import { selectReloadTable } from "../+state/adminSelectors";
+import { selectreloadData } from "../+state/adminSelectors";
 import { Page, PagedRequest } from "../../../models/paged-request";
 import { ClaimSearchField } from "../+models/claim-search-field";
 import { useState } from "react";
@@ -48,7 +48,7 @@ const ClaimFilter = (props: ClaimFilterProps) => {
 
   const barangays = useSelector(selectBarangay);
 
-  const reloadTable = useSelector(selectReloadTable);
+  const reloadData = useSelector(selectreloadData);
 
   const [barangayLookup, setBarangayLookup] = useState<LookupItem[]>(() => []);
   const [searchText, setSearchText] = useState("");
@@ -92,10 +92,10 @@ const ClaimFilter = (props: ClaimFilterProps) => {
   }, [status, searchText, barangayId, pageSize, pageNumber]);
 
   useEffect(() => {
-    if (!!reloadTable) {
+    if (!!reloadData) {
       loadClaims();
     }
-  }, [reloadTable]);
+  }, [reloadData]);
 
   const loadClaims = () => {
     const page: Page = {

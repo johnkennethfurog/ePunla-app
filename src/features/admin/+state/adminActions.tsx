@@ -5,8 +5,8 @@ import {
   clientQueryApiRequest,
 } from "../../../utils/client";
 import { adminSlice } from "./adminSlice";
-import { PagedClaim } from "../+models/claim";
-import Farm, { PagedFarm } from "../+models/farm";
+import Claim, { PagedClaim } from "../+models/claim";
+import { PagedFarm } from "../+models/farm";
 import {
   showError,
   showSuccess,
@@ -23,6 +23,7 @@ import { Category } from "../+models/category";
 import { CropSavePayload } from "../+models/crop-save-payload";
 import { BarangaySavePayload } from "../+models/barangay-save-payload";
 import { BarangayStatusPayload } from "../+models/barangay-status-payload";
+import { ClaimDetail } from "../+models/claim-detail";
 
 const ADMIN_MODULE = "/admin";
 const MASTER_LIST_MODULE = "/masterlist";
@@ -35,12 +36,14 @@ const {
   onLogout,
   validateClaimSuccess,
   validateFarmSuccess,
+  setClaimForVerificationSuccess,
   saveCropSuccess,
   saveBarangaySuccess,
   saveBarangayStatusSuccess,
 
   loadFarmsSuccess,
   loadClaimsSuccess,
+  loadClaimDetailSuccess,
   loadCategoriesSuccess,
   loadCropsSuccess,
 } = adminSlice.actions;
@@ -60,12 +63,33 @@ export const validateClaim =
     clientCommandApiRequest()
       .put(`${ADMIN_MODULE}/claims/${claimId}/validate`, payload)
       .then(() => {
-        dispatch(validateClaimSuccess());
+        dispatch(validateClaimSuccess({ isApproved: payload.isApproved }));
         onValidateSuccess();
       })
-      .catch((err: any) => {
+      .catch((err: ErrorMessage[]) => {
+        const errorMessage = err[0]?.message || "Unable to validate Claim";
+
         dispatch(error(err));
-        dispatch(showError("Unable to validate Claim"));
+        dispatch(showError(errorMessage));
+      });
+  };
+
+export const setClaimForVerification =
+  (claimId: number): AppThunk =>
+  (dispatch) => {
+    dispatch(save());
+
+    clientCommandApiRequest()
+      .put(`${ADMIN_MODULE}/claims/${claimId}/setforverification`)
+      .then(() => {
+        dispatch(setClaimForVerificationSuccess());
+      })
+      .catch((err: ErrorMessage[]) => {
+        const errorMessage =
+          err[0]?.message || "Unable set claim for verification";
+
+        dispatch(error(err));
+        dispatch(showError(errorMessage));
       });
   };
 
@@ -84,9 +108,11 @@ export const validateFarm =
         dispatch(validateFarmSuccess());
         onValidateSuccess();
       })
-      .catch((err: any) => {
+      .catch((err: ErrorMessage[]) => {
+        const errorMessage = err[0]?.message || "Unable to validate Farm";
+
         dispatch(error(err));
-        dispatch(showError("Unable to validate Farm"));
+        dispatch(showError(errorMessage));
       });
   };
 
@@ -182,6 +208,22 @@ export const fetchClaims =
       .catch((err: any) => {
         dispatch(error(err));
         dispatch(showError("Unable to get Claims"));
+      });
+  };
+
+export const fetchClaimDetail =
+  (claimId: number): AppThunk =>
+  (dispatch) => {
+    dispatch(load());
+
+    clientQueryApiRequest()
+      .get(`${ADMIN_MODULE}/claims/${claimId}`)
+      .then((response: AxiosResponse<ClaimDetail>) => {
+        dispatch(loadClaimDetailSuccess(response.data));
+      })
+      .catch((err: any) => {
+        dispatch(error(err));
+        dispatch(showError("Unable to get Claim Detail"));
       });
   };
 

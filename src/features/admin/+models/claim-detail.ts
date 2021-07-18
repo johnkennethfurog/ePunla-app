@@ -1,28 +1,30 @@
-import { PagedResponse } from "../../../models/paged-response";
 import { ClaimDamageCause } from "./claim-damage-cause";
 
-export interface PagedClaim {
-  page: PagedResponse;
-  values: Claim[];
-}
-export default interface Claim {
+export interface ClaimDetail {
   claimId: number;
   filingDate: Date;
-  crop: string;
   damagedArea: string;
   status: string;
   description: string;
-  photoUrl: string;
-  remarks: null;
+  photoUrl: null;
+  remarks: string;
   validationDate: Date;
+  damageCause: ClaimDamageCause[];
+  totalDamagedArea: number;
+  crop: string;
+  datePlanted: Date;
+  cropAreaSize: number;
   farm: string;
   address: string;
   barangay: string;
   area: string;
+  farmSize: number;
   firstName: string;
   lastName: string;
   middleName: null;
   avatar: null;
   mobileNumber: string;
-  damageCause: ClaimDamageCause[];
+  farmerBarangay: string;
+  farmerArea: string;
+  farmerAddress: string;
 }

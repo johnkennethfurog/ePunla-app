@@ -23,7 +23,7 @@ import useLookup from "../../../hooks/useLookup";
 import { LookupItem } from "../../../models/lookup-item";
 import { fetchCrops } from "../+state/farmerActions";
 import { StatusCrop, StatusCropList } from "../+models/status-crop.enum";
-import { selectReloadTable } from "../+state/farmerSelectors";
+import { selectreloadData } from "../+state/farmerSelectors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,7 +57,7 @@ const CropsFilter = () => {
 
   const [crop, bindCrop] = useLookup(null);
 
-  const reloadTable = useSelector(selectReloadTable);
+  const reloadData = useSelector(selectreloadData);
 
   const [plantedFrom, bindPlantedFrom] = useDateInput(moment().startOf("year"));
   const [plantedTo, bindPlantedTo] = useDateInput(moment());
@@ -69,10 +69,10 @@ const CropsFilter = () => {
   }, []);
 
   useEffect(() => {
-    if (!!reloadTable) {
+    if (!!reloadData) {
       loadCrops();
     }
-  }, [reloadTable]);
+  }, [reloadData]);
 
   useEffect(() => {
     loadCrops();

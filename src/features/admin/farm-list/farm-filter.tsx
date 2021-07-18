@@ -12,7 +12,7 @@ import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
 import { fetchFarms } from "../+state/adminActions";
 import { StatusFarm, StatusFarmList } from "../../../models/status-farm.enum";
-import { selectReloadTable } from "../+state/adminSelectors";
+import { selectreloadData } from "../+state/adminSelectors";
 import { Page, PagedRequest } from "../../../models/paged-request";
 import { FarmSearchField } from "../+models/farm-search-field";
 import { useState } from "react";
@@ -45,7 +45,7 @@ const FarmFilter = (props: FarmFilterProps) => {
 
   const barangays = useSelector(selectBarangay);
 
-  const reloadTable = useSelector(selectReloadTable);
+  const reloadData = useSelector(selectreloadData);
 
   const [barangayLookup, setBarangayLookup] = useState<LookupItem[]>(() => []);
   const [searchText, setSearchText] = useState("");
@@ -91,10 +91,10 @@ const FarmFilter = (props: FarmFilterProps) => {
   }, [status, searchText, barangayId, pageSize, pageNumber]);
 
   useEffect(() => {
-    if (!!reloadTable) {
+    if (!!reloadData) {
       loadFarms();
     }
-  }, [reloadTable]);
+  }, [reloadData]);
 
   const loadFarms = () => {
     const page: Page = {

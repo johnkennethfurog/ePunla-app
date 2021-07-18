@@ -23,6 +23,7 @@ import ClaimValidateModal from "./claim-validate-modal";
 import { useReactToPrint } from "react-to-print";
 import ClaimListToPrint from "./claim-list-to-print";
 import PrintIcon from "@material-ui/icons/Print";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const ClaimList = () => {
   const dispatch = useDispatch();
   const style = useStyles();
+  const history = useHistory();
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -52,13 +54,11 @@ const ClaimList = () => {
 
   const claims = useSelector(selectClaims);
   const pageCount = useSelector(selectClaimsPageCount);
-
   const actionToPerform = useSelector(selectActionToPerform);
 
-  const [showValidationModal, setShowValidationModal] = useState(() => false);
   const [selectedClaim, setSelectedClaim] = useState<Claim>(() => null);
   const [expand, setExpand] = useState(() => false);
-  const [isApproved, setIsApproved] = useState(() => false);
+
   const [pageNumber, setPageNumber] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
@@ -77,18 +77,13 @@ const ClaimList = () => {
     setSelectedClaim(claim);
 
     switch (actionType) {
-      case ActionType.AdminDeclineClaim:
-        setIsApproved(false);
-        setShowValidationModal(true);
-        break;
-
-      case ActionType.AdminApproveClaim:
-        setIsApproved(true);
-        setShowValidationModal(true);
-        break;
-
       case ActionType.AdminExpandCollapsedClaim:
         setExpand(expand);
+        // do nothing
+        break;
+
+      case ActionType.AdminViewClaim:
+        history.push(`/admin/claims/${claim.claimId}`);
         // do nothing
         break;
 
@@ -99,10 +94,6 @@ const ClaimList = () => {
     // Notify reducer action is already done
     dispatch(doneAction());
   }, [actionToPerform]);
-
-  const onClose = () => {
-    setShowValidationModal(false);
-  };
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPageNumber(newPage);
@@ -173,13 +164,6 @@ const ClaimList = () => {
           page={pageNumber}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-
-        <ClaimValidateModal
-          isApproved={isApproved}
-          claimId={selectedClaim?.claimId}
-          isOpen={showValidationModal}
-          onClose={onClose}
         />
       </Paper>
     </>

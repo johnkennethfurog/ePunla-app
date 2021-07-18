@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import Shell from "../../components/shell/shell";
 import CropList from "./crops-list/crops-list";
 import BarangayList from "./barangay-list/barangay-list";
+import ClaimDetail from "./claim-list/claim-detail";
 
 const AdminPage = () => {
   const dispatch = useDispatch();
@@ -46,16 +47,19 @@ const AdminPage = () => {
     >
       <>
         <Switch>
-          <Route path={`${path}/farms`}>
+          <Route exact path={`${path}/farms`}>
             <FarmList />
           </Route>
-          <Route path={`${path}/claims`}>
+          <Route exact path={`${path}/claims`}>
             <ClaimList />
           </Route>
-          <Route path={`${path}/crops`}>
+          <Route exact path={`${path}/claims/:claimId`}>
+            <ClaimDetail />
+          </Route>
+          <Route exact path={`${path}/crops`}>
             <CropList />
           </Route>
-          <Route path={`${path}/barangays`}>
+          <Route exact path={`${path}/barangays`}>
             <BarangayList />
           </Route>
         </Switch>

@@ -9,7 +9,7 @@ import {
   fetchBarangays,
   selectBarangay,
 } from "../../../app/+states/commonSlice";
-import { selectReloadTable } from "../+state/adminSelectors";
+import { selectreloadData } from "../+state/adminSelectors";
 import BarangaySaveModal from "./barangay-save-modal";
 import {
   doneAction,
@@ -44,7 +44,7 @@ const BarangayList = () => {
   const style = useStyles();
 
   const actionToPerform = useSelector(selectActionToPerform);
-  const reloadTable = useSelector(selectReloadTable);
+  const reloadData = useSelector(selectreloadData);
 
   const [selectedBarangay, setSelectedBarangay] = useState<Barangay>(
     () => null
@@ -62,11 +62,11 @@ const BarangayList = () => {
   }, []);
 
   useEffect(() => {
-    if (!!reloadTable) {
+    if (!!reloadData) {
       dispatch(fetchBarangays());
       dispatch(loadAdminAction());
     }
-  }, [reloadTable]);
+  }, [reloadData]);
 
   useEffect(() => {
     if (!actionToPerform) return;

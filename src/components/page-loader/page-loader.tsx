@@ -1,7 +1,5 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
-import DoaLogo from "../../assets/department_of_agri.png";
-import TanauanLogo from "../../assets/tanauan_logo.png";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -26,14 +24,7 @@ const useStyle = makeStyles((theme) => ({
 
 const Pageloader = () => {
   const style = useStyle();
-  return (
-    <div className={style.root}>
-      {/* <div className={style.header}>
-        <img className={style.logo} src={DoaLogo} />
-        <img className={style.logo} src={TanauanLogo} />
-      </div> */}
-    </div>
-  );
+  return <div className={style.root}></div>;
 };
 
 export default Pageloader;

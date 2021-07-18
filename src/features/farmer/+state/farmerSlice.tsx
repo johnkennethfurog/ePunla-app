@@ -18,7 +18,7 @@ interface FarmerState {
   error: ErrorMessage[];
   lookups: Dictionary<LookupItem>;
   selectedClaim: Claim;
-  reloadTable: boolean;
+  reloadData: boolean;
   profile: FarmerProfile;
 }
 
@@ -30,7 +30,7 @@ const initialState: FarmerState = {
   error: [],
   isLoading: false,
   isSaving: false,
-  reloadTable: false,
+  reloadData: false,
   lookups: {},
   selectedClaim: null,
   profile: null,
@@ -53,7 +53,7 @@ export const farmerSlice = createSlice({
     },
     load: (state: FarmerState) => {
       state.isLoading = true;
-      state.reloadTable = false;
+      state.reloadData = false;
       state.error = null;
     },
     reset: (state: FarmerState) => {
@@ -75,7 +75,7 @@ export const farmerSlice = createSlice({
     },
     saveClaimSuccess: (state: FarmerState) => {
       state.isSaving = false;
-      state.reloadTable = true;
+      state.reloadData = true;
     },
     harvestCropSuccess: (state: FarmerState, action: PayloadAction<number>) => {
       const { crops, cropsToHarvest } = state;
@@ -94,11 +94,11 @@ export const farmerSlice = createSlice({
     },
     saveFarmCropSuccess: (state: FarmerState) => {
       state.isSaving = false;
-      state.reloadTable = true;
+      state.reloadData = true;
     },
     saveFarmSuccess: (state: FarmerState) => {
       state.isSaving = false;
-      state.reloadTable = true;
+      state.reloadData = true;
     },
 
     // FETCHING

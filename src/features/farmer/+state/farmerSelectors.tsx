@@ -16,7 +16,7 @@ export const selectError = (state: RootState) =>
   state.farmer.error?.map((err) => err.message) || [];
 export const selectIsLoading = (state: RootState) => state.farmer.isLoading;
 export const selectIsSaving = (state: RootState) => state.farmer.isSaving;
-export const selectReloadTable = (state: RootState) => state.farmer.reloadTable;
+export const selectreloadData = (state: RootState) => state.farmer.reloadData;
 
 export const selectProfile = (state: RootState) => state.farmer.profile;
 export const selectFarmerAvatar = (state: RootState) =>

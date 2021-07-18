@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Farm, { PagedFarm } from "../+models/farm";
-import { PagedClaim } from "../+models/claim";
+import Claim, { PagedClaim } from "../+models/claim";
 
 import { ErrorMessage } from "../../../models/error-message";
 import { Category } from "../+models/category";
 import { PagedCrop } from "../+models/crop";
+import { ClaimDetail } from "../+models/claim-detail";
+import { StatusClaim } from "../../../models/status-claim.enum";
 interface AdminState {
   farms: PagedFarm;
   claims: PagedClaim;
@@ -13,7 +15,8 @@ interface AdminState {
   isSaving: boolean;
   error: ErrorMessage[];
   categories: Category[];
-  reloadTable: boolean;
+  reloadData: boolean;
+  claimDetail?: ClaimDetail;
 }
 
 const initialState: AdminState = {
@@ -33,7 +36,7 @@ const initialState: AdminState = {
   error: [],
   isLoading: false,
   isSaving: false,
-  reloadTable: false,
+  reloadData: false,
 };
 
 // REDUCERS
@@ -50,7 +53,7 @@ export const adminSlice = createSlice({
 
     load: (state: AdminState) => {
       state.isLoading = true;
-      state.reloadTable = false;
+      state.reloadData = false;
       state.error = null;
     },
     reset: (state: AdminState) => {
@@ -66,25 +69,36 @@ export const adminSlice = createSlice({
       state.error = null;
     },
     // SAVING
-    validateClaimSuccess: (state: AdminState) => {
+    setClaimForVerificationSuccess: (state: AdminState) => {
       state.isSaving = false;
-      state.reloadTable = true;
+      state.claimDetail.status = StatusClaim.ForVerification;
+    },
+    validateClaimSuccess: (
+      state: AdminState,
+      action: PayloadAction<{ isApproved: boolean }>
+    ) => {
+      const { isApproved } = action.payload;
+
+      state.isSaving = false;
+      state.claimDetail.status = isApproved
+        ? StatusClaim.Claimed
+        : StatusClaim.Denied;
     },
     validateFarmSuccess: (state: AdminState) => {
       state.isSaving = false;
-      state.reloadTable = true;
+      state.reloadData = true;
     },
     saveCropSuccess: (state: AdminState) => {
       state.isSaving = false;
-      state.reloadTable = true;
+      state.reloadData = true;
     },
     saveBarangaySuccess: (state: AdminState) => {
       state.isSaving = false;
-      state.reloadTable = true;
+      state.reloadData = true;
     },
     saveBarangayStatusSuccess: (state: AdminState) => {
       state.isSaving = false;
-      state.reloadTable = true;
+      state.reloadData = true;
     },
     // FETCHING
 
@@ -98,6 +112,13 @@ export const adminSlice = createSlice({
     ) => {
       state.isLoading = false;
       state.claims = action.payload;
+    },
+    loadClaimDetailSuccess: (
+      state: AdminState,
+      action: PayloadAction<ClaimDetail>
+    ) => {
+      state.isLoading = false;
+      state.claimDetail = action.payload;
     },
     loadCropsSuccess: (state: AdminState, action: PayloadAction<PagedCrop>) => {
       state.isLoading = false;

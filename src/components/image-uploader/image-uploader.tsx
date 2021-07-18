@@ -2,7 +2,6 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core";
 import { CSSProperties } from "@material-ui/styles";
 import React, { useCallback, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import clsx from "clsx";
 import PlaceHolder from "../../assets/placeholder.jpeg";
 
 type ImageUploaderProps = {

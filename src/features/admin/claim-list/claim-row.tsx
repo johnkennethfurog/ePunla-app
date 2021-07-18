@@ -6,15 +6,13 @@ import {
   makeStyles,
   Theme,
   Hidden,
-  Menu,
-  MenuItem,
 } from "@material-ui/core";
 import React from "react";
 import Status from "../../../components/status/status";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 import Claim from "../+models/claim";
 import { StatusClaim } from "../../../models/status-claim.enum";
@@ -42,16 +40,9 @@ const ClaimRow = (props: ClaimRowProps) => {
 
   const style = useStyles();
   const dispatch = useDispatch();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement>();
 
-  const approveClaim = () => {
-    dispatchAction(ActionType.AdminApproveClaim, claim);
-    onCloseMenu();
-  };
-
-  const declineClaim = () => {
-    dispatchAction(ActionType.AdminDeclineClaim, claim);
-    onCloseMenu();
+  const viewClaim = () => {
+    dispatchAction(ActionType.AdminViewClaim, claim);
   };
 
   const dispatchAction = (
@@ -75,14 +66,6 @@ const ClaimRow = (props: ClaimRowProps) => {
       isOpen ? null : claim,
       !isOpen
     );
-  };
-
-  const onCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
-  const onOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
   };
 
   return (
@@ -113,23 +96,9 @@ const ClaimRow = (props: ClaimRowProps) => {
         }
       </TableCell>
       <TableCell className={style.cell}>
-        {claim.status === StatusClaim.Pending && (
-          <>
-            <IconButton onClick={onOpenMenu} aria-label="edit">
-              <MoreVertIcon />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={onCloseMenu}
-            >
-              <MenuItem onClick={approveClaim}>Approve</MenuItem>
-              <MenuItem onClick={declineClaim}>Decline</MenuItem>
-            </Menu>
-          </>
-        )}
+        <IconButton onClick={viewClaim} aria-label="edit">
+          <VisibilityIcon />
+        </IconButton>
       </TableCell>
     </TableRow>
   );

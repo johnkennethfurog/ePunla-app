@@ -53,4 +53,9 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
   );
 };
 
+ConfirmationModal.defaultProps = {
+  btnYesTitle: "Yes",
+  btnNoTitle: "No",
+};
+
 export default ConfirmationModal;

@@ -13,7 +13,7 @@ import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
 import { LookupItem } from "../../../models/lookup-item";
 import { fetchCategories, fetchCrops } from "../+state/adminActions";
-import { selectCategories, selectReloadTable } from "../+state/adminSelectors";
+import { selectCategories, selectreloadData } from "../+state/adminSelectors";
 import { CropSearchField } from "../+models/crop-search-field";
 import { Page } from "../../../models/paged-request";
 import { useRef } from "react";
@@ -44,7 +44,7 @@ const CropsFilter = (props: CropsFilterProps) => {
   const [query, bindQuery] = useInput("");
   const [category, bindCategory] = useInput("");
 
-  const reloadTable = useSelector(selectReloadTable);
+  const reloadData = useSelector(selectreloadData);
   const categories = useSelector(selectCategories);
 
   const delayedQuery = useRef(
@@ -63,10 +63,10 @@ const CropsFilter = (props: CropsFilterProps) => {
   }, [query]);
 
   useEffect(() => {
-    if (!!reloadTable) {
+    if (!!reloadData) {
       loadCrops();
     }
-  }, [reloadTable]);
+  }, [reloadData]);
 
   useEffect(() => {
     const lookup = categories.map((x) => {

@@ -9,7 +9,7 @@ import { fetchFarms, resetFarmerAction } from "../+state/farmerActions";
 import {
   selectFarms,
   selectProfile,
-  selectReloadTable,
+  selectreloadData,
 } from "../+state/farmerSelectors";
 import FarmSaveModal from "./farm-save-modal";
 import {
@@ -44,7 +44,7 @@ const FarmList = () => {
   const style = useStyles();
 
   const actionToPerform = useSelector(selectActionToPerform);
-  const reloadTable = useSelector(selectReloadTable);
+  const reloadData = useSelector(selectreloadData);
   const profile = useSelector(selectProfile);
 
   const [selectedFarm, setSelectedFarm] = useState<Farm>(() => null);
@@ -59,10 +59,10 @@ const FarmList = () => {
   }, [profile]);
 
   useEffect(() => {
-    if (!!reloadTable) {
+    if (!!reloadData) {
       dispatch(fetchFarms());
     }
-  }, [reloadTable]);
+  }, [reloadData]);
 
   useEffect(() => {
     if (!actionToPerform) return;
