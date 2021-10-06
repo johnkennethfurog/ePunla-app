@@ -13,8 +13,6 @@ const ProtectedRoute = ({
 }: ProtectedRouteProps) => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
-  console.log("isAuthenticated", isAuthenticated);
-
   if (isAuthenticated) {
     return <Route {...routeProps} />;
   } else {

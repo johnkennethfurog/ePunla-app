@@ -8,12 +8,10 @@ import {
   TextField,
   InputAdornment,
 } from "@material-ui/core";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useDispatch, useSelector } from "react-redux";
 import ButtonLoading from "../../../components/button-loading/button-loading";
-import AppDatePicker from "../../../components/date-picker/date-picker";
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
 import { LookupItem } from "../../../models/lookup-item";
@@ -27,16 +25,12 @@ import { Coordinates } from "../../../models/coordinates";
 import LocationMarker from "./farm-location-marker";
 import { addValidationError, saveFarm } from "../+state/farmerActions";
 import ErrorAlert from "../../../components/error-alert/error-alert";
+import Config from "../../../utils/config";
 
 type FarmSaveModalProps = {
   farm?: Farm;
   isOpen: boolean;
   onClose: () => void;
-};
-
-const tanauan_coords: Coordinates = {
-  lng: 121.09959078753087,
-  lat: 14.098898609585907,
 };
 
 const FarmSaveModal = (props: FarmSaveModalProps) => {
@@ -242,9 +236,9 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
               <GoogleMapReact
                 onClick={onSelectLocation}
                 bootstrapURLKeys={{
-                  key: "AIzaSyAxZUt26k60tbv0UIiDIyEsQOfEUmFGhCc",
+                  key: Config.googleMapKey,
                 }}
-                defaultCenter={coordinates || tanauan_coords}
+                defaultCenter={coordinates || Config.tanauanCoordinates}
                 defaultZoom={!!coordinates ? 15 : 12.5}
               >
                 {!!coordinates && <LocationMarker {...coordinates} />}

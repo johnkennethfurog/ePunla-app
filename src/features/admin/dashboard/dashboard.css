@@ -1,0 +1,21 @@
+.bubble {
+  width: 140px;
+  display: flex;
+  padding: 7px;
+  flex-wrap: wrap;
+  margin-top: -20px;
+  margin-left: 19px;
+  border-radius: 10px;
+  background-color: #342d2dc4;
+}
+
+.triangleLeft {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-right: 20px solid #342d2dc4;
+  border-bottom: 10px solid transparent;
+  position: absolute;
+  left: -1px;
+  top: -10px;
+}
