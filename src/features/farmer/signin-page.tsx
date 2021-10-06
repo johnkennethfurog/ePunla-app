@@ -105,7 +105,7 @@ const SigninPage = () => {
           </div>
 
           <Typography className={style.title} variant="h5" color="primary">
-            E-Punla
+            S2M App
           </Typography>
           <Typography
             className={style.subtitle}

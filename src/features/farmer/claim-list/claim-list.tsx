@@ -89,7 +89,7 @@ const ClaimList = () => {
             onClick={openClaimFormModal}
             startIcon={<AddIcon />}
           >
-            Create New
+            Claim
           </Button>
         </div>
       )}

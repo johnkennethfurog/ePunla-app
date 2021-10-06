@@ -8,5 +8,7 @@ export interface FarmerSignupPayload {
   password: string;
   avatar: string;
   avatarId: string;
+  identityDocument: string;
+  identityDocumentId: string;
   barangayAreaId: number;
 }

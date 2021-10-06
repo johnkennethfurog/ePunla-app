@@ -8,6 +8,7 @@ export interface Farm {
   barangayArea: string;
   barangayAreaId: number;
   streetAddress: string;
+  imageUrl: string;
   lng: number;
   lat: number;
 }

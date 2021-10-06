@@ -14,9 +14,7 @@ const AdminHomePage = React.lazy(
 );
 
 const useStyle = makeStyles((theme) => ({
-  root: {
-    height: "100vh",
-  },
+  root: {},
 }));
 
 function App() {

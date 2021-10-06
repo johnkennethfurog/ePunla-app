@@ -8,12 +8,10 @@ import {
   TextField,
   InputAdornment,
 } from "@material-ui/core";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useDispatch, useSelector } from "react-redux";
 import ButtonLoading from "../../../components/button-loading/button-loading";
-import AppDatePicker from "../../../components/date-picker/date-picker";
 import { SimpleDropDown } from "../../../components/select/selects";
 import useInput from "../../../hooks/useInput";
 import { LookupItem } from "../../../models/lookup-item";
@@ -25,8 +23,14 @@ import {
 } from "../../../app/+states/commonSlice";
 import { Coordinates } from "../../../models/coordinates";
 import LocationMarker from "./farm-location-marker";
-import { addValidationError, saveFarm } from "../+state/farmerActions";
+import {
+  addValidationError,
+  saveFarm,
+  uploadPhoto,
+} from "../+state/farmerActions";
 import ErrorAlert from "../../../components/error-alert/error-alert";
+import ImageUploader from "../../../components/image-uploader/image-uploader";
+import { ImageUploadResponse } from "../../../models/image-upload-response";
 
 type FarmSaveModalProps = {
   farm?: Farm;
@@ -48,6 +52,8 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
   const barangays = useSelector(selectBarangay);
   const [isNew, setIsNew] = useState(true);
 
+  const [imageToUpload, setImageToUpload] = useState<File>();
+  const [imageToUploadPreview, setImageToUploadPreview] = useState<string>("");
   const [farmName, bindFarmName, setFarmName] = useInput("");
   const [address, bindAddress, setAddress] = useInput("");
   const [areaSize, bindAreaSize, setAreaSize] = useInput("");
@@ -64,6 +70,7 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
     if (!isOpen) {
       setAreaLookup([]);
       setBarangayLookup([]);
+      setImageToUploadPreview(null);
 
       return;
     }
@@ -75,6 +82,7 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
     setAreaSize(farm?.areaSize.toString() || "");
     setBarangayId(farm?.barangayId || "");
     setAreaId(farm?.barangayAreaId || "");
+    setImageToUploadPreview(farm?.imageUrl || "");
     setCoordinates(
       !!farm?.lng && !!farm.lat ? { lng: farm.lng, lat: farm.lat } : null
     );
@@ -149,6 +157,19 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
       return;
     }
 
+    if (!imageToUpload) {
+      processSaveFarm();
+      return;
+    }
+
+    dispatch(
+      uploadPhoto(imageToUpload, (img) => {
+        processSaveFarm(img);
+      })
+    );
+  };
+
+  const processSaveFarm = (img?: ImageUploadResponse) => {
     dispatch(
       saveFarm(
         {
@@ -160,6 +181,8 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
           streetAddress: address,
           lng: coordinates.lng,
           lat: coordinates.lat,
+          image: img?.url,
+          imageId: img?.publicId,
         },
         onClose
       )
@@ -221,6 +244,7 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
                 variant="outlined"
               />
             </Grid>
+
             <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
               <TextField
                 label="Farm Size"
@@ -236,7 +260,18 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
                 }}
               />
             </Grid>
+
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+              <ImageUploader
+                image={imageToUploadPreview}
+                onSelectImage={(x) => {
+                  setImageToUpload(x);
+                  setImageToUploadPreview(URL.createObjectURL(x));
+                }}
+              />
+            </Grid>
           </Grid>
+
           <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
             <div style={{ height: "100%", minHeight: 300 }}>
               <GoogleMapReact
