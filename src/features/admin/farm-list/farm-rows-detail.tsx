@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme: Theme) =>
       objectFit: "cover",
       width: "100%",
       height: 250,
+      borderColor: "light-gray",
+      borderWidth: 1,
+      borderStyle: "solid",
     },
     detailPlaceholder: {
       fontStyle: "italic",
@@ -67,8 +70,19 @@ const FarmRowDetail = (props: FarmRowDetailProps) => {
                 <span>{farm.area}</span>
               </Grid>
             </Hidden>
+            {/* FARMER VALID ID */}
+            <Grid item xs={12} sm={12} md={3} lg={3}>
+              <span className={style.label}>Farmer Valid ID:</span>
+              <img className={style.image} src={farm.identityDocumentUrl} />
+            </Grid>
+
+            {/* FARM IMAGE */}
+            <Grid item xs={12} sm={12} md={3} lg={3}>
+              <span className={style.label}>Farm Image:</span>
+              <img className={style.image} src={farm.imageUrl} />
+            </Grid>
             {/* FARMER DETAIL */}
-            <Grid item xs={12} sm={12} md={6} lg={4}>
+            <Grid item xs={12} sm={12} md={3} lg={3}>
               <span className={style.label}>Farmer:</span>
               <span>{farm.farmer} </span>
               <span className={style.label}>Mobile Number :</span>
@@ -85,7 +99,7 @@ const FarmRowDetail = (props: FarmRowDetailProps) => {
             </Grid>
 
             {/* FARMER DETAIL */}
-            <Grid item xs={12} sm={12} md={6} lg={4}>
+            <Grid item xs={12} sm={12} md={3} lg={3}>
               <span className={style.label}>Farmer Address:</span>
               <span>{farm.farmerAddress}</span>
               <span className={style.label}>Farmer Barangay:</span>

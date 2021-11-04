@@ -11,6 +11,7 @@ import React from "react";
 import moment from "moment";
 
 import { FarmCrop } from "../+models/farm-crop";
+import { StatusCrop } from "../+models/status-crop.enum";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,6 +48,15 @@ type CropRowDetailProps = {
 const CropRowDetail = (props: CropRowDetailProps) => {
   const { crop, isOpen } = props;
 
+  const actionDateLabel = React.useMemo(() => {
+    switch (crop.status) {
+      case StatusCrop.Damaged:
+        return "Date Damaged:";
+      case StatusCrop.Harvested:
+        return "Date Harvested:";
+    }
+  }, [crop.status]);
+
   const style = useStyles();
   return (
     <TableRow key={crop.cropId.toString() + "_detail"}>
@@ -66,6 +76,12 @@ const CropRowDetail = (props: CropRowDetailProps) => {
               <span className={style.label}>Area Size:</span>
               <span>{crop.areaSize} sqm.</span>
             </Grid>
+            {!!crop.actionDate && (
+              <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+                <span className={style.label}>{actionDateLabel}</span>
+                <span>{moment(crop.actionDate).format("MM-DD-YYYY")}</span>
+              </Grid>
+            )}
           </Grid>
         </Collapse>
       </TableCell>
@@ -73,4 +89,4 @@ const CropRowDetail = (props: CropRowDetailProps) => {
   );
 };
 
-export default CropRowDetail;
+export default React.memo(CropRowDetail);

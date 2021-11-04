@@ -181,8 +181,8 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
           streetAddress: address,
           lng: coordinates.lng,
           lat: coordinates.lat,
-          image: img?.url,
-          imageId: img?.publicId,
+          imageUrl: img?.url,
+          imageUrlId: img?.publicId,
         },
         onClose
       )

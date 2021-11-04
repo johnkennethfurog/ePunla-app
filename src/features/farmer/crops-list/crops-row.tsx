@@ -129,6 +129,11 @@ const CropRow = (props: CropRowProps) => {
           />
         }
       </TableCell>
+      <Hidden smDown>
+        <TableCell className={style.cell}>
+          {crop.actionDate ? moment(crop.actionDate).format("MM-DD-YYYY") : ""}
+        </TableCell>
+      </Hidden>
       <TableCell className={style.cell}>
         {crop.status === StatusCrop.Planted && (
           <>
@@ -153,4 +158,4 @@ const CropRow = (props: CropRowProps) => {
   );
 };
 
-export default CropRow;
+export default React.memo(CropRow);

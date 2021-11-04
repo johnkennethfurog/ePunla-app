@@ -11,4 +11,5 @@ export interface Farm {
   imageUrl: string;
   lng: number;
   lat: number;
+  validationDate: Date;
 }

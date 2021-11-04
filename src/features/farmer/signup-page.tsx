@@ -465,7 +465,7 @@ const SignupPage = () => {
           barangayAreaId: +areaId,
           avatar: img?.url,
           avatarId: img?.publicId,
-          identityDocument: identityDocument.url,
+          identityDocumentUrl: identityDocument.url,
           identityDocumentId: identityDocument.publicId,
           streetAddress,
         },

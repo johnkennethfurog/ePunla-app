@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import { doAction } from "../../../app/+states/commonSlice";
 import { ActionModule } from "../../../models/action-module.enum";
 import { useEffect } from "react";
+import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,13 +79,11 @@ const FarmRow = (props: FarmRowProps) => {
 
   return (
     <TableRow key={farm.farmId}>
-      <Hidden mdUp>
-        <TableCell className={style.cell}>
-          <IconButton aria-label="expand row" size="small" onClick={onExpand}>
-            {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-      </Hidden>
+      <TableCell className={style.cell}>
+        <IconButton aria-label="expand row" size="small" onClick={onExpand}>
+          {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </IconButton>
+      </TableCell>
 
       <TableCell className={style.cell}>{farm.name}</TableCell>
       <Hidden smDown>
@@ -104,6 +103,11 @@ const FarmRow = (props: FarmRowProps) => {
         }
       </TableCell>
       <TableCell className={style.cell}>
+        {!!farm.validationDate
+          ? moment(farm.validationDate).format("MM-DD-YYYY")
+          : "-"}
+      </TableCell>
+      <TableCell className={style.cell}>
         {farm.status === StatusFarm.Pending && (
           <IconButton onClick={onEdit} aria-label="edit">
             <EditIcon />
@@ -119,9 +123,7 @@ export const FarmRowHeader = () => {
   return (
     <TableHead>
       <TableRow className={style.rowHeader}>
-        <Hidden mdUp>
-          <TableCell></TableCell>
-        </Hidden>
+        <TableCell></TableCell>
         <TableCell>Name</TableCell>
         <Hidden smDown>
           <TableCell>Area Size</TableCell>
@@ -130,10 +132,11 @@ export const FarmRowHeader = () => {
           <TableCell>Area</TableCell>
         </Hidden>
         <TableCell>Status</TableCell>
+        <TableCell>Date Verified</TableCell>
         <TableCell></TableCell>
       </TableRow>
     </TableHead>
   );
 };
 
-export default FarmRow;
+export default React.memo(FarmRow);

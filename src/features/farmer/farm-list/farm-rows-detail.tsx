@@ -5,6 +5,8 @@ import {
   createStyles,
   makeStyles,
   Theme,
+  Hidden,
+  Grid,
 } from "@material-ui/core";
 import React from "react";
 import { Farm } from "../+models/farm";
@@ -50,20 +52,30 @@ const FarmRowDetail = (props: FarmRowDetailProps) => {
       <TableCell className={style.cell}></TableCell>
       <TableCell className={style.cell} colSpan={7}>
         <Collapse in={isOpen} timeout="auto" unmountOnExit>
-          <div className={style.rootGrid}>
-            <span className={style.label}>Area Size:</span>
-            <span>{farm.areaSize} sqm.</span>
-            <span className={style.label}>Address:</span>
-            <span>{farm.streetAddress}</span>
-            <span className={style.label}>Barangay:</span>
-            <span>{farm.barangay}</span>
-            <span className={style.label}>Barangay Area:</span>
-            <span>{farm.barangayArea}</span>
-          </div>
+          <Grid container className={style.rootGrid} spacing={5}>
+            {/* ATTACHED IMAGE */}
+            <Grid item xs={12} sm={12} md={6} lg={6}>
+              <img className={style.image} src={farm.imageUrl} />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6} lg={6}>
+              <Hidden mdUp>
+                <div className={style.rootGrid}>
+                  <span className={style.label}>Area Size:</span>
+                  <span>{farm.areaSize} sqm.</span>
+                  <span className={style.label}>Address:</span>
+                  <span>{farm.streetAddress}</span>
+                  <span className={style.label}>Barangay:</span>
+                  <span>{farm.barangay}</span>
+                  <span className={style.label}>Barangay Area:</span>
+                  <span>{farm.barangayArea}</span>
+                </div>
+              </Hidden>
+            </Grid>
+          </Grid>
         </Collapse>
       </TableCell>
     </TableRow>
   );
 };
 
-export default FarmRowDetail;
+export default React.memo(FarmRowDetail);

@@ -36,10 +36,13 @@ export const CropRowHeader = () => {
         </Hidden>
 
         <TableCell>Status</TableCell>
+        <Hidden smDown>
+          <TableCell>Status Date</TableCell>
+        </Hidden>
         <TableCell></TableCell>
       </TableRow>
     </TableHead>
   );
 };
 
-export default CropRowHeader;
+export default React.memo(CropRowHeader);

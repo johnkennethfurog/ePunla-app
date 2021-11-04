@@ -9,6 +9,6 @@ export interface FarmSavePayload {
   barangayAreaId: number;
   lng: number;
   lat: number;
-  image: string;
-  imageId: string;
+  imageUrl: string;
+  imageUrlId: string;
 }
