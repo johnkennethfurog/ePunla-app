@@ -22,7 +22,7 @@ const drawerItems: DrawerItem[] = [
   },
   {
     iconComponent: <AssignmentIcon />,
-    title: "Claims",
+    title: "Insurance Claims",
     route: "/claims",
   },
 ];

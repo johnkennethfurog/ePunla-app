@@ -10,6 +10,7 @@ export interface Claim {
   farmCropId: number;
   farmId: number;
   photoId: string;
+  validationDate?: Date;
   damageCause: DamageCause[];
 }
 

@@ -29,7 +29,9 @@ import { showError } from "../../app/+states/messagePromptSlice";
 import { SimpleDropDown } from "../../components/select/selects";
 import { LookupItem } from "../../models/lookup-item";
 import { fetchBarangays, selectBarangay } from "../../app/+states/commonSlice";
-import { ProfileUploader } from "../../components/image-uploader/image-uploader";
+import ImageUploader, {
+  ProfileUploader,
+} from "../../components/image-uploader/image-uploader";
 import { uploadPhoto } from "../../features/farmer/+state/farmerActions";
 import { ImageUploadResponse } from "../../models/image-upload-response";
 
@@ -38,7 +40,6 @@ const useStyle = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100%",
     padding: theme.spacing(2),
     backgroundColor: "#fafafa",
   },
@@ -74,6 +75,11 @@ const useStyle = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  labelProofOfIdentity: {
+    marginTop: theme.spacing(1),
+    fontSize: 12,
+    paddingBottom: 10,
+  },
 }));
 
 const getSteps = () => {
@@ -94,8 +100,14 @@ const SignupPage = () => {
   const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
   const [barangayLookup, setBarangayLookup] = useState<LookupItem[]>(() => []);
   const [areaLookup, setAreaLookup] = useState<LookupItem[]>(() => []);
+
+  // profile picture
   const [imageToUpload, setImageToUpload] = useState<File>();
   const [imageToUploadPreview, setImageToUploadPreview] = useState<string>("");
+
+  // proof of identity
+  const [IDToUpload, setIDToUpload] = useState<File>();
+  const [IDToUploadPreview, setIDToUploadPreview] = useState<string>("");
 
   const [mobileNumber, bindMobileNumber] = useInput("");
   const [password, bindPassword] = useInput("");
@@ -304,6 +316,22 @@ const SignupPage = () => {
             />
           </FormControl>
         </Grid>
+
+        {/* PROOF OF IDENTITY */}
+        <Grid item xs={12}>
+          <span className={style.labelProofOfIdentity}>
+            Upload proof of Identity *
+          </span>
+          <div style={{ marginTop: 5 }}>
+            <ImageUploader
+              image={IDToUploadPreview}
+              onSelectImage={(x) => {
+                setIDToUpload(x);
+                setIDToUploadPreview(URL.createObjectURL(x));
+              }}
+            />
+          </div>
+        </Grid>
       </>
     );
   };
@@ -401,19 +429,30 @@ const SignupPage = () => {
   };
 
   const onSignup = () => {
+    dispatch(
+      uploadPhoto(IDToUpload, (img) => {
+        processSignup(img);
+      })
+    );
+  };
+
+  const processSignup = (identityDocument: ImageUploadResponse) => {
     if (!imageToUpload) {
-      signup();
+      signup(identityDocument);
       return;
     }
 
     dispatch(
       uploadPhoto(imageToUpload, (img) => {
-        signup(img);
+        signup(identityDocument, img);
       })
     );
   };
 
-  const signup = (img?: ImageUploadResponse) => {
+  const signup = (
+    identityDocument: ImageUploadResponse,
+    img?: ImageUploadResponse
+  ) => {
     dispatch(
       signUp(
         {
@@ -426,6 +465,8 @@ const SignupPage = () => {
           barangayAreaId: +areaId,
           avatar: img?.url,
           avatarId: img?.publicId,
+          identityDocumentUrl: identityDocument.url,
+          identityDocumentId: identityDocument.publicId,
           streetAddress,
         },
         onSigninSuccess
@@ -517,11 +558,10 @@ const SignupPage = () => {
             Create an account
           </Typography>
 
-          <Stepper activeStep={activeStep}>
+          <Stepper alternativeLabel activeStep={activeStep}>
             {steps.map((label, index) => {
               const stepProps: { completed?: boolean } = {};
               const labelProps: { optional?: React.ReactNode } = {};
-
               return (
                 <Step key={label} {...stepProps}>
                   <StepLabel style={{ textAlign: "center" }} {...labelProps}>

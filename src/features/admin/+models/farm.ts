@@ -20,4 +20,8 @@ export default interface Farm {
   farmerBarangay: string;
   farmerArea: string;
   farmerAddress: string;
+  identityDocumentUrl: string;
+  identityDocumentId: string;
+  imageUrl: string;
+  imageUrlId: string;
 }

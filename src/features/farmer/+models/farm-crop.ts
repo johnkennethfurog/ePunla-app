@@ -11,4 +11,5 @@ export interface FarmCrop {
   areaSize: number;
   status: string;
   harvestDate: Date;
+  actionDate: Date;
 }

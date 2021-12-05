@@ -45,12 +45,11 @@ const ClaimFilter = () => {
 
   return (
     <form className={style.searchForm}>
-      <Typography gutterBottom>Search Claims</Typography>
       <Grid container>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <SimpleDropDown
             id="status"
-            label="Claim Status"
+            label="Insurance Claim Status"
             fullWidth
             bind={bindStatus}
             options={StatusClaimList}

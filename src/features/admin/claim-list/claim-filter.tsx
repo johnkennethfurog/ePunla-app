@@ -119,7 +119,7 @@ const ClaimFilter = (props: ClaimFilterProps) => {
 
   return (
     <form className={style.searchForm}>
-      <Typography gutterBottom>Search Claims</Typography>
+      <Typography gutterBottom>Search Insurance Claims</Typography>
       <Grid spacing={2} container>
         <Grid item xs={12} sm={12} md={6} lg={6}>
           <TextField
@@ -132,7 +132,7 @@ const ClaimFilter = (props: ClaimFilterProps) => {
         <Grid item xs={12} sm={6} md={3} lg={3}>
           <SimpleDropDown
             id="status"
-            label="Claim Status"
+            label="Insurance Claim Status"
             fullWidth
             bind={bindStatus}
             options={StatusClaimList}

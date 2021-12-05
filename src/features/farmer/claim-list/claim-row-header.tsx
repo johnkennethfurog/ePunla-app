@@ -33,6 +33,7 @@ const ClaimRowHeader = () => {
           <TableCell>Damaged Area</TableCell>
         </Hidden>
         <TableCell>Status</TableCell>
+        <TableCell>Action Date</TableCell>
         <TableCell></TableCell>
       </TableRow>
     </TableHead>

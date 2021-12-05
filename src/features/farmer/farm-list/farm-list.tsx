@@ -123,7 +123,7 @@ const FarmList = () => {
     <>
       <div className={style.newButtonDiv}>
         <Button color="primary" onClick={enrollFarm} startIcon={<AddIcon />}>
-          Create New
+          Enroll Farm
         </Button>
       </div>
       <Paper className={style.container}>
