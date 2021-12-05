@@ -90,6 +90,12 @@ const ClaimRow = (props: ClaimRowProps) => {
         }
       </TableCell>
       <TableCell className={style.cell}>
+        {claim.validationDate
+          ? moment(claim.validationDate).format("MM-DD-YYYY")
+          : "-"}
+      </TableCell>
+
+      <TableCell className={style.cell}>
         {claim.status === StatusClaim.Pending && (
           <>
             <IconButton onClick={onOpenMenu} aria-label="edit">

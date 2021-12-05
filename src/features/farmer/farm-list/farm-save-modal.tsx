@@ -8,8 +8,8 @@ import {
   TextField,
   InputAdornment,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import GoogleMapReact, { ClickEventValue } from "google-map-react";
+import React, { useEffect, useRef, useState } from "react";
+import GoogleMapReact, { ClickEventValue, fitBounds } from "google-map-react";
 import { useDispatch, useSelector } from "react-redux";
 import ButtonLoading from "../../../components/button-loading/button-loading";
 import { SimpleDropDown } from "../../../components/select/selects";
@@ -198,6 +198,18 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
     });
   };
 
+  const onGetLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setCoordinates({
+          lng: pos.coords.longitude,
+          lat: pos.coords.latitude,
+        });
+      },
+      (err) => {}
+    );
+  };
+
   return (
     <Dialog open={isOpen} onClose={closeFarmSaveModal} fullWidth maxWidth="lg">
       <DialogTitle>{!!isNew ? "Enrolll Farm" : "Update Farm"}</DialogTitle>
@@ -273,14 +285,34 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
           </Grid>
 
           <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
-            <div style={{ height: "100%", minHeight: 300 }}>
+            <div
+              style={{ height: "100%", minHeight: 300, position: "relative" }}
+            >
+              =
+              <Button
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  padding: 10,
+                  bottom: 0,
+                  zIndex: 1,
+                }}
+                disabled={isSaving}
+                onClick={onGetLocation}
+                variant="contained"
+                color="primary"
+              >
+                Get My Location
+              </Button>
               <GoogleMapReact
                 onClick={onSelectLocation}
                 bootstrapURLKeys={{
                   key: "AIzaSyAxZUt26k60tbv0UIiDIyEsQOfEUmFGhCc",
                 }}
+                center={coordinates || tanauan_coords}
                 defaultCenter={coordinates || tanauan_coords}
                 defaultZoom={!!coordinates ? 15 : 12.5}
+                zoom={!!coordinates ? 15 : 12.5}
               >
                 {!!coordinates && <LocationMarker {...coordinates} />}
               </GoogleMapReact>
