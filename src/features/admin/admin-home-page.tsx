@@ -43,7 +43,7 @@ const AdminPage = () => {
           <Route exact path={`${path}/barangays`}>
             <BarangayList />
           </Route>
-          <Route exact path={`${path}/`}>
+          <Route exact path={`${path}/dashboard`}>
             <Dashboard />
           </Route>
         </Switch>
