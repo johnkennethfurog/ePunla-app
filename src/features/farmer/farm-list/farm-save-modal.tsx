@@ -62,6 +62,11 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
   const [barangayLookup, setBarangayLookup] = useState<LookupItem[]>(() => []);
   const [areaLookup, setAreaLookup] = useState<LookupItem[]>(() => []);
 
+  const tanauan_coords: Coordinates = {
+    lng: 121.09959078753087,
+    lat: 14.098898609585907,
+  };
+
   useEffect(() => {
     if (!isOpen) {
       setAreaLookup([]);
