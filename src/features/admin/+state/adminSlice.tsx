@@ -7,6 +7,7 @@ import { Category } from "../+models/category";
 import { PagedCrop } from "../+models/crop";
 import { ClaimDetail } from "../+models/claim-detail";
 import { StatusClaim } from "../../../models/status-claim.enum";
+import { DashboardStatistic } from "../+models/dashboard-statistic";
 interface AdminState {
   farms: PagedFarm;
   claims: PagedClaim;
@@ -17,6 +18,8 @@ interface AdminState {
   categories: Category[];
   reloadData: boolean;
   claimDetail?: ClaimDetail;
+
+  dashboardStatistic?: DashboardStatistic;
 }
 
 const initialState: AdminState = {
@@ -130,6 +133,13 @@ export const adminSlice = createSlice({
     ) => {
       state.isLoading = false;
       state.categories = action.payload;
+    },
+    loadDashboardDAta: (
+      state: AdminState,
+      action: PayloadAction<DashboardStatistic>
+    ) => {
+      state.isLoading = false;
+      state.dashboardStatistic = action.payload;
     },
   },
 });

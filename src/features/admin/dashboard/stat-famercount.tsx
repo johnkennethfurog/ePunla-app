@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { StatFarmerPerBarangayDto } from "../+models/dashboard-statistic";
 
 ChartJS.register(
   CategoryScale,
@@ -18,49 +19,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-const sample_data = [
-  {
-    barangay: "Barangay A",
-    count: 25,
-  },
-  {
-    barangay: "Barangay B",
-    count: 16,
-  },
-  {
-    barangay: "Barangay C",
-    count: 25,
-  },
-  {
-    barangay: "Barangay D",
-    count: 76,
-  },
-  {
-    barangay: "Barangay E",
-    count: 29,
-  },
-  {
-    barangay: "Barangay F",
-    count: 33,
-  },
-  {
-    barangay: "Barangay G",
-    count: 18,
-  },
-  {
-    barangay: "Barangay H",
-    count: 46,
-  },
-  {
-    barangay: "Barangay I",
-    count: 24,
-  },
-  {
-    barangay: "Barangay J",
-    count: 61,
-  },
-];
 
 export const options = {
   responsive: true,
@@ -75,23 +33,31 @@ export const options = {
   },
 };
 
-const labels = sample_data.map((x) => x.barangay);
-const farmersCount = sample_data.map((x) => x.count);
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "No. of Farmers",
-      data: farmersCount,
-      backgroundColor: "#4472C4",
-    },
-  ],
+type StatFarmerCountProps = {
+  statData: StatFarmerPerBarangayDto[];
 };
-export const StatFarmerCount = () => {
+export const StatFarmerCount = ({ statData }: StatFarmerCountProps) => {
+  const chartData = React.useMemo(() => {
+    const labels = statData.map((x) => x.barangay);
+    const farmersCount = statData.map((x) => x.farmerCount);
+
+    const data = {
+      labels,
+      datasets: [
+        {
+          label: "No. of Farmers",
+          data: farmersCount,
+          backgroundColor: "#4472C4",
+        },
+      ],
+    };
+
+    return data;
+  }, [statData]);
+
   return (
     <div style={{ marginTop: 50 }}>
-      <Bar options={options} data={data} />;
+      <Bar options={options} data={chartData} />;
     </div>
   );
 };

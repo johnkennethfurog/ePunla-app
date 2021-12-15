@@ -20,3 +20,6 @@ export const selectIsLoading = (state: RootState) => state.admin.isLoading;
 export const selectAdminIsSaving = (state: RootState) => state.admin.isSaving;
 export const selectreloadData = (state: RootState) => state.admin.reloadData;
 export const selectCategories = (state: RootState) => state.admin.categories;
+
+export const selectDashboardData = (state: RootState) =>
+  state.admin.dashboardStatistic;

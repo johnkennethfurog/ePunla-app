@@ -24,6 +24,7 @@ import { CropSavePayload } from "../+models/crop-save-payload";
 import { BarangaySavePayload } from "../+models/barangay-save-payload";
 import { BarangayStatusPayload } from "../+models/barangay-status-payload";
 import { ClaimDetail } from "../+models/claim-detail";
+import { DashboardStatistic } from "../+models/dashboard-statistic";
 
 const ADMIN_MODULE = "/admin";
 const MASTER_LIST_MODULE = "/masterlist";
@@ -46,6 +47,8 @@ const {
   loadClaimDetailSuccess,
   loadCategoriesSuccess,
   loadCropsSuccess,
+
+  loadDashboardDAta,
 } = adminSlice.actions;
 
 export const farmerLogout = onLogout;
@@ -250,6 +253,20 @@ export const fetchCategories = (): AppThunk => (dispatch) => {
     .get(MASTER_LIST_MODULE + "/categories")
     .then((response: AxiosResponse<Category[]>) => {
       dispatch(loadCategoriesSuccess(response.data));
+    })
+    .catch((err: any) => {
+      dispatch(error(err));
+      dispatch(showError("Unable to get Crop Categories"));
+    });
+};
+
+export const fetchDashboardData = (): AppThunk => (dispatch) => {
+  dispatch(load());
+
+  clientQueryApiRequest()
+    .get("/admin/dashboard")
+    .then((response: AxiosResponse<DashboardStatistic>) => {
+      dispatch(loadDashboardDAta(response.data));
     })
     .catch((err: any) => {
       dispatch(error(err));
