@@ -2,6 +2,15 @@ export interface DashboardStatistic {
   statCropPerBarangayDto: StatCropPerBarangayDto[];
   statCropStatusPerBarangayDto: StatCropStatusPerBarangayDto[];
   statFarmerPerBarangayDto: StatFarmerPerBarangayDto[];
+  statCountDto: StatCountDto;
+}
+
+export interface StatCountDto {
+  farmCount: number;
+  activeFarmerCount: number;
+  plantedCropsSqm: number;
+  harvestedCropsSqm: number;
+  damagedCropsSqm: number;
 }
 
 export interface StatCropPerBarangayDto {

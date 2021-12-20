@@ -56,7 +56,7 @@ export const StatFarmerCount = ({ statData }: StatFarmerCountProps) => {
   }, [statData]);
 
   return (
-    <div style={{ marginTop: 50 }}>
+    <div style={{ marginTop: 50, width: "100%" }}>
       <Bar options={options} data={chartData} />;
     </div>
   );
