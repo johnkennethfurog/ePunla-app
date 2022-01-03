@@ -1,14 +1,14 @@
 import React from "react";
 import Config from "../../../utils/config";
-import GoogleMapReact, { ClickEventValue } from "google-map-react";
+import GoogleMapReact from "google-map-react";
 import randomColor from "randomcolor";
-
-import logo from "../../../assets/1.svg"; // with import
-import { createStyles, makeStyles } from "@material-ui/core";
+import PrintIcon from "@material-ui/icons/Print";
+import { Button, createStyles, makeStyles } from "@material-ui/core";
 import { Crop, StatCropPerBarangayDto } from "../+models/dashboard-statistic";
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import StatGeoPrint from "./stat-geo-print";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -68,30 +68,6 @@ const InfoWindow = ({ data }: { data: Crop[] }) => {
       }}
     >
       <Pie data={chartData} />;
-      {/* <div className={"triangleLeft"}></div>
-      {data.map((d) => {
-        return (
-          <div
-            key={d.crop}
-            style={{
-              // color: "white",
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              width: 120,
-              marginBottom: 3,
-              fontSize: 12,
-            }}
-          >
-            <img
-              style={{ width: 12, height: 12, marginRight: 2 }}
-              src={`/assets/images/1.svg`}
-              alt={d.toString()}
-            />
-            <span>{`${d.crop} - ${d.count} (${d.percentage}%)`}</span>
-          </div>
-        );
-      })} */}
     </div>
   );
 };
@@ -146,26 +122,42 @@ type StatGeoLocationProps = {
 };
 
 export const StatGeoLocation = ({ statData }: StatGeoLocationProps) => {
+  const [openGeoPrint, setOpenGeoPrint] = React.useState(false);
+
   return (
-    <div style={{ height: 800, minHeight: 300 }}>
-      <GoogleMapReact
-        // onClick={onSelectLocation}
-        bootstrapURLKeys={{
-          key: Config.googleMapKey,
-        }}
-        defaultCenter={Config.tanauanCoordinates}
-        defaultZoom={12.5}
-      >
-        {statData.map((x, i) => (
-          <Marker
-            key={i}
-            lat={x.lat}
-            lng={x.lng}
-            barangay={x.barangay}
-            crops={x.crops}
-          />
-        ))}
-      </GoogleMapReact>
-    </div>
+    <>
+      <div style={{ height: 800, minHeight: 300 }}>
+        <StatGeoPrint
+          isOpen={openGeoPrint}
+          onClose={() => setOpenGeoPrint(false)}
+          statData={statData}
+        />
+        <Button
+          color="primary"
+          onClick={() => setOpenGeoPrint(true)}
+          startIcon={<PrintIcon />}
+        >
+          Print
+        </Button>
+        <GoogleMapReact
+          // onClick={onSelectLocation}
+          bootstrapURLKeys={{
+            key: Config.googleMapKey,
+          }}
+          defaultCenter={Config.tanauanCoordinates}
+          defaultZoom={12.5}
+        >
+          {statData.map((x, i) => (
+            <Marker
+              key={i}
+              lat={x.lat}
+              lng={x.lng}
+              barangay={x.barangay}
+              crops={x.crops}
+            />
+          ))}
+        </GoogleMapReact>
+      </div>
+    </>
   );
 };

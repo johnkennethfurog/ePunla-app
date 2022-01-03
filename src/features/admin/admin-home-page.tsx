@@ -1,21 +1,18 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 
-import drawerItems from "./+utils/drawer-items";
-import FarmList from "./farm-list/farm-list";
-import ClaimList from "./claim-list/claim-list";
-
-import { useEffect } from "react";
 import Shell from "../../components/shell/shell";
-import CropList from "./crops-list/crops-list";
-import BarangayList from "./barangay-list/barangay-list";
-import ClaimDetail from "./claim-list/claim-detail";
-import Dashboard from "./dashboard/dashboard";
+import drawerItems from "./+utils/drawer-items";
+
+const CropList = React.lazy(() => import("./crops-list/crops-list"));
+const FarmList = React.lazy(() => import("./farm-list/farm-list"));
+const ClaimList = React.lazy(() => import("./claim-list/claim-list"));
+const BarangayList = React.lazy(() => import("./barangay-list/barangay-list"));
+const ClaimDetail = React.lazy(() => import("./claim-list/claim-detail"));
+const Dashboard = React.lazy(() => import("./dashboard/dashboard"));
 
 const AdminPage = () => {
   const { path } = useRouteMatch();
-
-  useEffect(() => {}, []);
 
   const handleLogout = () => {};
 
@@ -32,19 +29,29 @@ const AdminPage = () => {
             <FarmList />
           </Route>
           <Route exact path={`${path}/claims`}>
-            <ClaimList />
+            <Suspense fallback={<></>}>
+              <ClaimList />
+            </Suspense>
           </Route>
           <Route exact path={`${path}/claims/:claimId`}>
-            <ClaimDetail />
+            <Suspense fallback={<></>}>
+              <ClaimDetail />
+            </Suspense>
           </Route>
           <Route exact path={`${path}/crops`}>
-            <CropList />
+            <Suspense fallback={<></>}>
+              <CropList />
+            </Suspense>
           </Route>
           <Route exact path={`${path}/barangays`}>
-            <BarangayList />
+            <Suspense fallback={<></>}>
+              <BarangayList />
+            </Suspense>
           </Route>
           <Route exact path={`${path}/dashboard`}>
-            <Dashboard />
+            <Suspense fallback={<></>}>
+              <Dashboard />
+            </Suspense>
           </Route>
         </Switch>
       </>

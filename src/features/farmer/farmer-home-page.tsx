@@ -1,11 +1,5 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
-
-import drawerItems from "./+utils/drawer-items";
-import FarmList from "./farm-list/farm-list";
-import ClaimList from "./claim-list/claim-list";
-import CropList from "./crops-list/crops-list";
-
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../app/+states/userSlice";
 import {
@@ -17,6 +11,11 @@ import { Alert } from "@material-ui/lab";
 import { useEffect } from "react";
 import { farmerLogout, fetchProfile } from "./+state/farmerActions";
 import Shell from "../../components/shell/shell";
+import drawerItems from "./+utils/drawer-items";
+
+const FarmList = React.lazy(() => import("./farm-list/farm-list"));
+const ClaimList = React.lazy(() => import("./claim-list/claim-list"));
+const CropList = React.lazy(() => import("./crops-list/crops-list"));
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -53,13 +52,19 @@ const HomePage = () => {
 
         <Switch>
           <Route exact path="/farms">
-            <FarmList />
+            <Suspense fallback={<></>}>
+              <FarmList />
+            </Suspense>
           </Route>
           <Route exact path="/claims">
-            <ClaimList />
+            <Suspense fallback={<></>}>
+              <ClaimList />
+            </Suspense>
           </Route>
           <Route exact path="/crops">
-            <CropList />
+            <Suspense fallback={<></>}>
+              <CropList />
+            </Suspense>
           </Route>
         </Switch>
       </>

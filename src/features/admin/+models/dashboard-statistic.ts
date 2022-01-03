@@ -22,11 +22,11 @@ export interface StatCropPerBarangayDto {
   totalCount: number;
 }
 
-export interface Crop {
+export type Crop = {
   crop: string;
   percentage: number;
   count: number;
-}
+};
 
 export interface StatCropStatusPerBarangayDto {
   barangayId: number;
