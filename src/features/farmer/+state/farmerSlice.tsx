@@ -7,6 +7,7 @@ import { ErrorMessage } from "../../../models/error-message";
 import { StatusCrop } from "../+models/status-crop.enum";
 import { FarmerProfile } from "../+models/farmer-profile";
 import moment from "moment";
+import { FarmerDashboard } from "../+models/farmer-dashboard";
 
 interface FarmerState {
   farms: Farm[];
@@ -20,6 +21,7 @@ interface FarmerState {
   selectedClaim: Claim;
   reloadData: boolean;
   profile: FarmerProfile;
+  dashboard?: FarmerDashboard;
 }
 
 const initialState: FarmerState = {
@@ -131,6 +133,13 @@ export const farmerSlice = createSlice({
       state.isLoading = false;
       state.crops = payload;
       state.cropsToHarvest = cropForHarvest;
+    },
+    loadDashboardSuccess: (
+      state: FarmerState,
+      action: PayloadAction<FarmerDashboard>
+    ) => {
+      state.isLoading = false;
+      state.dashboard = action.payload;
     },
 
     // DELETING

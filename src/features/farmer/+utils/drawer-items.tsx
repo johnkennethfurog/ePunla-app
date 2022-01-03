@@ -5,11 +5,11 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 import LandscapeIcon from "@material-ui/icons/Landscape";
 import EcoIcon from "@material-ui/icons/Eco";
 const drawerItems: DrawerItem[] = [
-  // {
-  //   iconComponent: <DashboardIcon />,
-  //   title: "Dashboard",
-  //   route: "/dashboard",
-  // },
+  {
+    iconComponent: <DashboardIcon />,
+    title: "Dashboard",
+    route: "/dashboard",
+  },
   {
     iconComponent: <LandscapeIcon />,
     title: "Farms",

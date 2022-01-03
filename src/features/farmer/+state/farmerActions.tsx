@@ -24,6 +24,7 @@ import { ActionType } from "../../../models/action-type.enum";
 import { ActionModule } from "../../../models/action-module.enum";
 import { doAction } from "../../../app/+states/commonSlice";
 import { StatusFarmer } from "../../../models/status-farmer.enum";
+import { FarmerDashboard } from "../+models/farmer-dashboard";
 
 const FARMER_MODULE = "/farmer";
 const PHOTO_MODULE = "/photo";
@@ -38,6 +39,7 @@ const {
   loadFarmsSuccess,
   loadClaimsSuccess,
   loadCropsSuccess,
+  loadDashboardSuccess,
   onLoadFarmerProfileSuccess,
 
   uploadPhotoSuccess,
@@ -131,6 +133,20 @@ export const fetchCrops =
         dispatch(showError("Unable to get Crops"));
       });
   };
+
+export const fetchDashboard = (): AppThunk => (dispatch) => {
+  dispatch(load());
+
+  clientQueryApiRequest()
+    .get(FARMER_MODULE + "/dashboard")
+    .then((response: AxiosResponse<FarmerDashboard>) => {
+      dispatch(loadDashboardSuccess(response.data));
+    })
+    .catch((err: any) => {
+      dispatch(error(err));
+      dispatch(showError("Unable to get Dashboard"));
+    });
+};
 
 // SAVING OR UPDATING
 export const uploadPhoto =

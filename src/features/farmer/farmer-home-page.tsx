@@ -16,6 +16,7 @@ import drawerItems from "./+utils/drawer-items";
 const FarmList = React.lazy(() => import("./farm-list/farm-list"));
 const ClaimList = React.lazy(() => import("./claim-list/claim-list"));
 const CropList = React.lazy(() => import("./crops-list/crops-list"));
+const Dashboard = React.lazy(() => import("./dashboard/dashboard"));
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -64,6 +65,12 @@ const HomePage = () => {
           <Route exact path="/crops">
             <Suspense fallback={<></>}>
               <CropList />
+            </Suspense>
+          </Route>
+
+          <Route exact path="/dashboard">
+            <Suspense fallback={<></>}>
+              <Dashboard />
             </Suspense>
           </Route>
         </Switch>

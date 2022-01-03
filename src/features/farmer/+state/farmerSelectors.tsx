@@ -25,3 +25,5 @@ export const selectFarmerFullname = (state: RootState) =>
   `${state.farmer.profile?.firstName} ${state.farmer.profile?.lastName}`;
 export const selectIsPending = (state: RootState) =>
   state.farmer?.profile?.status === StatusFarmer.Pending;
+
+export const selectDashboard = (state: RootState) => state.farmer.dashboard;
