@@ -13,12 +13,14 @@ import { AxiosResponse } from "axios";
 import { showError } from "./messagePromptSlice";
 import { FarmerSignupPayload } from "../../features/farmer/+models/farmer-signup-payload";
 
-const TOKEN = "token";
+export const TOKEN = "token";
+export const ADMIN_TOKEN = "admin_token";
 
 interface UserState {
   loading: boolean;
   error: ErrorMessage[];
   isLoggedin: boolean;
+  isAdminLoggedin: boolean;
   isPending: false;
 }
 
@@ -26,6 +28,7 @@ const initialState: UserState = {
   loading: false,
   error: [],
   isPending: false,
+  isAdminLoggedin: !!localStorage.getItem(ADMIN_TOKEN),
   isLoggedin: !!localStorage.getItem(TOKEN),
 };
 
@@ -42,6 +45,10 @@ const UserSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    onAdminSignInSuccess: (state: UserState) => {
+      state.loading = false;
+      state.isAdminLoggedin = true;
+    },
     onSignInSuccess: onUserAuthenticated,
     onSignUpSuccess: onUserAuthenticated,
     onValidateMobileNumberSuccess: (state: UserState) => {
@@ -65,6 +72,7 @@ const UserSlice = createSlice({
 // ASYNC ACTIONS
 const {
   onSignInSuccess,
+  onAdminSignInSuccess,
   onLoad,
   onError,
   onValidateMobileNumberSuccess,
@@ -74,6 +82,7 @@ const {
 
 export const logout = (): AppThunk => (dispatch) => {
   localStorage.removeItem(TOKEN);
+  localStorage.removeItem(ADMIN_TOKEN);
   dispatch(onLogout());
 };
 
@@ -94,8 +103,13 @@ export const signIn =
       .post(url, payload)
       .then((response: AxiosResponse<{ token: string }>) => {
         const { data } = response;
-        localStorage.setItem(TOKEN, data.token);
-        dispatch(onSignInSuccess());
+        localStorage.setItem(forAdmin ? ADMIN_TOKEN : TOKEN, data.token);
+
+        if (forAdmin) {
+          dispatch(onAdminSignInSuccess());
+        } else {
+          dispatch(onSignInSuccess());
+        }
         successCallback();
       })
       .catch((err: ErrorMessage[]) => {
@@ -157,5 +171,7 @@ export const selectUserLoading = (state: RootState) => state.user.loading;
 export const selectUserError = (state: RootState) => state.user.error;
 export const selectIsAuthenticated = (state: RootState) =>
   state.user.isLoggedin;
+export const selectIsAdminAuthenticated = (state: RootState) =>
+  state.user.isAdminLoggedin;
 
 export default UserSlice.reducer;

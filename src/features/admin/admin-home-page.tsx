@@ -1,5 +1,7 @@
 import React, { Suspense } from "react";
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
+import { logout } from "../../app/+states/userSlice";
 
 import Shell from "../../components/shell/shell";
 import drawerItems from "./+utils/drawer-items";
@@ -12,14 +14,19 @@ const ClaimDetail = React.lazy(() => import("./claim-list/claim-detail"));
 const Dashboard = React.lazy(() => import("./dashboard/dashboard"));
 
 const AdminPage = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const { path } = useRouteMatch();
 
-  const handleLogout = () => {};
+  const handleLogout = () => {
+    history.push("/admin/signin");
+    dispatch(logout());
+  };
 
   return (
     <Shell
       drawerItems={drawerItems}
-      fullName={"XXX"}
+      fullName={"Admin"}
       avatar={""}
       onLogout={handleLogout}
     >

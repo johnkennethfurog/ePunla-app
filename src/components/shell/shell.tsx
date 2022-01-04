@@ -10,6 +10,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import AppLogo from "../../assets/logo.png";
 
 import DrawerStyle from "./shell.style";
 
@@ -57,7 +58,9 @@ const Shell: React.FunctionComponent<ShellProps> = (props) => {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar} />
+      <div className={classes.toolbar}>
+        <img className={classes.logo} src={AppLogo} />
+      </div>
 
       <List>
         {drawerItems.map((item, index) => (

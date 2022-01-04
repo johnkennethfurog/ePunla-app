@@ -185,7 +185,7 @@ export const fetchFarms =
 
     dispatch(load());
 
-    clientQueryApiRequest()
+    clientQueryApiRequest({ forAdmin: true })
       .post(`${ADMIN_MODULE}/farms`, searchField)
       .then((response: AxiosResponse<PagedFarm>) => {
         dispatch(loadFarmsSuccess(response.data));
@@ -203,7 +203,7 @@ export const fetchClaims =
   (dispatch) => {
     dispatch(load());
 
-    clientQueryApiRequest()
+    clientQueryApiRequest({ forAdmin: true })
       .post(ADMIN_MODULE + "/claims", searchField)
       .then((response: AxiosResponse<PagedClaim>) => {
         dispatch(loadClaimsSuccess(response.data));
@@ -219,7 +219,7 @@ export const fetchClaimDetail =
   (dispatch) => {
     dispatch(load());
 
-    clientQueryApiRequest()
+    clientQueryApiRequest({ forAdmin: true })
       .get(`${ADMIN_MODULE}/claims/${claimId}`)
       .then((response: AxiosResponse<ClaimDetail>) => {
         dispatch(loadClaimDetailSuccess(response.data));
@@ -235,7 +235,7 @@ export const fetchCrops =
   (dispatch) => {
     dispatch(load());
 
-    clientQueryApiRequest()
+    clientQueryApiRequest({ forAdmin: true })
       .post(MASTER_LIST_MODULE + "/crops", searchField)
       .then((response: AxiosResponse<PagedCrop>) => {
         dispatch(loadCropsSuccess(response.data));
@@ -249,7 +249,7 @@ export const fetchCrops =
 export const fetchCategories = (): AppThunk => (dispatch) => {
   dispatch(load());
 
-  clientQueryApiRequest()
+  clientQueryApiRequest({ forAdmin: true })
     .get(MASTER_LIST_MODULE + "/categories")
     .then((response: AxiosResponse<Category[]>) => {
       dispatch(loadCategoriesSuccess(response.data));
@@ -263,7 +263,7 @@ export const fetchCategories = (): AppThunk => (dispatch) => {
 export const fetchDashboardData = (): AppThunk => (dispatch) => {
   dispatch(load());
 
-  clientQueryApiRequest()
+  clientQueryApiRequest({ forAdmin: true })
     .get("/admin/dashboard")
     .then((response: AxiosResponse<DashboardStatistic>) => {
       dispatch(loadDashboardDAta(response.data));

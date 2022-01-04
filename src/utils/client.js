@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ADMIN_TOKEN, TOKEN } from "../app/+states/userSlice";
 
 const API_VERSION = "/api";
 // const BASE_URL_QUERY = "https://e-punla-query.azurewebsites.net";
@@ -18,8 +19,16 @@ const getCommandUrl = (url) => {
   return `${BASE_URL_COMMAND}${API_VERSION}${url}`;
 };
 
-const getAxiosClient = async (forQuery, method, url, options, data, params) => {
-  let token = localStorage.getItem("token");
+const getAxiosClient = async (
+  forQuery,
+  forAdmin,
+  method,
+  url,
+  options,
+  data,
+  params
+) => {
+  let token = localStorage.getItem(forAdmin ? ADMIN_TOKEN : TOKEN);
 
   const axiosSetup = {
     headers: {
@@ -51,23 +60,23 @@ const getAxiosClient = async (forQuery, method, url, options, data, params) => {
   return axiosInstance[method](requestUrl, options);
 };
 
-const clientApiRequest = (forQuery) => {
+const clientApiRequest = (forQuery, forAdmin) => {
   return {
     get: (url, options = {}, params = {}) =>
-      getAxiosClient(forQuery, "get", url, options, null, params),
+      getAxiosClient(forQuery, forAdmin, "get", url, options, null, params),
     post: (url, data, options = {}) =>
-      getAxiosClient(forQuery, "post", url, options, data),
+      getAxiosClient(forQuery, forAdmin, "post", url, options, data),
     put: (url, data, options = {}) =>
-      getAxiosClient(forQuery, "put", url, options, data),
+      getAxiosClient(forQuery, forAdmin, "put", url, options, data),
     delete: (url, data, options = {}) =>
-      getAxiosClient(forQuery, "delete", url, options, data),
+      getAxiosClient(forQuery, forAdmin, "delete", url, options, data),
   };
 };
 
-export const clientCommandApiRequest = () => {
-  return clientApiRequest(false);
+export const clientCommandApiRequest = (prop) => {
+  return clientApiRequest(false, prop?.forAdmin);
 };
 
-export const clientQueryApiRequest = () => {
-  return clientApiRequest(true);
+export const clientQueryApiRequest = (prop) => {
+  return clientApiRequest(true, prop?.forAdmin);
 };

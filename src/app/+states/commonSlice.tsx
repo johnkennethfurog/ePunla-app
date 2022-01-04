@@ -8,6 +8,7 @@ import { LookupType } from "../../models/lookup-type.enum";
 import { PagedRequest } from "../../models/paged-request";
 import { clientQueryApiRequest } from "../../utils/client";
 import { AppThunk, RootState } from "../store";
+import { ADMIN_TOKEN } from "./userSlice";
 
 interface CommonState {
   lookups: Dictionary<LookupItem[]>;
@@ -90,6 +91,8 @@ export const clearCropLookup = onClearCropLookup;
 export const doAction = onDoAction;
 export const doneAction = onDoneAction;
 
+const forAdmin = !!localStorage.getItem(ADMIN_TOKEN);
+
 //ASYNC ACTIONS
 export const fetchCropsLookups =
   (keyword: string): AppThunk =>
@@ -102,7 +105,7 @@ export const fetchCropsLookups =
       },
     };
 
-    clientQueryApiRequest()
+    clientQueryApiRequest({ forAdmin: forAdmin })
       .post("/crops/lookup", payload)
       .then((response: AxiosResponse<LookupItem[]>) => {
         dispatch(loadCropLookupSuccess(response.data));
@@ -129,7 +132,7 @@ export const fetchLookups =
       return;
     }
 
-    clientQueryApiRequest()
+    clientQueryApiRequest({ forAdmin: forAdmin })
       .get("/lookups/lookuplist")
       .then((response: AxiosResponse<LookupItemResponse[]>) => {
         dispatch(loadLookupSuccess(response.data));
@@ -140,7 +143,7 @@ export const fetchLookups =
   };
 
 export const fetchBarangays = (): AppThunk => (dispatch) => {
-  clientQueryApiRequest()
+  clientQueryApiRequest({ forAdmin: forAdmin })
     .get("/masterlist/barangays")
     .then((response: AxiosResponse<Barangay[]>) => {
       dispatch(loadBarangaySuccess(response.data));

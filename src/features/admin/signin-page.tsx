@@ -1,5 +1,4 @@
 import {
-  Button,
   FormControl,
   IconButton,
   InputAdornment,
@@ -16,8 +15,6 @@ import clsx from "clsx";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import LockIcon from "@material-ui/icons/Lock";
-import DoaLogo from "../../assets/department_of_agri.png";
-import TanauanLogo from "../../assets/tanauan_logo.png";
 import AppLogo from "../../assets/logo.png";
 import ButtonLoading from "../../components/button-loading/button-loading";
 import useInput from "../../hooks/useInput";
@@ -42,7 +39,7 @@ const useStyle = makeStyles((theme) => ({
   textField: { marginTop: theme.spacing(2) },
   actionDiv: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     marginTop: theme.spacing(3),
   },
   logo: {
@@ -58,7 +55,7 @@ const useStyle = makeStyles((theme) => ({
   subtitle: { textAlign: "center" },
 }));
 
-const SigninPage = () => {
+const AdminSigninPage = () => {
   const style = useStyle();
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -67,7 +64,7 @@ const SigninPage = () => {
 
   const [showPass, setShowPass] = React.useState<boolean>(false);
 
-  const [mobileNumber, bindMobileNumber] = useInput("");
+  const [email, bindEmail] = useInput("");
   const [password, bindPassword] = useInput("");
 
   useEffect(() => {
@@ -79,20 +76,16 @@ const SigninPage = () => {
   };
 
   const onSignin = () => {
-    if (!mobileNumber || !password) {
+    if (!email || !password) {
       dispatch(showError("Username and password is required"));
       return;
     }
 
-    dispatch(signIn(false, { mobileNumber, password }, onSigninSuccess));
+    dispatch(signIn(true, { email, password }, onSigninSuccess));
   };
 
   const onSigninSuccess = () => {
-    history.replace("/dashboard");
-  };
-
-  const onSignup = () => {
-    history.replace("/signup");
+    history.replace("/admin/dashboard");
   };
 
   return (
@@ -105,7 +98,7 @@ const SigninPage = () => {
           </div>
 
           <Typography className={style.title} variant="h5" color="primary">
-            S2M App
+            S2M Admin App
           </Typography>
           <Typography
             className={style.subtitle}
@@ -120,16 +113,8 @@ const SigninPage = () => {
             fullWidth
             variant="outlined"
           >
-            <InputLabel htmlFor="mobile-number">Mobile Number</InputLabel>
-            <OutlinedInput
-              inputProps={{ maxLength: 10 }}
-              label="Mobile Number"
-              id="mobile-number"
-              {...bindMobileNumber}
-              startAdornment={
-                <InputAdornment position="start">+63</InputAdornment>
-              }
-            />
+            <InputLabel htmlFor="email">Email</InputLabel>
+            <OutlinedInput label="Email" id="email" {...bindEmail} />
           </FormControl>
 
           <FormControl
@@ -163,9 +148,6 @@ const SigninPage = () => {
           </FormControl>
 
           <div className={style.actionDiv}>
-            <Button onClick={onSignup} color="primary">
-              Create Account
-            </Button>
             <ButtonLoading text="Sign In" onClick={onSignin} />
           </div>
         </form>
@@ -174,4 +156,4 @@ const SigninPage = () => {
   );
 };
 
-export default SigninPage;
+export default AdminSigninPage;

@@ -23,7 +23,7 @@ const style = makeStyles((theme) => ({
     },
   },
   // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
+  toolbar: { ...theme.mixins.toolbar, padding: 20 },
   drawerPaper: {
     width: drawerWidth,
   },
@@ -32,6 +32,10 @@ const style = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   avatar: {},
+  logo: {
+    width: "100%",
+    // margin: 15,
+  },
 }));
 
 export default style;
