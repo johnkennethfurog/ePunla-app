@@ -63,7 +63,7 @@ export const validateClaim =
   (dispatch) => {
     dispatch(save());
 
-    clientCommandApiRequest()
+    clientCommandApiRequest({ forAdmin: true })
       .put(`${ADMIN_MODULE}/claims/${claimId}/validate`, payload)
       .then(() => {
         dispatch(validateClaimSuccess({ isApproved: payload.isApproved }));
@@ -82,7 +82,7 @@ export const setClaimForVerification =
   (dispatch) => {
     dispatch(save());
 
-    clientCommandApiRequest()
+    clientCommandApiRequest({ forAdmin: true })
       .put(`${ADMIN_MODULE}/claims/${claimId}/setforverification`)
       .then(() => {
         dispatch(setClaimForVerificationSuccess());
@@ -105,7 +105,7 @@ export const validateFarm =
   (dispatch) => {
     dispatch(save());
 
-    clientCommandApiRequest()
+    clientCommandApiRequest({ forAdmin: true })
       .put(`${ADMIN_MODULE}/farms/${farmId}/validate`, payload)
       .then(() => {
         dispatch(validateFarmSuccess());
@@ -124,7 +124,7 @@ export const saveCrop =
   (dispatch) => {
     dispatch(save());
 
-    clientCommandApiRequest()
+    clientCommandApiRequest({ forAdmin: true })
       .post(`${MASTER_LIST_MODULE}/crops/save`, payload)
       .then(() => {
         dispatch(saveCropSuccess());
@@ -143,7 +143,7 @@ export const saveBarangay =
   (dispatch) => {
     dispatch(save());
 
-    clientCommandApiRequest()
+    clientCommandApiRequest({ forAdmin: true })
       .post(`${MASTER_LIST_MODULE}/barangays/save`, payload)
       .then(() => {
         dispatch(saveBarangaySuccess());
@@ -162,7 +162,7 @@ export const updateBarangayStatus =
   (dispatch) => {
     dispatch(save());
 
-    clientCommandApiRequest()
+    clientCommandApiRequest({ forAdmin: true })
       .put(
         `${MASTER_LIST_MODULE}/barangays/${barangayId}/changeStatus`,
         payload
