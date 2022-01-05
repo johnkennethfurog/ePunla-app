@@ -44,6 +44,11 @@ const Shell: React.FunctionComponent<ShellProps> = (props) => {
     setAnchorEl(null);
   };
 
+  const handleTermsAndConditions = () => {
+    history.push("terms-and-conditions");
+    setAnchorEl(null);
+  };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
@@ -121,6 +126,9 @@ const Shell: React.FunctionComponent<ShellProps> = (props) => {
             open={openMenu}
             onClose={handleMenuClose}
           >
+            <MenuItem onClick={handleTermsAndConditions}>
+              Terms and Conditions
+            </MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Toolbar>

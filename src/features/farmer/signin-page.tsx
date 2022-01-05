@@ -16,8 +16,6 @@ import clsx from "clsx";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import LockIcon from "@material-ui/icons/Lock";
-import DoaLogo from "../../assets/department_of_agri.png";
-import TanauanLogo from "../../assets/tanauan_logo.png";
 import AppLogo from "../../assets/logo.png";
 import ButtonLoading from "../../components/button-loading/button-loading";
 import useInput from "../../hooks/useInput";
@@ -103,10 +101,6 @@ const SigninPage = () => {
             <img className={style.logo} src={AppLogo} />
             {/* <img className={style.logo} src={TanauanLogo} /> */}
           </div>
-
-          <Typography className={style.title} variant="h5" color="primary">
-            S2M App
-          </Typography>
           <Typography
             className={style.subtitle}
             variant="subtitle2"

@@ -18,8 +18,7 @@ import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import DoaLogo from "../../assets/department_of_agri.png";
-import TanauanLogo from "../../assets/tanauan_logo.png";
+import AppLogo from "../../assets/logo.png";
 import ButtonLoading from "../../components/button-loading/button-loading";
 import useInput from "../../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
@@ -57,8 +56,7 @@ const useStyle = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   logo: {
-    width: 60,
-    height: 60,
+    width: 200,
     marginLeft: 10,
     marginRight: 10,
   },
@@ -543,13 +541,8 @@ const SignupPage = () => {
       <Paper>
         <form className={style.signinform}>
           <div className={style.header}>
-            <img className={style.logo} src={DoaLogo} />
-            <img className={style.logo} src={TanauanLogo} />
+            <img className={style.logo} src={AppLogo} />
           </div>
-
-          <Typography className={style.title} variant="h5" color="primary">
-            E-Punla
-          </Typography>
           <Typography
             className={style.subtitle}
             variant="subtitle2"

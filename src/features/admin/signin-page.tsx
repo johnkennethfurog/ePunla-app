@@ -96,10 +96,6 @@ const AdminSigninPage = () => {
             <img className={style.logo} src={AppLogo} />
             {/* <img className={style.logo} src={TanauanLogo} /> */}
           </div>
-
-          <Typography className={style.title} variant="h5" color="primary">
-            S2M Admin App
-          </Typography>
           <Typography
             className={style.subtitle}
             variant="subtitle2"
