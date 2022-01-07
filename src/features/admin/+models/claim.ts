@@ -25,4 +25,5 @@ export default interface Claim {
   avatar: null;
   mobileNumber: string;
   damageCause: ClaimDamageCause[];
+  referenceNumber: string;
 }

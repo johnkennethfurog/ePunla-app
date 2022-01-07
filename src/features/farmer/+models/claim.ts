@@ -12,6 +12,7 @@ export interface Claim {
   photoId: string;
   validationDate?: Date;
   damageCause: DamageCause[];
+  referenceNumber: string;
 }
 
 export interface DamageCause {

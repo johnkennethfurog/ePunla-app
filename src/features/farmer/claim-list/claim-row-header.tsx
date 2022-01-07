@@ -25,6 +25,7 @@ const ClaimRowHeader = () => {
       <TableRow>
         <TableCell></TableCell>
         <Hidden smDown>
+          <TableCell>Reference Number</TableCell>
           <TableCell>Date Filed</TableCell>
           <TableCell>Farm</TableCell>
         </Hidden>

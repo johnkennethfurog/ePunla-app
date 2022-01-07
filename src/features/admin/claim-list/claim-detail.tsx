@@ -21,6 +21,7 @@ import Status from "../../../components/status/status";
 import { StatusClaim } from "../../../models/status-claim.enum";
 import {
   fetchClaimDetail,
+  setClaimAsClaimed,
   setClaimForVerification,
 } from "../+state/adminActions";
 import FieldValueDisplay from "../../../components/field-value-display/FieldValueDisplay";
@@ -110,6 +111,11 @@ const ClaimDetail = () => {
     setShowVerifyModal(false);
   };
 
+  const onSetClaimAsClaimed = () => {
+    dispatch(setClaimAsClaimed(claim.claimId));
+    setShowVerifyModal(false);
+  };
+
   const onCloseConfirmation = () => {
     setShowVerifyModal(false);
   };
@@ -120,6 +126,16 @@ const ClaimDetail = () => {
         claim?.status !== StatusClaim.Denied &&
         !isLoading && (
           <div className={style.actionContainer}>
+            {claim?.status === StatusClaim.Approved && (
+              <Button
+                color="primary"
+                onClick={onSetClaimAsClaimed}
+                startIcon={<DoneIcon />}
+              >
+                Claim
+              </Button>
+            )}
+
             {claim?.status === StatusClaim.ForVerification && (
               <Button
                 color="primary"
@@ -139,14 +155,15 @@ const ClaimDetail = () => {
                 For Verification
               </Button>
             )}
-
-            <Button
-              style={{ color: "red", marginLeft: 10 }}
-              onClick={declineClaim}
-              startIcon={<CloseIcon />}
-            >
-              Decline
-            </Button>
+            {claim?.status !== StatusClaim.Approved && (
+              <Button
+                style={{ color: "red", marginLeft: 10 }}
+                onClick={declineClaim}
+                startIcon={<CloseIcon />}
+              >
+                Decline
+              </Button>
+            )}
           </div>
         )}
 
@@ -172,6 +189,12 @@ const ClaimDetail = () => {
               xl={10}
             >
               <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                {/* REFERENCE NUMBER */}
+                <FieldValueDisplay
+                  field="Reference Number"
+                  value={`${claim?.referenceNumber ?? "-"}`}
+                />
+
                 {/* FARMER */}
                 <FieldValueDisplay
                   field="Farmer"

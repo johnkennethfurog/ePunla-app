@@ -27,4 +27,5 @@ export interface ClaimDetail {
   farmerBarangay: string;
   farmerArea: string;
   farmerAddress: string;
+  referenceNumber: string;
 }

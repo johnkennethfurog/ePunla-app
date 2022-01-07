@@ -38,6 +38,7 @@ const {
   validateClaimSuccess,
   validateFarmSuccess,
   setClaimForVerificationSuccess,
+  setClaimAsClaimedSuccess,
   saveCropSuccess,
   saveBarangaySuccess,
   saveBarangayStatusSuccess,
@@ -90,6 +91,24 @@ export const setClaimForVerification =
       .catch((err: ErrorMessage[]) => {
         const errorMessage =
           err[0]?.message || "Unable set claim for verification";
+
+        dispatch(error(err));
+        dispatch(showError(errorMessage));
+      });
+  };
+
+export const setClaimAsClaimed =
+  (claimId: number): AppThunk =>
+  (dispatch) => {
+    dispatch(save());
+
+    clientCommandApiRequest({ forAdmin: true })
+      .put(`${ADMIN_MODULE}/claims/${claimId}/setasclaimed`)
+      .then(() => {
+        dispatch(setClaimAsClaimedSuccess());
+      })
+      .catch((err: ErrorMessage[]) => {
+        const errorMessage = err[0]?.message || "Unable set claim sa claimed";
 
         dispatch(error(err));
         dispatch(showError(errorMessage));

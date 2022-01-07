@@ -65,6 +65,10 @@ const ClaimRowDetail = (props: ClaimRowDetailProps) => {
             {/* DESCRIPTION */}
             <Grid item xs={12} sm={12} md={4} lg={4}>
               <Hidden mdUp>
+                {/* REFERENCE NUMBER */}
+                <span className={style.label}>Reference Number:</span>
+                <span>{claim?.referenceNumber ?? "-"}</span>
+
                 {/* DATE FILED */}
                 <span className={style.label}>Date Filed:</span>
                 <span>{moment(claim.filingDate).format("MM-DD-YYYY")}</span>

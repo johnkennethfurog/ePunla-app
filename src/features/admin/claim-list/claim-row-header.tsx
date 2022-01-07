@@ -31,6 +31,7 @@ const ClaimRowHeader = () => {
         <Hidden smDown>
           <TableCell>Crop</TableCell>
           <TableCell>Damaged Area</TableCell>
+          <TableCell>Reference Number</TableCell>
         </Hidden>
         <TableCell>Status</TableCell>
         <TableCell></TableCell>

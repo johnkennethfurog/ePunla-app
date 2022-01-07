@@ -71,6 +71,9 @@ const ClaimRow = (props: ClaimRowProps) => {
       </TableCell>
       <Hidden smDown>
         <TableCell className={style.cell}>
+          {claim.referenceNumber ?? "-"}
+        </TableCell>
+        <TableCell className={style.cell}>
           {moment(claim.filingDate).format("MM-DD-YYYY")}
         </TableCell>
         <TableCell className={style.cell}>{claim.farm}</TableCell>

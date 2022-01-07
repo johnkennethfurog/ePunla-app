@@ -5,6 +5,7 @@ export enum StatusClaim {
   Claimed = "Claimed",
   Denied = "Denied",
   ForVerification = "ForVerification",
+  Approved = "Approved",
 }
 
 export const StatusClaimList: LookupItem[] = Object.values(StatusClaim).map(

@@ -123,7 +123,7 @@ const ClaimFilter = (props: ClaimFilterProps) => {
       <Grid spacing={2} container>
         <Grid item xs={12} sm={12} md={6} lg={6}>
           <TextField
-            label="Farmer name, Farm name or Address"
+            label="Reference no., Farmer name, Farm name or Address"
             fullWidth
             {...bindQuery}
             variant="outlined"

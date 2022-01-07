@@ -84,6 +84,7 @@ const ClaimRow = (props: ClaimRowProps) => {
       <Hidden smDown>
         <TableCell className={style.cell}>{claim.crop}</TableCell>
         <TableCell className={style.cell}>{claim.damagedArea}</TableCell>
+        <TableCell className={style.cell}>{claim.referenceNumber}</TableCell>
       </Hidden>
       <TableCell className={style.cell}>
         {

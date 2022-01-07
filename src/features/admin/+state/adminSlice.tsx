@@ -76,6 +76,10 @@ export const adminSlice = createSlice({
       state.isSaving = false;
       state.claimDetail.status = StatusClaim.ForVerification;
     },
+    setClaimAsClaimedSuccess: (state: AdminState) => {
+      state.isSaving = false;
+      state.claimDetail.status = StatusClaim.Claimed;
+    },
     validateClaimSuccess: (
       state: AdminState,
       action: PayloadAction<{ isApproved: boolean }>
