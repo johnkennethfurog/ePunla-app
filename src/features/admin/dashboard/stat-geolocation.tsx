@@ -2,13 +2,14 @@ import React from "react";
 import Config from "../../../utils/config";
 import GoogleMapReact from "google-map-react";
 import randomColor from "randomcolor";
-import PrintIcon from "@material-ui/icons/Print";
+
 import { Button, createStyles, makeStyles } from "@material-ui/core";
 import { Crop, StatCropPerBarangayDto } from "../+models/dashboard-statistic";
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import StatGeoPrint from "./stat-geo-print";
+import { ButtonPrint } from "../../../components/button-print/button-print";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -132,13 +133,9 @@ export const StatGeoLocation = ({ statData }: StatGeoLocationProps) => {
           onClose={() => setOpenGeoPrint(false)}
           statData={statData}
         />
-        <Button
-          color="primary"
-          onClick={() => setOpenGeoPrint(true)}
-          startIcon={<PrintIcon />}
-        >
-          Print
-        </Button>
+
+        <ButtonPrint onClick={() => setOpenGeoPrint(true)} />
+
         <GoogleMapReact
           // onClick={onSelectLocation}
           bootstrapURLKeys={{

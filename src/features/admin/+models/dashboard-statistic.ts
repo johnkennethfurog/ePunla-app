@@ -3,6 +3,7 @@ export interface DashboardStatistic {
   statCropStatusPerBarangayDto: StatCropStatusPerBarangayDto[];
   statFarmerPerBarangayDto: StatFarmerPerBarangayDto[];
   statCountDto: StatCountDto;
+  farmerPerBarangayDto: FarmerPerBarangayDto[];
 }
 
 export interface StatCountDto {
@@ -40,4 +41,18 @@ export interface StatFarmerPerBarangayDto {
   barangayId: number;
   barangay: string;
   farmerCount: number;
+}
+
+export interface FarmerPerBarangayDto {
+  barangayId: number;
+  barangay: string;
+  farmers: Farmer[];
+}
+
+export interface Farmer {
+  firstName: string;
+  lastName: string;
+  streetAddress: null;
+  mobileNumber: string;
+  farmerId: number;
 }

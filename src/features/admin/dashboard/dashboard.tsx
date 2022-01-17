@@ -72,6 +72,7 @@ const Dashboard = () => {
         />
         <StatFarmerCount
           statData={dashboardData?.statFarmerPerBarangayDto ?? []}
+          farmerPrBarangay={dashboardData?.farmerPerBarangayDto ?? []}
         />
       </div>
     </div>

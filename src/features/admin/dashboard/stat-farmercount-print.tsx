@@ -1,6 +1,10 @@
 import React from "react";
 import { Dialog, DialogContent, Button } from "@material-ui/core";
-import { Crop, StatCropPerBarangayDto } from "../+models/dashboard-statistic";
+import {
+  Crop,
+  FarmerPerBarangayDto,
+  StatCropPerBarangayDto,
+} from "../+models/dashboard-statistic";
 
 import {
   Document,
@@ -47,46 +51,47 @@ const styles = ReactPdfStyleSheet.create({
 });
 
 type DocumentToPrintProps = {
-  statData: StatCropPerBarangayDto[];
+  data: FarmerPerBarangayDto[];
 };
 
-type ReportData = {
-  barangay?: string;
-  id: string;
-} & Crop;
-
-const DocumentToPrint = ({ statData }: DocumentToPrintProps) => {
+const DocumentToPrint = ({ data }: DocumentToPrintProps) => {
   return (
     <Document>
       <Page size="A4" style={styles.body}>
         <Text style={styles.header} fixed>
-          Crops per Barangay
+          Farmers per Barangay
         </Text>
         <View>
           <View style={styles.row}>
-            <Text style={[styles.cell, { flex: 2 }]}>Barangay</Text>
-            <Text style={styles.cell}>Crop</Text>
-            <Text style={[styles.cell, { textAlign: "right" }]}>Count</Text>
+            <Text style={[styles.cell]}>Barangay</Text>
+            <Text style={styles.cell}>Farmer</Text>
+            <Text style={[styles.cell, { flex: 2 }]}>Address</Text>
+            <Text style={styles.cell}>Mobile Number</Text>
           </View>
-          {statData.map((data, ind) => {
+          {data.map((data, ind) => {
             return (
               <View key={`${data.barangayId}_${ind}`} style={styles.row}>
-                <Text style={[styles.cell, { flex: 2 }]}>{`${ind + 1}. ${
+                <Text style={[styles.cell, { flex: 1 }]}>{`${ind + 1}. ${
                   data.barangay
                 }`}</Text>
-                <View style={{ display: "flex", flex: 2 }}>
-                  {data.crops.map((crop) => (
+                <View style={{ display: "flex", flex: 4 }}>
+                  {data.farmers.map((frmr) => (
                     <View
-                      key={`${data.barangayId}_${ind}_${crop.crop}`}
+                      key={`${data.barangayId}_${ind}_${frmr.farmerId}`}
                       style={{
                         display: "flex",
                         flexDirection: "row",
                       }}
                     >
-                      <Text style={styles.cell}>{crop.crop}</Text>
                       <Text
-                        style={[styles.cell, { textAlign: "right" }]}
-                      >{`${crop.count} (${crop.percentage}%)`}</Text>
+                        style={[styles.cell]}
+                      >{`${frmr.firstName} ${frmr.lastName}`}</Text>
+                      <Text style={[styles.cell, { flex: 2 }]}>
+                        {frmr.streetAddress ?? "-"}
+                      </Text>
+                      <Text
+                        style={styles.cell}
+                      >{`+63${frmr.mobileNumber}`}</Text>
                     </View>
                   ))}
                 </View>
@@ -99,13 +104,17 @@ const DocumentToPrint = ({ statData }: DocumentToPrintProps) => {
   );
 };
 
-type StatGeoPrintProps = {
-  statData: StatCropPerBarangayDto[];
+type StatFarmerCountPrintProps = {
+  statData: FarmerPerBarangayDto[];
   isOpen: boolean;
   onClose: () => void;
 };
 
-const StatGeoPrint = ({ statData, isOpen, onClose }: StatGeoPrintProps) => {
+const StatFarmerCountPrint = ({
+  statData,
+  isOpen,
+  onClose,
+}: StatFarmerCountPrintProps) => {
   return (
     <Dialog
       style={{ position: "relative" }}
@@ -125,7 +134,7 @@ const StatGeoPrint = ({ statData, isOpen, onClose }: StatGeoPrintProps) => {
       <DialogContent>
         <div style={{ height: "90vh", width: "100%", marginTop: 40 }}>
           <PDFViewer style={{ width: "100%", height: "100%" }}>
-            <DocumentToPrint statData={statData} />
+            <DocumentToPrint data={statData} />
           </PDFViewer>
         </div>
       </DialogContent>
@@ -133,4 +142,4 @@ const StatGeoPrint = ({ statData, isOpen, onClose }: StatGeoPrintProps) => {
   );
 };
 
-export default StatGeoPrint;
+export default StatFarmerCountPrint;

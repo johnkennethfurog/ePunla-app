@@ -9,7 +9,12 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { StatFarmerPerBarangayDto } from "../+models/dashboard-statistic";
+import {
+  FarmerPerBarangayDto,
+  StatFarmerPerBarangayDto,
+} from "../+models/dashboard-statistic";
+import { ButtonPrint } from "../../../components/button-print/button-print";
+import StatFarmerCountPrint from "./stat-farmercount-print";
 
 ChartJS.register(
   CategoryScale,
@@ -35,8 +40,13 @@ export const options = {
 
 type StatFarmerCountProps = {
   statData: StatFarmerPerBarangayDto[];
+  farmerPrBarangay: FarmerPerBarangayDto[];
 };
-export const StatFarmerCount = ({ statData }: StatFarmerCountProps) => {
+export const StatFarmerCount = ({
+  statData,
+  farmerPrBarangay,
+}: StatFarmerCountProps) => {
+  const [openGeoPrint, setOpenGeoPrint] = React.useState(false);
   const chartData = React.useMemo(() => {
     const labels = statData.map((x) => x.barangay);
     const farmersCount = statData.map((x) => x.farmerCount);
@@ -56,7 +66,16 @@ export const StatFarmerCount = ({ statData }: StatFarmerCountProps) => {
   }, [statData]);
 
   return (
-    <div style={{ marginTop: 50, width: "100%" }}>
+    <div style={{ marginTop: 50, width: "100%", position: "relative" }}>
+      <StatFarmerCountPrint
+        isOpen={openGeoPrint}
+        onClose={() => setOpenGeoPrint(false)}
+        statData={farmerPrBarangay}
+      />
+      <ButtonPrint
+        style={{ position: "absolute", left: 15, top: 10 }}
+        onClick={() => setOpenGeoPrint(true)}
+      />
       <Bar options={options} data={chartData} />;
     </div>
   );
