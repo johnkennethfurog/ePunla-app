@@ -106,7 +106,7 @@ const CropsFilter = (props: CropsFilterProps) => {
   return (
     <form className={style.searchForm}>
       <Typography variant="subtitle1" gutterBottom>
-        Search Crops
+        Crops Occurancy
       </Typography>
 
       <Grid spacing={2} container>

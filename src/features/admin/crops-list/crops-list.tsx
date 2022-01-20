@@ -28,6 +28,7 @@ import AddIcon from "@material-ui/icons/Add";
 import EmptyList from "../../../components/empty-list/empty-list";
 import CropRowDetail from "./crops-row-detail";
 import CropsSaveModal from "./crops-save-modal";
+import { deleteCrop } from "../../farmer/+state/farmerActions";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -94,7 +95,7 @@ const CropList = () => {
   };
 
   const onConfirmDelete = () => {
-    // dispatch(deleteCrop(selectedCrop?.farmCropId));
+    dispatch(deleteCrop(selectedCrop?.cropId!));
     setShowDeleteModal(false);
   };
 
@@ -157,8 +158,8 @@ const CropList = () => {
 
         <ConfirmationModal
           open={showDeleteModal}
-          title="Delete Crop"
-          content="Are you sure you want to delete this crop?"
+          title="Deactivate Crop"
+          content="Are you sure you want to deactivate this crop?"
           btnNoTitle="No"
           btnYesTitle="Yes"
           onClickBtnNo={closeDeleteModal}

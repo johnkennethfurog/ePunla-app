@@ -134,7 +134,7 @@ export const StatPlanstatus = ({ statData }: StatPlanstatusProps) => {
 
   return (
     <div style={{ marginTop: 50, width: "100%" }}>
-      <Bar options={options} data={chartData} />;
+      <Bar options={options} data={chartData} />
     </div>
   );
 };

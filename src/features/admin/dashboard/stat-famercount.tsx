@@ -76,7 +76,7 @@ export const StatFarmerCount = ({
         style={{ position: "absolute", left: 15, top: 10 }}
         onClick={() => setOpenGeoPrint(true)}
       />
-      <Bar options={options} data={chartData} />;
+      <Bar options={options} data={chartData} />
     </div>
   );
 };

@@ -9,6 +9,8 @@ import { selectDashboardData } from "../+state/adminSelectors";
 import { makeStyles, createStyles } from "@material-ui/core";
 import { StatCard } from "./stat-card";
 
+const CropsOccurance = React.lazy(() => import("../crops-occurancy"));
+
 const useStyles = makeStyles(() =>
   createStyles({
     container: {},
@@ -75,6 +77,7 @@ const Dashboard = () => {
           farmerPrBarangay={dashboardData?.farmerPerBarangayDto ?? []}
         />
       </div>
+      <CropsOccurance />
     </div>
   );
 };

@@ -9,12 +9,13 @@ import {
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import PlaceHolder from "../../../assets/placeholder.jpeg";
 
 import DoneIcon from "@material-ui/icons/Done";
 import CloseIcon from "@material-ui/icons/Close";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
+import BackIcon from "@material-ui/icons/ArrowBack";
 
 import { selectClaimDetail, selectIsLoading } from "../+state/adminSelectors";
 import Status from "../../../components/status/status";
@@ -55,7 +56,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     actionContainer: {
       display: "flex",
-      justifyContent: "flex-end",
       marginBottom: 15,
     },
     sectionTitle: {
@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const ClaimDetail = () => {
+  const history = useHistory();
   const style = useStyles();
   const dispatch = useDispatch();
 
@@ -120,42 +121,54 @@ const ClaimDetail = () => {
     setShowVerifyModal(false);
   };
 
+  const onBack = () => {
+    history.goBack();
+  };
+
   return (
     <>
-      {claim?.status !== StatusClaim.Claimed &&
-        claim?.status !== StatusClaim.Denied &&
-        !isLoading && (
-          <div className={style.actionContainer}>
-            {claim?.status === StatusClaim.Approved && (
-              <Button
-                color="primary"
-                onClick={onSetClaimAsClaimed}
-                startIcon={<DoneIcon />}
-              >
-                Claim
-              </Button>
-            )}
+      {!isLoading && (
+        <div className={style.actionContainer}>
+          <Button
+            style={{ marginRight: "auto" }}
+            color="primary"
+            onClick={onBack}
+            startIcon={<BackIcon />}
+          >
+            Back
+          </Button>
 
-            {claim?.status === StatusClaim.ForVerification && (
-              <Button
-                color="primary"
-                onClick={approveClaim}
-                startIcon={<DoneIcon />}
-              >
-                Approve
-              </Button>
-            )}
+          {claim?.status === StatusClaim.Approved && (
+            <Button
+              color="primary"
+              onClick={onSetClaimAsClaimed}
+              startIcon={<DoneIcon />}
+            >
+              Claim
+            </Button>
+          )}
 
-            {claim?.status === StatusClaim.Pending && (
-              <Button
-                color="primary"
-                onClick={forVerifyClaim}
-                startIcon={<VerifiedUserIcon />}
-              >
-                For Verification
-              </Button>
-            )}
-            {claim?.status !== StatusClaim.Approved && (
+          {claim?.status === StatusClaim.ForVerification && (
+            <Button
+              color="primary"
+              onClick={approveClaim}
+              startIcon={<DoneIcon />}
+            >
+              Approve
+            </Button>
+          )}
+
+          {claim?.status === StatusClaim.Pending && (
+            <Button
+              color="primary"
+              onClick={forVerifyClaim}
+              startIcon={<VerifiedUserIcon />}
+            >
+              For Verification
+            </Button>
+          )}
+          {claim?.status !== StatusClaim.Claimed &&
+            claim?.status !== StatusClaim.Approved && (
               <Button
                 style={{ color: "red", marginLeft: 10 }}
                 onClick={declineClaim}
@@ -164,8 +177,8 @@ const ClaimDetail = () => {
                 Decline
               </Button>
             )}
-          </div>
-        )}
+        </div>
+      )}
 
       <Paper className={style.container}>
         <Grid container spacing={2}>

@@ -49,11 +49,11 @@ const FarmListToPrint: React.FC<FarmListToPrintProps> = (props) => {
       <Table size="small" className={style.table}>
         <TableHead>
           <TableRow>
-            <TableCell className={style.cell}>Farm</TableCell>
-            <TableCell className={style.cell}>Farmer</TableCell>
-            <TableCell className={style.cell}>Mobile Number</TableCell>
-            <TableCell className={style.cell}>Address</TableCell>
-            <TableCell className={style.cell}>Status</TableCell>
+            <TableCell className={style.cell}>Name of Farm</TableCell>
+            <TableCell className={style.cell}>Address of Farm</TableCell>
+            <TableCell className={style.cell}>Manage By</TableCell>
+            <TableCell className={style.cell}>Area Size</TableCell>
+            <TableCell className={style.cell}>Date Registerd</TableCell>
           </TableRow>
         </TableHead>
 
@@ -62,15 +62,19 @@ const FarmListToPrint: React.FC<FarmListToPrintProps> = (props) => {
             return (
               <TableRow key={farm.farmId}>
                 <TableCell className={style.cell}>{farm.farm}</TableCell>
-                <TableCell className={style.cell}>{farm.farmer}</TableCell>
-                <TableCell
-                  className={style.cell}
-                >{`+63${farm.mobileNumber}`}</TableCell>
                 <TableCell
                   className={style.cell}
                 >{`${farm.address}, ${farm.area}, ${farm.barangay}`}</TableCell>
+                <TableCell className={style.cell}>{farm.farmer}</TableCell>
+                <TableCell
+                  className={style.cell}
+                >{`${farm.areaSize.toLocaleString()} sqm.`}</TableCell>
 
-                <TableCell className={style.cell}>{farm.status}</TableCell>
+                <TableCell className={style.cell}>
+                  {!farm.validationDate
+                    ? "-"
+                    : moment(farm.validationDate).format("MM-DD-yyyy")}
+                </TableCell>
               </TableRow>
             );
           })}

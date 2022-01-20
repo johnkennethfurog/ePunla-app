@@ -25,6 +25,8 @@ import { BarangaySavePayload } from "../+models/barangay-save-payload";
 import { BarangayStatusPayload } from "../+models/barangay-status-payload";
 import { ClaimDetail } from "../+models/claim-detail";
 import { DashboardStatistic } from "../+models/dashboard-statistic";
+import { CropOccuranceSearchField } from "../+models/crop-occurance-search-field";
+import { CropOccurance } from "../+models/crop-occurance";
 
 const ADMIN_MODULE = "/admin";
 const MASTER_LIST_MODULE = "/masterlist";
@@ -48,6 +50,7 @@ const {
   loadClaimDetailSuccess,
   loadCategoriesSuccess,
   loadCropsSuccess,
+  loadCropOccuranceSuccess,
 
   loadDashboardDAta,
 } = adminSlice.actions;
@@ -292,6 +295,22 @@ export const fetchDashboardData = (): AppThunk => (dispatch) => {
       dispatch(showError("Unable to get Crop Categories"));
     });
 };
+
+export const fetchCropsOccurance =
+  (searchField: CropOccuranceSearchField): AppThunk =>
+  (dispatch) => {
+    dispatch(load());
+
+    clientQueryApiRequest({ forAdmin: true })
+      .post(ADMIN_MODULE + "/cropsoccurance", searchField)
+      .then((response: AxiosResponse<CropOccurance[]>) => {
+        dispatch(loadCropOccuranceSuccess(response.data));
+      })
+      .catch((err: any) => {
+        dispatch(error(err));
+        dispatch(showError("Unable to get Crops"));
+      });
+  };
 
 // LOCAL USED
 export const addValidationError =

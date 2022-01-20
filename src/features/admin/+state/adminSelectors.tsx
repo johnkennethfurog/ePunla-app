@@ -23,3 +23,6 @@ export const selectCategories = (state: RootState) => state.admin.categories;
 
 export const selectDashboardData = (state: RootState) =>
   state.admin.dashboardStatistic;
+
+export const selectOccuranceCrops = (state: RootState) =>
+  state.admin.cropOccurance;

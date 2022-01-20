@@ -8,6 +8,7 @@ import { PagedCrop } from "../+models/crop";
 import { ClaimDetail } from "../+models/claim-detail";
 import { StatusClaim } from "../../../models/status-claim.enum";
 import { DashboardStatistic } from "../+models/dashboard-statistic";
+import { CropOccurance } from "../+models/crop-occurance";
 interface AdminState {
   farms: PagedFarm;
   claims: PagedClaim;
@@ -18,6 +19,7 @@ interface AdminState {
   categories: Category[];
   reloadData: boolean;
   claimDetail?: ClaimDetail;
+  cropOccurance: CropOccurance[];
 
   dashboardStatistic?: DashboardStatistic;
 }
@@ -37,6 +39,7 @@ const initialState: AdminState = {
   },
   categories: [],
   error: [],
+  cropOccurance: [],
   isLoading: false,
   isSaving: false,
   reloadData: false,
@@ -88,7 +91,7 @@ export const adminSlice = createSlice({
 
       state.isSaving = false;
       state.claimDetail.status = isApproved
-        ? StatusClaim.Claimed
+        ? StatusClaim.Approved
         : StatusClaim.Denied;
     },
     validateFarmSuccess: (state: AdminState) => {
@@ -120,6 +123,7 @@ export const adminSlice = createSlice({
       state.isLoading = false;
       state.claims = action.payload;
     },
+
     loadClaimDetailSuccess: (
       state: AdminState,
       action: PayloadAction<ClaimDetail>
@@ -144,6 +148,13 @@ export const adminSlice = createSlice({
     ) => {
       state.isLoading = false;
       state.dashboardStatistic = action.payload;
+    },
+    loadCropOccuranceSuccess: (
+      state: AdminState,
+      action: PayloadAction<CropOccurance[]>
+    ) => {
+      state.isLoading = false;
+      state.cropOccurance = action.payload;
     },
   },
 });

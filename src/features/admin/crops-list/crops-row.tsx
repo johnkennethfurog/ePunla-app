@@ -121,7 +121,7 @@ const CropRow = (props: CropRowProps) => {
               onClose={onCloseMenu}
             >
               <MenuItem onClick={onEdit}>Edit</MenuItem>
-              <MenuItem onClick={onDelete}>Delete</MenuItem>
+              {/* <MenuItem onClick={onDelete}>Deactivate</MenuItem> */}
             </Menu>
           </>
         )}

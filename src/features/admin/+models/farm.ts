@@ -24,4 +24,5 @@ export default interface Farm {
   identityDocumentId: string;
   imageUrl: string;
   imageUrlId: string;
+  validationDate: Date;
 }

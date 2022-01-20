@@ -154,7 +154,7 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
     }
 
     if (!coordinates) {
-      dispatch(addValidationError("Pleas point you farm location in the map"));
+      dispatch(addValidationError("Please point your farm location map"));
       return;
     }
 
@@ -213,7 +213,7 @@ const FarmSaveModal = (props: FarmSaveModalProps) => {
 
   return (
     <Dialog open={isOpen} onClose={closeFarmSaveModal} fullWidth maxWidth="lg">
-      <DialogTitle>{!!isNew ? "Enrolll Farm" : "Update Farm"}</DialogTitle>
+      <DialogTitle>{!!isNew ? "Enroll Farm" : "Update Farm"}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid container spacing={2} item xs={12} sm={12} md={4} lg={4} xl={4}>

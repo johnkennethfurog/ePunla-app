@@ -55,4 +55,5 @@ export interface Farmer {
   streetAddress: null;
   mobileNumber: string;
   farmerId: number;
+  registrationDate?: Date;
 }

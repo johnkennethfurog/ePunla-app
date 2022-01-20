@@ -14,6 +14,7 @@ import {
   Text,
   PDFViewer,
 } from "@react-pdf/renderer";
+import { CropOccurance } from "../+models/crop-occurance";
 import moment from "moment";
 
 // Create styles
@@ -52,56 +53,34 @@ const styles = ReactPdfStyleSheet.create({
 });
 
 type DocumentToPrintProps = {
-  data: FarmerPerBarangayDto[];
+  data: CropOccurance[];
 };
 
 const DocumentToPrint = ({ data }: DocumentToPrintProps) => {
   return (
     <Document>
-      <Page size="A4" style={styles.body}>
+      <Page orientation="landscape" size="A4" style={styles.body}>
         <Text style={styles.header} fixed>
-          Farmers per Barangay
+          Crop Occurancy
         </Text>
         <View>
           <View style={styles.row}>
-            <Text style={[styles.cell]}>Barangay</Text>
-            <Text style={styles.cell}>Name</Text>
-            <Text style={[styles.cell, { flex: 1 }]}>Address</Text>
-            <Text style={styles.cell}>Mobile Number</Text>
-            <Text style={styles.cell}>Member Since</Text>
+            <Text style={[styles.cell]}>Planted Date</Text>
+            <Text style={styles.cell}>Crop</Text>
+            <Text style={[styles.cell]}>Farmer</Text>
+            <Text style={styles.cell}>Farm</Text>
+            <Text style={styles.cell}>Area Size</Text>
           </View>
           {data.map((data, ind) => {
             return (
-              <View key={`${data.barangayId}_${ind}`} style={styles.row}>
-                <Text style={[styles.cell, { flex: 1 }]}>{`${ind + 1}. ${
-                  data.barangay
-                }`}</Text>
-                <View style={{ display: "flex", flex: 4 }}>
-                  {data.farmers.map((frmr) => (
-                    <View
-                      key={`${data.barangayId}_${ind}_${frmr.farmerId}`}
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <Text
-                        style={[styles.cell]}
-                      >{`${frmr.firstName} ${frmr.lastName}`}</Text>
-                      <Text style={[styles.cell, { flex: 1 }]}>
-                        {frmr.streetAddress ?? "-"}
-                      </Text>
-                      <Text
-                        style={styles.cell}
-                      >{`+63${frmr.mobileNumber}`}</Text>
-                      <Text style={styles.cell}>{`${
-                        frmr.registrationDate
-                          ? moment(frmr.registrationDate).format("MM-DD-yyyy")
-                          : "-"
-                      }`}</Text>
-                    </View>
-                  ))}
-                </View>
+              <View key={`${ind}`} style={styles.row}>
+                <Text style={[styles.cell]}>
+                  {moment(data.plantedDate).format("MM-DD-yyyy")}
+                </Text>
+                <Text style={[styles.cell]}>{data.crop}</Text>
+                <Text style={[styles.cell]}>{data.farmer}</Text>
+                <Text style={[styles.cell]}>{data.farm}</Text>
+                <Text style={[styles.cell]}>{`${data.areaSize} sqm.`}</Text>
               </View>
             );
           })}
@@ -111,17 +90,17 @@ const DocumentToPrint = ({ data }: DocumentToPrintProps) => {
   );
 };
 
-type StatFarmerCountPrintProps = {
-  statData: FarmerPerBarangayDto[];
+type CropOccurancePrintProps = {
+  statData: CropOccurance[];
   isOpen: boolean;
   onClose: () => void;
 };
 
-const StatFarmerCountPrint = ({
+const CropOccurancePrint = ({
   statData,
   isOpen,
   onClose,
-}: StatFarmerCountPrintProps) => {
+}: CropOccurancePrintProps) => {
   return (
     <Dialog
       style={{ position: "relative" }}
@@ -149,4 +128,4 @@ const StatFarmerCountPrint = ({
   );
 };
 
-export default StatFarmerCountPrint;
+export default CropOccurancePrint;
