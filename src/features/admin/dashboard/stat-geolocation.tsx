@@ -36,7 +36,9 @@ const InfoWindow = ({ data }: { data: Crop[] }) => {
 
   const chartData = React.useMemo(
     () => ({
-      labels: data.map((x) => `${x.crop} - ${Math.floor(x.percentage)}%`),
+      labels: data.map(
+        (x) => `${x.crop} - ${x.count} (${Math.floor(x.percentage)}%)`
+      ),
       legend: { display: true, position: "left" },
       datasets: [
         {
@@ -50,6 +52,12 @@ const InfoWindow = ({ data }: { data: Crop[] }) => {
     }),
     []
   );
+
+  const total: number = React.useMemo(() => {
+    return data.reduce((p, c) => {
+      return (p = p + c.count);
+    }, 0);
+  }, []);
 
   return (
     <div
@@ -68,6 +76,9 @@ const InfoWindow = ({ data }: { data: Crop[] }) => {
         left: 40,
       }}
     >
+      <div style={{ flex: 1, textAlign: "center", fontSize: 15 }}>
+        {`Total Count of Planted Crops : ${total}`}
+      </div>
       <Pie data={chartData} />;
     </div>
   );
