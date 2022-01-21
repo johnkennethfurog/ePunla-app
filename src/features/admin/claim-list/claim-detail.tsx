@@ -272,6 +272,20 @@ const ClaimDetail = () => {
                   value={moment(claim?.filingDate).format("MMM DD,YYYY")}
                 />
 
+                {/* DATE PLANTED */}
+                <FieldValueDisplay
+                  field="Date Planted"
+                  value={moment(claim?.datePlanted).format("MMM DD,YYYY")}
+                />
+
+                {/* ESTIMATED HARVEST DATE */}
+                <FieldValueDisplay
+                  field="Estimated Harvest Date"
+                  value={moment(claim?.estimatedHarvestDate).format(
+                    "MMM DD,YYYY"
+                  )}
+                />
+
                 {/* CROP */}
                 <FieldValueDisplay field="Crop" value={claim?.crop} />
 

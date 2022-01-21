@@ -28,4 +28,5 @@ export interface ClaimDetail {
   farmerArea: string;
   farmerAddress: string;
   referenceNumber: string;
+  estimatedHarvestDate: Date;
 }
