@@ -84,9 +84,9 @@ const DocumentToPrint = ({ statData }: DocumentToPrintProps) => {
                       }}
                     >
                       <Text style={styles.cell}>{crop.crop}</Text>
-                      <Text
-                        style={[styles.cell, { textAlign: "right" }]}
-                      >{`${crop.count} (${crop.percentage}%)`}</Text>
+                      <Text style={[styles.cell, { textAlign: "right" }]}>{`${
+                        crop.count
+                      } (${Math.floor(crop.percentage)}%)`}</Text>
                     </View>
                   ))}
                 </View>

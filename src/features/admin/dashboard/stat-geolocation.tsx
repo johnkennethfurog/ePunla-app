@@ -36,12 +36,12 @@ const InfoWindow = ({ data }: { data: Crop[] }) => {
 
   const chartData = React.useMemo(
     () => ({
-      labels: data.map((x) => `${x.crop} - ${x.percentage}%`),
+      labels: data.map((x) => `${x.crop} - ${Math.floor(x.percentage)}%`),
       legend: { display: true, position: "left" },
       datasets: [
         {
-          label: "# of Votes",
-          data: data.map((x) => x.count),
+          label: "# of Crops",
+          data: data.map((x) => Math.floor(x.count)),
           backgroundColor: data.map((x) => randomColor()),
           borderColor: ["black"],
           borderWidth: 1,
