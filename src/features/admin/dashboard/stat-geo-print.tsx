@@ -10,6 +10,7 @@ import {
   Text,
   PDFViewer,
 } from "@react-pdf/renderer";
+import moment from "moment";
 
 // Create styles
 const styles = ReactPdfStyleSheet.create({
@@ -26,6 +27,12 @@ const styles = ReactPdfStyleSheet.create({
   },
   header: {
     fontSize: 12,
+    marginBottom: 3,
+    textAlign: "center",
+    color: "black",
+  },
+  subheader: {
+    fontSize: 10,
     marginBottom: 20,
     textAlign: "center",
     color: "grey",
@@ -61,6 +68,9 @@ const DocumentToPrint = ({ statData }: DocumentToPrintProps) => {
       <Page size="A4" style={styles.body}>
         <Text style={styles.header} fixed>
           Crops per Barangay
+        </Text>
+        <Text style={styles.subheader} fixed>
+          {`as of ${moment().format("MM-DD-YYYY")}`}
         </Text>
         <View>
           <View style={styles.row}>
