@@ -9,6 +9,7 @@ import { ClaimDetail } from "../+models/claim-detail";
 import { StatusClaim } from "../../../models/status-claim.enum";
 import { DashboardStatistic } from "../+models/dashboard-statistic";
 import { CropOccurance } from "../+models/crop-occurance";
+import { UserProfile } from "../+models/user-profile";
 interface AdminState {
   farms: PagedFarm;
   claims: PagedClaim;
@@ -22,6 +23,7 @@ interface AdminState {
   cropOccurance: CropOccurance[];
 
   dashboardStatistic?: DashboardStatistic;
+  profile?: UserProfile;
 }
 
 const initialState: AdminState = {
@@ -43,6 +45,7 @@ const initialState: AdminState = {
   isLoading: false,
   isSaving: false,
   reloadData: false,
+  profile: undefined,
 };
 
 // REDUCERS
@@ -111,7 +114,12 @@ export const adminSlice = createSlice({
       state.reloadData = true;
     },
     // FETCHING
-
+    loadProfileSuccess: (
+      state: AdminState,
+      action: PayloadAction<UserProfile>
+    ) => {
+      state.profile = action.payload;
+    },
     loadFarmsSuccess: (state: AdminState, action: PayloadAction<PagedFarm>) => {
       state.isLoading = false;
       state.farms = action.payload;

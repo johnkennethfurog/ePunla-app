@@ -16,6 +16,8 @@ import {
 } from "@react-pdf/renderer";
 import { CropOccurance } from "../+models/crop-occurance";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { selectName } from "../+state/adminSelectors";
 
 // Create styles
 const styles = ReactPdfStyleSheet.create({
@@ -56,13 +58,32 @@ const styles = ReactPdfStyleSheet.create({
     flexDirection: "row",
     marginBottom: 20,
   },
+  printedDate: {
+    position: "absolute",
+    fontSize: 8,
+    bottom: 30,
+    left: 0,
+    right: 10,
+    textAlign: "right",
+    color: "grey",
+  },
+  printedBy: {
+    position: "absolute",
+    fontSize: 8,
+    bottom: 20,
+    left: 0,
+    right: 10,
+    textAlign: "right",
+    color: "grey",
+  },
 });
 
 type DocumentToPrintProps = {
   data: CropOccurance[];
+  name: string;
 };
 
-const DocumentToPrint = ({ data }: DocumentToPrintProps) => {
+const DocumentToPrint = ({ data, name }: DocumentToPrintProps) => {
   return (
     <Document>
       <Page orientation="landscape" size="A4" style={styles.body}>
@@ -94,6 +115,16 @@ const DocumentToPrint = ({ data }: DocumentToPrintProps) => {
             );
           })}
         </View>
+        <Text
+          style={styles.printedDate}
+          render={() => `Print date : ${moment().format("MM-d-yyy HH:mm")}`}
+          fixed
+        />
+        <Text
+          style={styles.printedBy}
+          render={() => `Print by : ${name}`}
+          fixed
+        />
       </Page>
     </Document>
   );
@@ -110,6 +141,7 @@ const CropOccurancePrint = ({
   isOpen,
   onClose,
 }: CropOccurancePrintProps) => {
+  const name = useSelector(selectName);
   return (
     <Dialog
       style={{ position: "relative" }}
@@ -129,7 +161,7 @@ const CropOccurancePrint = ({
       <DialogContent>
         <div style={{ height: "90vh", width: "100%", marginTop: 40 }}>
           <PDFViewer style={{ width: "100%", height: "100%" }}>
-            <DocumentToPrint data={statData} />
+            <DocumentToPrint name={name} data={statData} />
           </PDFViewer>
         </div>
       </DialogContent>

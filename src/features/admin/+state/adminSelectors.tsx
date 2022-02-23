@@ -1,6 +1,7 @@
 import { RootState } from "../../../app/store";
 // SELECTOR
-
+export const selectName = ({ admin }: RootState) =>
+  !!admin.profile ? `${admin.profile.firstName} ${admin.profile.lastName}` : "";
 export const selectClaimDetail = (state: RootState) => state.admin.claimDetail;
 export const selectClaims = (state: RootState) => state.admin.claims.values;
 export const selectClaimsPageCount = (state: RootState) =>

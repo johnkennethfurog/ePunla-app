@@ -61,11 +61,24 @@ const ImageUploader = (props: ImageUploaderProps) => {
   const { image, onSelectImage } = props;
   const style = useStyles();
 
-  const onDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0] as File;
-    const fileUrl = URL.createObjectURL(file);
-    setPreview(fileUrl);
-    onSelectImage(file);
+  const [error, setError] = useState<string>();
+
+  const onDrop = useCallback((acceptedFiles: any[], rejectedFiles: any[]) => {
+    setError("");
+    if (rejectedFiles.length > 0) {
+      const {
+        errors: [error],
+      } = rejectedFiles[0];
+
+      if (error.code === "file-too-large") {
+        setError("File should not exceed 5mb");
+      }
+    } else if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0] as File;
+      const fileUrl = URL.createObjectURL(file);
+      setPreview(fileUrl);
+      onSelectImage(file);
+    }
 
     // Do something with the files
   }, []);
@@ -78,7 +91,15 @@ const ImageUploader = (props: ImageUploaderProps) => {
     isDragActive,
     isDragAccept,
     isDragReject,
-  } = useDropzone({ accept: "image/*", onDrop });
+  } = useDropzone({
+    accept: "image/*",
+    onDrop,
+    maxSize: 5242880,
+    multiple: false,
+    onDropRejected: (e) => {
+      console.log("xxxxx");
+    },
+  });
 
   const divStyle = useMemo(
     () => ({
@@ -96,6 +117,8 @@ const ImageUploader = (props: ImageUploaderProps) => {
       {!!preview && <img className={style.image} src={preview} />}
       {!preview && <p>Drag 'n' drop your image, or click to select file</p>}
       <input {...getInputProps()}></input>
+
+      {!!error && <span style={{ color: "red", fontSize: 12 }}>{error}</span>}
     </div>
   );
 };
@@ -104,11 +127,24 @@ export const ProfileUploader = (props: ImageUploaderProps) => {
   const { onSelectImage, image } = props;
   const style = useStyles();
 
-  const onDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0] as File;
-    const fileUrl = URL.createObjectURL(file);
-    setPreview(fileUrl);
-    onSelectImage(file);
+  const [error, setError] = useState<string>();
+
+  const onDrop = useCallback((acceptedFiles: any[], rejectedFiles: any[]) => {
+    setError("");
+    if (rejectedFiles.length > 0) {
+      const {
+        errors: [error],
+      } = rejectedFiles[0];
+
+      if (error.code === "file-too-large") {
+        setError("File should not exceed 5mb");
+      }
+    } else if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0] as File;
+      const fileUrl = URL.createObjectURL(file);
+      setPreview(fileUrl);
+      onSelectImage(file);
+    }
 
     // Do something with the files
   }, []);
@@ -118,6 +154,8 @@ export const ProfileUploader = (props: ImageUploaderProps) => {
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*",
     onDrop,
+    maxSize: 5242880,
+    multiple: false,
   });
 
   return (
@@ -137,6 +175,9 @@ export const ProfileUploader = (props: ImageUploaderProps) => {
       <span style={{ fontSize: 12, marginTop: -10 }}>
         Click to Change Photo
       </span>
+
+      {!!error && <span style={{ color: "red", fontSize: 12 }}>{error}</span>}
+
       <input {...getInputProps()}></input>
     </div>
   );

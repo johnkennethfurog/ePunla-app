@@ -27,6 +27,7 @@ import { ClaimDetail } from "../+models/claim-detail";
 import { DashboardStatistic } from "../+models/dashboard-statistic";
 import { CropOccuranceSearchField } from "../+models/crop-occurance-search-field";
 import { CropOccurance } from "../+models/crop-occurance";
+import { UserProfile } from "../+models/user-profile";
 
 const ADMIN_MODULE = "/admin";
 const MASTER_LIST_MODULE = "/masterlist";
@@ -51,6 +52,7 @@ const {
   loadCategoriesSuccess,
   loadCropsSuccess,
   loadCropOccuranceSuccess,
+  loadProfileSuccess,
 
   loadDashboardDAta,
 } = adminSlice.actions;
@@ -199,6 +201,23 @@ export const updateBarangayStatus =
   };
 
 // FETCHING
+export const fetchProfile = (): AppThunk => (dispatch, getState) => {
+  const state = getState();
+
+  dispatch(load());
+
+  clientQueryApiRequest({ forAdmin: true })
+    .get(`${ADMIN_MODULE}/profile`)
+    .then((response: AxiosResponse<UserProfile>) => {
+      dispatch(loadProfileSuccess(response.data));
+    })
+    .catch((err: any) => {
+      console.log("err loading profile", err);
+
+      dispatch(error(err));
+      dispatch(showError("Unable to load Profile"));
+    });
+};
 
 export const fetchFarms =
   (searchField: PagedRequest<FarmSearchField>): AppThunk =>
