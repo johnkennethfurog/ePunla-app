@@ -27,6 +27,7 @@ export type Crop = {
   crop: string;
   percentage: number;
   count: number;
+  color: string;
 };
 
 export interface StatCropStatusPerBarangayDto {

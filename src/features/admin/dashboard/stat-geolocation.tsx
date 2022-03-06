@@ -1,9 +1,8 @@
 import React from "react";
 import Config from "../../../utils/config";
 import GoogleMapReact from "google-map-react";
-import randomColor from "randomcolor";
 
-import { Button, createStyles, makeStyles } from "@material-ui/core";
+import { createStyles, makeStyles } from "@material-ui/core";
 import { Crop, StatCropPerBarangayDto } from "../+models/dashboard-statistic";
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
@@ -44,7 +43,7 @@ const InfoWindow = ({ data }: { data: Crop[] }) => {
         {
           label: "# of Crops",
           data: data.map((x) => Math.floor(x.count)),
-          backgroundColor: data.map((x) => randomColor()),
+          backgroundColor: data.map((x) => x.color),
           borderColor: ["black"],
           borderWidth: 1,
         },
@@ -84,6 +83,22 @@ const InfoWindow = ({ data }: { data: Crop[] }) => {
   );
 };
 
+const Dot = ({ color }: { color: string }) => {
+  return (
+    <div
+      style={{
+        width: 10,
+        height: 10,
+        borderRadius: 10,
+        backgroundColor: color,
+        borderColor: "#757575",
+        borderWidth: 1,
+        borderStyle: "solid",
+      }}
+    ></div>
+  );
+};
+
 const Marker = ({
   crops,
   barangay,
@@ -94,6 +109,16 @@ const Marker = ({
   crops: Crop[];
 }) => {
   const [isHovered, setIsHovered] = React.useState(false);
+
+  const dots = React.useMemo(() => {
+    const cropDots = crops.reduce((dts, e) => {
+      for (let ind = 0; ind < e.count ; ind++) {
+        dts.push(e.color);
+      }
+      return dts;
+    }, []);
+    return cropDots;
+  }, []);
 
   return (
     <div
@@ -109,17 +134,33 @@ const Marker = ({
         alignItems: "center",
         cursor: "pointer",
         position: "relative",
-        width: 50,
-        height: 50,
+
+        width: 120,
         // backgroundColor: "red",
       }}
     >
-      <img
+      {/* <img
         style={{ width: 25, height: 25 }}
         src={`/assets/images/marker.png`}
-      />
+      /> */}
+
+      <div
+        style={{
+          width: 100,
+          columnGap: 1,
+          rowGap: 1,
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        {dots.map((e) => (
+          <Dot color={e} />
+        ))}
+      </div>
+
       <span
-        style={{ color: "#04796a", textAlign: "center", fontWeight: "bold" }}
+        style={{ color: "#04796a", textAlign: "center", fontWeight: "bold", marginTop:5 }}
       >
         {barangay}
       </span>
